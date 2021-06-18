@@ -3,6 +3,8 @@ package me.becycled.backend.model.dao.mybatis;
 import me.becycled.backend.model.dao.mybatis.community.CommunityDao;
 import me.becycled.backend.model.dao.mybatis.route.RouteDao;
 import me.becycled.backend.model.dao.mybatis.routephoto.RoutePhotoDao;
+import me.becycled.backend.model.dao.mybatis.telemetry.TelemetryDao;
+import me.becycled.backend.model.dao.mybatis.tracker.TrackerDao;
 import me.becycled.backend.model.dao.mybatis.user.UserDao;
 import me.becycled.backend.model.dao.mybatis.useraccount.UserAccountDao;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,6 +19,8 @@ public class DaoFactory {
     private final RouteDao routeDao;
     private final RoutePhotoDao routePhotoDao;
     private final CommunityDao communityDao;
+    private final TelemetryDao telemetryDao;
+    private final TrackerDao trackerDao;
 
     public DaoFactory(final SqlSessionFactory sqlSessionFactory) {
         userDao = new UserDao(sqlSessionFactory);
@@ -24,21 +28,35 @@ public class DaoFactory {
         routeDao = new RouteDao(sqlSessionFactory);
         routePhotoDao = new RoutePhotoDao(sqlSessionFactory);
         communityDao = new CommunityDao(sqlSessionFactory);
+        telemetryDao = new TelemetryDao(sqlSessionFactory);
+        trackerDao = new TrackerDao(sqlSessionFactory);
     }
 
     public UserDao getUserDao() {
         return userDao;
     }
+
     public UserAccountDao getUserAccountDao() {
         return userAccountDao;
     }
+
     public RouteDao getRouteDao() {
         return routeDao;
     }
+
     public RoutePhotoDao getRoutePhotoDao() {
         return routePhotoDao;
     }
+
     public CommunityDao getCommunityDao() {
         return communityDao;
+    }
+
+    public TelemetryDao getTelemetryDao() {
+        return telemetryDao;
+    }
+
+    public TrackerDao getTrackerDao() {
+        return trackerDao;
     }
 }
