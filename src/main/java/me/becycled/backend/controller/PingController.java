@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/**
+ * @author I1yi4
+ */
 @RestController
 public class PingController {
 

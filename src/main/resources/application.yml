@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: beCycled-backend
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/becycled
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+
+server:
+  port: 8080
+mybatis:
+  configLocation: classpath:mybatis-config.xml
+  checkConfigLocation: true
