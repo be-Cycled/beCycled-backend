@@ -14,7 +14,6 @@ public interface TelemetryMapper {
     @Insert(
         "INSERT INTO telemetries (tracker_id, fix_time, latitude, longitude, altitude, speed, course) " +
             "VALUES (#{trackerId}, #{fixTime}, #{latitude}, #{longitude}, #{altitude}, #{speed}, #{course})")
-    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(Telemetry entity);
 
     @Results(id = "telemetryResult", value = {
@@ -36,7 +35,7 @@ public interface TelemetryMapper {
     @ResultMap("telemetryResult")
     List<Telemetry> getRangeByTrackerId(Integer trackerId, Instant from, Instant to);
 
-    @Select("SELECT * FROM telemetries GROUP BY tracker_id ORDER BY tracker_id ASC, fix_time DESC")
+    @Select("SELECT * FROM telemetries ORDER BY tracker_id ASC, fix_time DESC")
     @ResultMap("telemetryResult")
     List<Telemetry> getAll();
 }

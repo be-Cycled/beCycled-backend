@@ -126,6 +126,10 @@ public final class Telemetry {
             .toString();
     }
 
+    public static Builder builder() {
+        return new Telemetry().new Builder();
+    }
+
     public Builder editor() {
         return this.new Builder(this);
     }
