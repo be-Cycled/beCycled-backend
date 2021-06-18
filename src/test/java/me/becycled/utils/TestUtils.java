@@ -4,7 +4,10 @@ import me.becycled.backend.model.entity.User;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.route.RoutePhoto;
 import me.becycled.backend.model.entity.route.SportType;
+import me.becycled.backend.model.entity.telemetry.Telemetry;
+import me.becycled.backend.model.entity.telemetry.Tracker;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -12,7 +15,7 @@ import java.util.List;
  */
 public class TestUtils {
 
-    public static User getTestUser(){
+    public static User getTestUser() {
         final User user = new User();
         user.setLogin("login");
         user.setFirstName("firstName");
@@ -131,11 +134,31 @@ public class TestUtils {
         return route;
     }
 
-    public static RoutePhoto getTestRoutePhoto(){
+    public static RoutePhoto getTestRoutePhoto() {
         final RoutePhoto routePhoto = new RoutePhoto();
         routePhoto.setRouteId(1);
         routePhoto.setPhoto(new byte[]{0x55, 0x30});
         return routePhoto;
     }
 
+    public static Telemetry getTestTelemetry() {
+        return Telemetry.builder()
+            .withTrackerId(1)
+            .withFixTime(Instant.parse("2021-06-18T12:00:00Z"))
+            .withServerTime(Instant.parse("2021-06-18T12:01:30Z"))
+            .withLatitude(43.414414)
+            .withLongitude(39.949160)
+            .withAltitude(10.0)
+            .withSpeed(60)
+            .withCourse(180)
+            .build();
+    }
+
+    public static Tracker getTestTracker() {
+        final Tracker tracker = new Tracker();
+        tracker.setId(1);
+        tracker.setUserId(1);
+        tracker.setImei("100000000000000");
+        return tracker;
+    }
 }

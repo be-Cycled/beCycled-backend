@@ -23,6 +23,8 @@
     <mapper resource="mybatis/mappers/RoutePhotoMapper.xml"/>
     <mapper resource="mybatis/mappers/UserAccountMapper.xml"/>
     <mapper resource="mybatis/mappers/UserMapper.xml"/>
+    <mapper resource="mybatis/mappers/TelemetryMapper.xml"/>
+    <mapper resource="mybatis/mappers/TrackerMapper.xml"/>
   </mappers>
 
 </configuration>
