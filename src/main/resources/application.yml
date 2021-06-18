@@ -4,7 +4,7 @@ spring:
   main:
     banner-mode: off
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/becycled
+    url: jdbc:postgresql://127.0.0.1:5432/beCycled
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
