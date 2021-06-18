@@ -19,6 +19,8 @@
   </settings>
 
   <mappers>
+    <mapper resource="mybatis/mappers/RouteMapper.xml"/>
+    <mapper resource="mybatis/mappers/RoutePhotoMapper.xml"/>
     <mapper resource="mybatis/mappers/UserAccountMapper.xml"/>
     <mapper resource="mybatis/mappers/UserMapper.xml"/>
   </mappers>

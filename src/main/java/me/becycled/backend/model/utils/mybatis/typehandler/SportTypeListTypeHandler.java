@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Ilya Gehrman @I1yi4
+ * @author I1yi4
  */
 public class SportTypeListTypeHandler implements TypeHandler<List<SportType>> {
 

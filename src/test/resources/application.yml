@@ -1,0 +1,3 @@
+mybatis:
+  configLocation: classpath:mybatis-config.xml
+  checkConfigLocation: true
