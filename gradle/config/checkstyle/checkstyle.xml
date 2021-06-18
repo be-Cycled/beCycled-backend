@@ -115,7 +115,7 @@
         <module name="ParameterAssignment"/>  <!-- more strict version is FinalParameters -->
         <!--<module name="RequireThis"/>-->
         <module name="ReturnCount">
-            <property name="max" value="2"/>
+            <property name="max" value="5"/>
             <property name="maxForVoid" value="1"/>
         </module>
         <module name="SimplifyBooleanExpression"/>
