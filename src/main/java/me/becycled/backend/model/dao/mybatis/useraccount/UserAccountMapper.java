@@ -1,6 +1,6 @@
 package me.becycled.backend.model.dao.mybatis.useraccount;
 
-import me.becycled.backend.model.entity.UserAccount;
+import me.becycled.backend.model.entity.user.UserAccount;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;

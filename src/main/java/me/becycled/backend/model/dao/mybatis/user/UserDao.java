@@ -1,7 +1,7 @@
 package me.becycled.backend.model.dao.mybatis.user;
 
 import me.becycled.backend.model.dao.mybatis.BaseMyBatisDao;
-import me.becycled.backend.model.entity.User;
+import me.becycled.backend.model.entity.user.User;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 

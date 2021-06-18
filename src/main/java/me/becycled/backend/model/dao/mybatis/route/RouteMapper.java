@@ -48,5 +48,5 @@ public interface RouteMapper {
             + "disposable=#{disposable}, "
             + "description=#{description} "
             + "WHERE id=#{id}")
-    int update(Route user);
+    int update(Route route);
 }
