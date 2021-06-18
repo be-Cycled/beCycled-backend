@@ -1,8 +1,3 @@
-/*
- * Copyright © 2021 ООО "Первая Мониторинговая Компания".
- * All rights reserved.
- */
-
 package me.becycled.backend.model.utils.mybatis.typehandler;
 
 import me.becycled.backend.model.entity.route.SportType;

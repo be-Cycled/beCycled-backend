@@ -1,4 +1,4 @@
-package me.becycled.backend.model.entity;
+package me.becycled.backend.model.entity.user;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

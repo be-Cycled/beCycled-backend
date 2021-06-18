@@ -1,9 +1,11 @@
 package me.becycled.utils;
 
-import me.becycled.backend.model.entity.User;
+import me.becycled.backend.model.entity.community.Community;
+import me.becycled.backend.model.entity.community.CommunityType;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.route.RoutePhoto;
 import me.becycled.backend.model.entity.route.SportType;
+import me.becycled.backend.model.entity.user.User;
 
 import java.util.List;
 
@@ -138,4 +140,17 @@ public class TestUtils {
         return routePhoto;
     }
 
+    public static Community getTestCommunity(){
+        final Community community = new Community();
+        community.setOwnerUserId(1);
+        community.setName("name");
+        community.setNickname("nickname");
+        community.setAvatar(new byte[]{0x34, 0x12, 0x11});
+        community.setCommunityType(CommunityType.ORGANIZATION);
+        community.setSportTypes(List.of(SportType.BICYCLE, SportType.RUN));
+        community.setUserIds(List.of(1));
+        community.setUrl("url");
+        community.setDescription("description");
+        return community;
+    }
 }

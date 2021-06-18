@@ -2,9 +2,9 @@ package me.becycled.dao;
 
 import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
-import me.becycled.backend.model.entity.User;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.route.SportType;
+import me.becycled.backend.model.entity.user.User;
 import me.becycled.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
