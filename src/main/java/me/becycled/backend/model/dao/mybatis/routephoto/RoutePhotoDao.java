@@ -20,8 +20,8 @@ public class RoutePhotoDao extends BaseMyBatisDao {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final RoutePhotoMapper mapper = session.getMapper(RoutePhotoMapper.class);
 
-            final int id = mapper.create(entity);
-            return mapper.getById(id);
+            mapper.create(entity);
+            return mapper.getById(entity.getId());
         }
     }
 

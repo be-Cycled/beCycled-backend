@@ -27,14 +27,15 @@ public class UserDaoIntegrationTest extends BaseIntegrationTest {
     @Test
     void create() {
         final User user = new User();
-        user.setLogin("login");
+        user.setLogin("zxc");
         user.setFirstName("firstName");
         user.setLastName("lastName");
-        user.setEmail("email@gmail.com");
-        user.setPhone("88005553535");
+        user.setEmail("eamail@gmail.com");
+        user.setPhone("88005583535");
         user.setAbout("about");
         user.setAvatar(new byte[]{});
 
+        final User qwe = daoFactory.getUserDao().create(TestUtils.getTestUser());
         final User createdUser = daoFactory.getUserDao().create(user);
         assertNotNull(createdUser.getId());
         assertEquals(user.getLogin(), createdUser.getLogin());

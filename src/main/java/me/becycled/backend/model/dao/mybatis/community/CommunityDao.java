@@ -20,8 +20,8 @@ public class CommunityDao extends BaseMyBatisDao {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
 
-            final int id = mapper.create(entity);
-            return mapper.getById(id);
+            mapper.create(entity);
+            return mapper.getById(entity.getId());
         }
     }
 

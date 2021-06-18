@@ -19,9 +19,9 @@ public class TrackerDao extends BaseMyBatisDao {
     public Tracker create(final Tracker entity) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final TrackerMapper mapper = session.getMapper(TrackerMapper.class);
-            final int id = mapper.create(entity);
 
-            return mapper.getById(id);
+            mapper.create(entity);
+            return mapper.getById(entity.getId());
         }
     }
 

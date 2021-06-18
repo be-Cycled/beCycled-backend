@@ -15,7 +15,7 @@ CREATE TABLE users
 
 CREATE TABLE user_accounts
 (
-    user_id        INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    user_id        INTEGER NOT NULL UNIQUE REFERENCES users (id) ON DELETE CASCADE,
     password       TEXT    NOT NULL,
     last_auth_time TIMESTAMPTZ
 )
