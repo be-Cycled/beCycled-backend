@@ -1,8 +1,3 @@
-/*
- * Copyright © 2018 ООО "Первая Мониторинговая Компания".
- * All rights reserved.
- */
-
 package me.becycled.config;
 
 import me.becycled.backend.model.dao.mybatis.DaoFactory;

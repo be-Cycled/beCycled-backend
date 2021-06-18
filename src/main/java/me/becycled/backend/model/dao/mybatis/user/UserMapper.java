@@ -1,6 +1,6 @@
 package me.becycled.backend.model.dao.mybatis.user;
 
-import me.becycled.backend.model.entity.User;
+import me.becycled.backend.model.entity.user.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

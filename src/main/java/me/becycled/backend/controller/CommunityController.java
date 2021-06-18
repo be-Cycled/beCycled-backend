@@ -1,6 +1,7 @@
 package me.becycled.backend.controller;
 
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
+import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +18,28 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @author I1yi4
  */
 @RestController
-@RequestMapping("/routes")
-public class RouteController {
+@RequestMapping("/communities")
+public class CommunityController {
 
     private final DaoFactory daoFactory;
 
     @Autowired
-    public RouteController(final DaoFactory daoFactory) {
+    public CommunityController(final DaoFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
-        final Route route = daoFactory.getRouteDao().getById(id);
-        if (route == null) {
-            return new ResponseEntity<>("Not found route", HttpStatus.NOT_FOUND);
+        final Community community = daoFactory.getCommunityDao().getById(id);
+        if (community == null) {
+            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(route);
+        return ResponseEntity.ok(community);
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Route>> getAll() {
-        return ResponseEntity.ok(daoFactory.getRouteDao().getAll());
+    public ResponseEntity<List<Community>> getAll() {
+        return ResponseEntity.ok(daoFactory.getCommunityDao().getAll());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
@@ -53,12 +54,12 @@ public class RouteController {
             return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
         }
 
-        final Route route = daoFactory.getRouteDao().getById(id);
-        if (route == null) {
-            return new ResponseEntity<>("Route not exist", HttpStatus.NOT_FOUND);
+        final Community community = daoFactory.getCommunityDao().getById(id);
+        if (community == null) {
+            return new ResponseEntity<>("Community not exist", HttpStatus.NOT_FOUND);
         }
-        if (!route.getUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Only owner can update route", HttpStatus.BAD_REQUEST);
+        if (!community.getOwnerUserId().equals(curUser.getId())) {
+            return new ResponseEntity<>("Only owner can update community", HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok(daoFactory.getRouteDao().update(entity));

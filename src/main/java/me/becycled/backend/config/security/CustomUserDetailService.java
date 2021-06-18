@@ -1,8 +1,8 @@
 package me.becycled.backend.config.security;
 
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
-import me.becycled.backend.model.entity.User;
-import me.becycled.backend.model.entity.UserAccount;
+import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.entity.user.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
