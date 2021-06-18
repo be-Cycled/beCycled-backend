@@ -88,6 +88,7 @@ public final class Telemetry {
     }
 
     @Override
+    @SuppressWarnings("CyclomaticComplexity")
     public boolean equals(final Object o) {
         if (this == o) {
             return true;

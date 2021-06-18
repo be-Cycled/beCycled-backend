@@ -13,7 +13,6 @@ public final class Tracker {
     private Integer id;
     private Integer userId;
     private String imei;
-    private TrackerModelType trackerModelType;
 
     public Integer getId() {
         return id;
@@ -39,14 +38,6 @@ public final class Tracker {
         this.imei = imei;
     }
 
-    public TrackerModelType getTrackerModelType() {
-        return trackerModelType;
-    }
-
-    public void setTrackerModelType(final TrackerModelType trackerModelType) {
-        this.trackerModelType = trackerModelType;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -58,13 +49,12 @@ public final class Tracker {
         final Tracker that = (Tracker) o;
         return Objects.equals(id, that.id)
             && Objects.equals(userId, that.userId)
-            && Objects.equals(imei, that.imei)
-            && trackerModelType == that.trackerModelType;
+            && Objects.equals(imei, that.imei);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, imei, trackerModelType);
+        return Objects.hash(id, userId, imei);
     }
 
     @Override
@@ -73,7 +63,6 @@ public final class Tracker {
             .append("id", id)
             .append("userId", userId)
             .append("imei", imei)
-            .append("trackerModelType", trackerModelType)
             .toString();
     }
 }
