@@ -35,6 +35,6 @@ public interface TrackerMapper {
     @Update("UPDATE trackers SET user_id=#{userId}, imei=#{imei} WHERE id=#{id}")
     int update(Tracker tracker);
 
-    @Select("DELETE FROM trackers WHERE id=#{id}")
+    @Delete("DELETE FROM trackers WHERE id=#{id}")
     int delete(Integer id);
 }
