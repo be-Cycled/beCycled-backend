@@ -8,6 +8,7 @@ CREATE TABLE workouts
     route_id     INTEGER     NOT NULL REFERENCES routes (id),
     sport_types  SPORT_TYPE[] NOT NULL,
     user_ids     INTEGER[],
+    duration  INTEGER,
     description  TEXT,
     created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );

@@ -20,6 +20,7 @@ public interface CompetitionMapper {
             "#{routeId}," +
             "#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, " +
             "#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}," +
+            "#{duration}, " +
             "#{description})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(Competition user);
@@ -34,6 +35,7 @@ public interface CompetitionMapper {
         @Result(column = "route_id", property = "routeId"),
         @Result(column = "sport_types", property = "sportTypes", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler.class),
         @Result(column = "user_ids", property = "userIds", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler.class),
+        @Result(column = "duration", property = "duration"),
         @Result(column = "description", property = "description"),
         @Result(column = "created_at", property = "createdAt")
     })
@@ -56,6 +58,7 @@ public interface CompetitionMapper {
             + "start_date=#{startDate}, "
             + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
             + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
+            + "duration=#{duration}, "
             + "description=#{description}, "
             + "created_at=#{createdAt} "
             + "WHERE id=#{id}")

@@ -184,11 +184,12 @@ public class TestUtils {
     public static Workout getTestWorkout() {
         final Workout workout = new Workout();
         workout.setOwnerUserId(1);
-        workout.setIsPrivate(false);
+        workout.setPrivate(false);
         workout.setRouteId(1);
         workout.setSportTypes(List.of(SportType.BICYCLE));
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         workout.setDescription("description");
+        workout.setDuration(100500);
         return workout;
     }
 

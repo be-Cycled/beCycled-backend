@@ -20,6 +20,7 @@ public class Workout {
     private Integer routeId;
     private List<SportType> sportTypes;
     private List<Integer> userIds;
+    private Integer duration;
     private String description;
     private Instant createdAt;
 
@@ -47,12 +48,12 @@ public class Workout {
         this.communityId = communityId;
     }
 
-    public Boolean getIsPrivate() {
+    public Boolean getPrivate() {
         return isPrivate;
     }
 
-    public void setIsPrivate(final Boolean isPrivate) {
-        this.isPrivate = isPrivate;
+    public void setPrivate(final Boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 
     public Instant getStartDate() {
@@ -85,6 +86,14 @@ public class Workout {
 
     public void setUserIds(final List<Integer> userIds) {
         this.userIds = userIds;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(final Integer duration) {
+        this.duration = duration;
     }
 
     public String getDescription() {
@@ -133,6 +142,7 @@ public class Workout {
             .append("sportTypes", sportTypes)
             .append("userIds", userIds)
             .append("description", description)
+            .append("duration", duration)
             .append("createdAt", createdAt)
             .toString();
     }
