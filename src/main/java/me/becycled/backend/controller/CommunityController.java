@@ -2,7 +2,6 @@ package me.becycled.backend.controller;
 
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
-import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,14 +36,29 @@ public class CommunityController {
         return ResponseEntity.ok(community);
     }
 
+    @RequestMapping(value = "/login/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getByLogin(@PathVariable("login") final String login) {
+        final User user = daoFactory.getUserDao().getByLogin(login);
+        if (user == null) {
+            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(daoFactory.getCommunityDao().getUserId(user.getId()));
+    }
+
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Community>> getAll() {
         return ResponseEntity.ok(daoFactory.getCommunityDao().getAll());
     }
 
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Community> create(@RequestBody final Community entity) {
+        return ResponseEntity.ok(daoFactory.getCommunityDao().create(entity));
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Route entity) {
+                                    @RequestBody final Community entity) {
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }
@@ -62,6 +76,6 @@ public class CommunityController {
             return new ResponseEntity<>("Only owner can update community", HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity.ok(daoFactory.getRouteDao().update(entity));
+        return ResponseEntity.ok(daoFactory.getCommunityDao().update(entity));
     }
 }

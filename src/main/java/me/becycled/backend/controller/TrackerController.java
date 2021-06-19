@@ -5,10 +5,7 @@ import me.becycled.backend.model.entity.telemetry.Tracker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -44,6 +41,11 @@ public class TrackerController {
             return new ResponseEntity<>("Tracker is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(tracker);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Tracker> create(@RequestBody final Tracker entity) {
+        return ResponseEntity.ok(daoFactory.getTrackerDao().create(entity));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)

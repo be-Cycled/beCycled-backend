@@ -41,6 +41,11 @@ public class RouteController {
         return ResponseEntity.ok(daoFactory.getRouteDao().getAll());
     }
 
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Route> create(@RequestBody final Route entity) {
+        return ResponseEntity.ok(daoFactory.getRouteDao().create(entity));
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(@PathVariable("id") final int id,
                                     @RequestBody final Route entity) {
