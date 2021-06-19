@@ -42,7 +42,7 @@ public class CompetitionDaoIntegrationTest extends BaseIntegrationTest {
         workout.setOwnerUserId(1);
         workout.setPrivate(false);
         workout.setRouteId(1);
-        workout.setSportTypes(List.of(SportType.BICYCLE));
+        workout.setSportType(SportType.BICYCLE);
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         workout.setDescription("description");
         final Workout bdWorkout = daoFactory.getWorkoutDao().create(workout);
@@ -55,7 +55,7 @@ public class CompetitionDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(workout.getId(), bdWorkout.getId());
         assertEquals(workout.getOwnerUserId(), bdWorkout.getOwnerUserId());
         assertEquals(workout.getRouteId(), bdWorkout.getRouteId());
-        assertEquals(workout.getSportTypes(), bdWorkout.getSportTypes());
+        assertEquals(workout.getSportType(), bdWorkout.getSportType());
         assertEquals(workout.getStartDate(), bdWorkout.getStartDate());
         assertEquals(workout.getCommunityId(), bdWorkout.getCommunityId());
         assertEquals(workout.getDescription(), bdWorkout.getDescription());
@@ -90,7 +90,7 @@ public class CompetitionDaoIntegrationTest extends BaseIntegrationTest {
         testWorkout.setOwnerUserId(1);
         testWorkout.setPrivate(false);
         testWorkout.setRouteId(1);
-        testWorkout.setSportTypes(List.of(SportType.BICYCLE));
+        testWorkout.setSportType(SportType.BICYCLE);
         testWorkout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         testWorkout.setDescription("description");
         testWorkout.setCreatedAt(community.getCreatedAt());
@@ -100,8 +100,7 @@ public class CompetitionDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(1, bdWorkout.getOwnerUserId().intValue());
         assertEquals(false, bdWorkout.getPrivate());
         assertEquals(1, bdWorkout.getRouteId().intValue());
-        assertEquals(List.of(SportType.BICYCLE), bdWorkout.getSportTypes());
-        assertEquals(List.of(SportType.BICYCLE), bdWorkout.getSportTypes());
+        assertEquals(SportType.BICYCLE, bdWorkout.getSportType());
         assertEquals(Collections.emptyList(), bdWorkout.getUserIds());
         assertEquals(Instant.parse("2021-06-19T00:00:00Z"), bdWorkout.getStartDate());
         assertEquals("description", bdWorkout.getDescription());

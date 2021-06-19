@@ -18,7 +18,7 @@ public class Competition {
     private Boolean isPrivate;
     private Instant startDate;
     private Integer routeId;
-    private List<SportType> sportTypes;
+    private SportType sportType;
     private List<Integer> userIds;
     private String venue;
     private Integer duration;
@@ -73,12 +73,12 @@ public class Competition {
         this.routeId = routeId;
     }
 
-    public List<SportType> getSportTypes() {
-        return sportTypes;
+    public SportType getSportType() {
+        return sportType;
     }
 
-    public void setSportTypes(final List<SportType> sportTypes) {
-        this.sportTypes = sportTypes;
+    public void setSportType(final SportType sportType) {
+        this.sportType = sportType;
     }
 
     public List<Integer> getUserIds() {
@@ -145,7 +145,7 @@ public class Competition {
             && Objects.equals(isPrivate, workout.isPrivate)
             && Objects.equals(startDate, workout.startDate)
             && Objects.equals(routeId, workout.routeId)
-            && Objects.equals(sportTypes, workout.sportTypes)
+            && Objects.equals(sportType, workout.sportType)
             && Objects.equals(userIds, workout.userIds)
             && Objects.equals(venue, workout.venue)
             && Objects.equals(duration, workout.duration)
@@ -155,7 +155,7 @@ public class Competition {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ownerUserId, communityId, isPrivate, startDate, routeId, sportTypes, userIds, venue, duration, description, createdAt);
+        return Objects.hash(id, ownerUserId, communityId, isPrivate, startDate, routeId, sportType, userIds, venue, duration, description, createdAt);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class Competition {
             .append("isPrivate", isPrivate)
             .append("startDate", startDate)
             .append("routeId", routeId)
-            .append("sportTypes", sportTypes)
+            .append("sportTypes", sportType)
             .append("userIds", userIds)
             .append("description", description)
             .append("venue", venue)

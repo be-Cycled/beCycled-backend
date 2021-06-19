@@ -186,7 +186,7 @@ public class TestUtils {
         workout.setOwnerUserId(1);
         workout.setPrivate(false);
         workout.setRouteId(1);
-        workout.setSportTypes(List.of(SportType.BICYCLE));
+        workout.setSportType(SportType.BICYCLE);
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         workout.setDescription("description");
         workout.setVenue("venue");
@@ -208,7 +208,7 @@ public class TestUtils {
         competition.setOwnerUserId(1);
         competition.setIsPrivate(false);
         competition.setRouteId(1);
-        competition.setSportTypes(List.of(SportType.BICYCLE));
+        competition.setSportType(SportType.BICYCLE);
         competition.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         competition.setDescription("description");
         competition.setVenue("venue");
