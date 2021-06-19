@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,7 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
@@ -76,6 +78,50 @@ public class CommunityController {
             community.getUserIds().stream()
                 .map(id -> daoFactory.getUserDao().getById(id))
                 .collect(Collectors.toList()));
+    }
+
+    @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> join(@PathVariable("id") final int id) {
+        final Community community = daoFactory.getCommunityDao().getById(id);
+        if (community == null) {
+            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
+        }
+
+        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        if (curUser == null) {
+            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+        }
+
+        if (community.getUserIds().contains(curUser.getId())) {
+            return new ResponseEntity<>("Current user already joined", HttpStatus.BAD_REQUEST);
+        }
+        final List<Integer> userIds = community.getUserIds() != null ? community.getUserIds() : new ArrayList<>();
+        userIds.add(curUser.getId());
+
+        community.setUserIds(userIds);
+        return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));
+    }
+
+    @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
+        final Community community = daoFactory.getCommunityDao().getById(id);
+        if (community == null) {
+            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
+        }
+
+        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        if (curUser == null) {
+            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+        }
+
+        if (!community.getUserIds().contains(curUser.getId())) {
+            return new ResponseEntity<>("Current user not in community", HttpStatus.BAD_REQUEST);
+        }
+        final List<Integer> userIds = community.getUserIds() != null ? community.getUserIds() : new ArrayList<>();
+        userIds.remove(curUser.getId());
+
+        community.setUserIds(userIds);
+        return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
