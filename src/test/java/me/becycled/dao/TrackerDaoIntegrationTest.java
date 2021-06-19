@@ -12,7 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * @author binakot
@@ -74,9 +75,30 @@ class TrackerDaoIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void update() {
+        Tracker testTracker = TestUtils.getTestTracker();
+        testTracker = daoFactory.getTrackerDao().create(testTracker);
+
+        final Tracker updateTracker = new Tracker();
+        updateTracker.setId(testTracker.getId());
+        updateTracker.setUserId(2);
+        updateTracker.setImei("222220000000000");
+
+        Tracker dbTracker = daoFactory.getTrackerDao().update(updateTracker);
+
+        assertEquals(updateTracker.getId(), dbTracker.getId());
+        assertEquals(updateTracker.getUserId(), dbTracker.getUserId());
+        assertEquals(updateTracker.getImei(), dbTracker.getImei());
     }
 
     @Test
     void delete() {
+        Tracker testTracker = TestUtils.getTestTracker();
+        testTracker = daoFactory.getTrackerDao().create(testTracker);
+
+        int delete = daoFactory.getTrackerDao().delete(testTracker.getId());
+        assertEquals(1, delete);
+
+        int anotherDelete = daoFactory.getTrackerDao().delete(testTracker.getId());
+        assertEquals(0, anotherDelete);
     }
 }
