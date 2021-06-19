@@ -71,6 +71,18 @@ public class CompetitionDaoIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void getByCommunityNickname() {
+        final Competition testCompetition = TestUtils.getTestCompetition();
+        testCompetition.setCommunityId(1);
+        final Competition competition = daoFactory.getCompetitionDao().create(testCompetition);
+        final String nickname = daoFactory.getCommunityDao().getById(testCompetition.getId()).getNickname();
+        final List<Competition> bdCompetition = daoFactory.getCompetitionDao().getByCommunityNickname(nickname);
+
+        assertEquals(1, bdCompetition.size());
+        assertEquals(competition, bdCompetition.get(0));
+    }
+
+    @Test
     void getAll() {
         final Competition firstCompetition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
         final Competition secondCompetition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
