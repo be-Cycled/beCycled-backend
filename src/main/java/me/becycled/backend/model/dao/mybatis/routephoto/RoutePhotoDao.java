@@ -12,8 +12,6 @@ import java.util.List;
  */
 public class RoutePhotoDao extends BaseMyBatisDao {
 
-    private Integer id;
-
     public RoutePhotoDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);
     }

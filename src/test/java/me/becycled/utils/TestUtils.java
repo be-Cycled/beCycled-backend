@@ -10,6 +10,7 @@ import me.becycled.backend.model.entity.route.SportType;
 import me.becycled.backend.model.entity.telemetry.Telemetry;
 import me.becycled.backend.model.entity.telemetry.Tracker;
 import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.entity.user.UserAccount;
 import me.becycled.backend.model.entity.workout.Workout;
 
 import java.time.Instant;
@@ -217,5 +218,13 @@ public class TestUtils {
         competition.setVenue("venue");
         competition.setDuration(100500);
         return competition;
+    }
+
+    public static UserAccount getTestUserAccount() {
+        final UserAccount userAccount = new UserAccount();
+        userAccount.setUserId(1);
+        userAccount.setPassword("password");
+        userAccount.setLastAuthTime(Instant.parse("2021-06-18T12:00:00Z"));
+        return userAccount;
     }
 }
