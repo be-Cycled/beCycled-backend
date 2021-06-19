@@ -13,6 +13,7 @@ import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.workout.Workout;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -184,9 +185,11 @@ public class TestUtils {
     public static Workout getTestWorkout() {
         final Workout workout = new Workout();
         workout.setOwnerUserId(1);
+        workout.setCommunityId(1);
         workout.setPrivate(false);
         workout.setRouteId(1);
         workout.setSportType(SportType.BICYCLE);
+        workout.setUserIds(Collections.emptyList());
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         workout.setDescription("description");
         workout.setVenue("venue");
@@ -214,6 +217,5 @@ public class TestUtils {
         competition.setVenue("venue");
         competition.setDuration(100500);
         return competition;
-
     }
 }
