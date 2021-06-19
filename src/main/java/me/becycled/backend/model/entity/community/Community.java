@@ -1,11 +1,9 @@
 package me.becycled.backend.model.entity.community;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import me.becycled.backend.model.entity.route.SportType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +16,7 @@ public class Community {
     private Integer ownerUserId;
     private String name;
     private String nickname;
-    private byte[] avatar;
+    private String avatar;
     private CommunityType communityType;
     private List<SportType> sportTypes;
     private List<Integer> userIds;
@@ -58,14 +56,11 @@ public class Community {
         this.nickname = nickname;
     }
 
-    @SuppressWarnings("PMD.MethodReturnsInternalArray")
-    @SuppressFBWarnings("EI_EXPOSE_REP")
-    public byte[] getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public void setAvatar(final byte[] avatar) {
+    public void setAvatar(final String avatar) {
         this.avatar = avatar;
     }
 
@@ -127,14 +122,22 @@ public class Community {
             return false;
         }
         final Community that = (Community) o;
-        return Objects.equals(id, that.id) && Objects.equals(ownerUserId, that.ownerUserId) && Objects.equals(name, that.name) && Objects.equals(nickname, that.nickname) && Arrays.equals(avatar, that.avatar) && communityType == that.communityType && Objects.equals(sportTypes, that.sportTypes) && Objects.equals(userIds, that.userIds) && Objects.equals(url, that.url) && Objects.equals(description, that.description) && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(id, that.id)
+            && Objects.equals(ownerUserId, that.ownerUserId)
+            && Objects.equals(name, that.name)
+            && Objects.equals(nickname, that.nickname)
+            && Objects.equals(avatar, that.avatar)
+            && communityType == that.communityType
+            && Objects.equals(sportTypes, that.sportTypes)
+            && Objects.equals(userIds, that.userIds)
+            && Objects.equals(url, that.url)
+            && Objects.equals(description, that.description)
+            && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, ownerUserId, name, nickname, communityType, sportTypes, userIds, url, description, createdAt);
-        result = 31 * result + Arrays.hashCode(avatar);
-        return result;
+        return Objects.hash(id, ownerUserId, name, nickname, avatar, communityType, sportTypes, userIds, url, description, createdAt);
     }
 
     @Override

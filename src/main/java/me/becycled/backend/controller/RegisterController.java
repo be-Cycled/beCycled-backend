@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Base64;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
@@ -52,7 +50,7 @@ public class RegisterController {
         final User user = new User();
         user.setLogin(entity.getLogin());
         user.setEmail(entity.getEmail());
-        user.setAvatar(Base64.getDecoder().decode(DEFAULT_AVATAR));
+        user.setAvatar(DEFAULT_AVATAR);
         final User createdUser = daoFactory.getUserDao().create(user);
         final UserAccount userAccount = new UserAccount();
         userAccount.setUserId(createdUser.getId());

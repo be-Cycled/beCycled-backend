@@ -37,7 +37,7 @@ public class CommunityDaoIntegrationTest extends BaseIntegrationTest {
         community.setOwnerUserId(1);
         community.setName("name");
         community.setNickname("nickname");
-        community.setAvatar(new byte[]{0x34, 0x12, 0x11});
+        community.setAvatar("avatar");
         community.setCommunityType(CommunityType.ORGANIZATION);
         community.setSportTypes(List.of(SportType.BICYCLE, SportType.RUN));
         community.setUserIds(List.of(1));
@@ -140,7 +140,7 @@ public class CommunityDaoIntegrationTest extends BaseIntegrationTest {
         testCommunity.setOwnerUserId(2);
         testCommunity.setName("1");
         testCommunity.setNickname("2");
-        testCommunity.setAvatar(new byte[]{0x32});
+        testCommunity.setAvatar("avatar");
         testCommunity.setCommunityType(CommunityType.CLUB);
         testCommunity.setSportTypes(List.of(SportType.BICYCLE));
         testCommunity.setUserIds(List.of(1, 2));
@@ -153,7 +153,7 @@ public class CommunityDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(1, bdCommunity.getOwnerUserId().intValue());
         assertEquals("1", bdCommunity.getName());
         assertEquals("2", bdCommunity.getNickname());
-        assertArrayEquals(new byte[]{0x32}, bdCommunity.getAvatar());
+        assertEquals("avatar", bdCommunity.getAvatar());
         assertEquals(CommunityType.CLUB, bdCommunity.getCommunityType());
         assertEquals(List.of(SportType.BICYCLE), bdCommunity.getSportTypes());
         assertEquals(List.of(1, 2), bdCommunity.getUserIds());

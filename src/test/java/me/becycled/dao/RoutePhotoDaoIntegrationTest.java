@@ -31,7 +31,7 @@ public class RoutePhotoDaoIntegrationTest extends BaseIntegrationTest {
 
         final RoutePhoto routePhoto = new RoutePhoto();
         routePhoto.setRouteId(1);
-        routePhoto.setPhoto(new byte[]{0x55, 0x30});
+        routePhoto.setPhoto("avatar");
 
         final RoutePhoto photo = daoFactory.getRoutePhotoDao().create(routePhoto);
         assertNotNull(photo.getId());

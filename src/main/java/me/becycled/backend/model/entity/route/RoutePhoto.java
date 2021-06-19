@@ -1,10 +1,8 @@
 package me.becycled.backend.model.entity.route;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -14,7 +12,7 @@ public class RoutePhoto {
 
     private Integer id;
     private Integer routeId;
-    private byte[] photo;
+    private String photo;
     private Instant createdAt;
 
     public Integer getId() {
@@ -33,14 +31,11 @@ public class RoutePhoto {
         this.routeId = routeId;
     }
 
-    @SuppressWarnings("PMD.MethodReturnsInternalArray")
-    @SuppressFBWarnings("EI_EXPOSE_REP")
-    public byte[] getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public void setPhoto(final byte[] photo) {
+    public void setPhoto(final String photo) {
         this.photo = photo;
     }
 
@@ -63,15 +58,13 @@ public class RoutePhoto {
         final RoutePhoto that = (RoutePhoto) o;
         return Objects.equals(id, that.id)
             && Objects.equals(routeId, that.routeId)
-            && Arrays.equals(photo, that.photo)
+            && Objects.equals(photo, that.photo)
             && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, routeId, createdAt);
-        result = 31 * result + Arrays.hashCode(photo);
-        return result;
+        return Objects.hash(id, routeId, photo, createdAt);
     }
 
     @Override

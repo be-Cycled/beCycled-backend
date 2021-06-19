@@ -139,7 +139,7 @@ public class TestUtils {
     public static RoutePhoto getTestRoutePhoto() {
         final RoutePhoto routePhoto = new RoutePhoto();
         routePhoto.setRouteId(1);
-        routePhoto.setPhoto(new byte[]{0x55, 0x30});
+        routePhoto.setPhoto("photo");
         return routePhoto;
     }
 
@@ -148,7 +148,7 @@ public class TestUtils {
         community.setOwnerUserId(1);
         community.setName("name");
         community.setNickname("nickname");
-        community.setAvatar(new byte[]{0x34, 0x12, 0x11});
+        community.setAvatar("avatar");
         community.setCommunityType(CommunityType.ORGANIZATION);
         community.setSportTypes(List.of(SportType.BICYCLE, SportType.RUN));
         community.setUserIds(List.of(1));

@@ -1,11 +1,9 @@
 package me.becycled.backend.model.entity.user;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -20,7 +18,7 @@ public class User {
     private String email;
     private String phone;
     private String about;
-    private byte[] avatar;
+    private String avatar;
     private Instant createdAt;
 
     public Integer getId() {
@@ -79,14 +77,11 @@ public class User {
         this.about = about;
     }
 
-    @SuppressWarnings("PMD.MethodReturnsInternalArray")
-    @SuppressFBWarnings("EI_EXPOSE_REP")
-    public byte[] getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public void setAvatar(final byte[] avatar) {
+    public void setAvatar(final String avatar) {
         this.avatar = avatar;
     }
 
@@ -115,15 +110,13 @@ public class User {
             && Objects.equals(email, user.email)
             && Objects.equals(phone, user.phone)
             && Objects.equals(about, user.about)
-            && Arrays.equals(avatar, user.avatar)
+            && Objects.equals(avatar, user.avatar)
             && Objects.equals(createdAt, user.createdAt);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, login, firstName, lastName, email, phone, about, createdAt);
-        result = 31 * result + Arrays.hashCode(avatar);
-        return result;
+        return Objects.hash(id, login, firstName, lastName, email, phone, about, avatar, createdAt);
     }
 
     @Override

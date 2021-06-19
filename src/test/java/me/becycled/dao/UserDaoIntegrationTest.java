@@ -33,7 +33,7 @@ public class UserDaoIntegrationTest extends BaseIntegrationTest {
         user.setEmail("eamail@gmail.com");
         user.setPhone("88005583535");
         user.setAbout("about");
-        user.setAvatar(new byte[]{});
+        user.setAvatar("avatar");
 
         final User qwe = daoFactory.getUserDao().create(TestUtils.getTestUser());
         final User createdUser = daoFactory.getUserDao().create(user);
@@ -44,7 +44,7 @@ public class UserDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(user.getEmail(), createdUser.getEmail());
         assertEquals(user.getPhone(), createdUser.getPhone());
         assertEquals(user.getAbout(), createdUser.getAbout());
-        assertArrayEquals(user.getAvatar(), createdUser.getAvatar());
+        assertEquals(user.getAvatar(), createdUser.getAvatar());
         assertNotNull(createdUser.getCreatedAt());
     }
 
@@ -104,7 +104,7 @@ public class UserDaoIntegrationTest extends BaseIntegrationTest {
         user.setEmail("email@gmail.com");
         user.setPhone("88005553535");
         user.setAbout("about");
-        user.setAvatar(new byte[]{0x55});
+        user.setAvatar("avatar");
 
         daoFactory.getUserDao().update(user);
 
@@ -116,7 +116,7 @@ public class UserDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals("email@gmail.com", bdUser.getEmail());
         assertEquals("88005553535", bdUser.getPhone());
         assertEquals("about", bdUser.getAbout());
-        assertArrayEquals(new byte[]{0x55}, bdUser.getAvatar());
+        assertEquals("avatar", bdUser.getAvatar());
         assertEquals(createdUser.getCreatedAt(), bdUser.getCreatedAt());
     }
 }

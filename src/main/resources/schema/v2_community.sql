@@ -8,7 +8,7 @@ CREATE TABLE communities
     owner_user_id  INTEGER        NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
     name           TEXT           NOT NULL,
     nickname       TEXT           NOT NULL UNIQUE,
-    avatar         BYTEA,
+    avatar         TEXT,
     community_type COMMUNITY_TYPE NOT NULL,
     sport_types    SPORT_TYPE[]   NOT NULL,
     user_ids       INTEGER[],

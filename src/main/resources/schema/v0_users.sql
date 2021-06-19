@@ -7,7 +7,7 @@ CREATE TABLE users
     email      TEXT        NOT NULL UNIQUE,
     phone      TEXT        UNIQUE,
     about      TEXT,
-    avatar     BYTEA,
+    avatar     TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

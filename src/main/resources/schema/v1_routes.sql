@@ -21,6 +21,6 @@ CREATE TABLE route_photos
 (
     id         SERIAL PRIMARY KEY,
     route_id   INTEGER     NOT NULL REFERENCES routes (id) ON DELETE CASCADE,
-    photo      BYTEA,
+    photo      TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
