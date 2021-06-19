@@ -26,6 +26,8 @@ CREATE TABLE competitions
     route_id      INTEGER     NOT NULL REFERENCES routes (id),
     sport_types   SPORT_TYPE[] NOT NULL,
     user_ids      INTEGER[],
+    venue         TEXT,
+    duration      INTEGER,
     description   TEXT,
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
