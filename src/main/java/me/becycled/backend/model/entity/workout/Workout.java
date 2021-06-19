@@ -77,7 +77,7 @@ public class Workout {
         return sportType;
     }
 
-    public void setSportType(SportType sportType) {
+    public void setSportType(final SportType sportType) {
         this.sportType = sportType;
     }
 

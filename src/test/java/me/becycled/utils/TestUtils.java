@@ -185,7 +185,6 @@ public class TestUtils {
     public static Workout getTestWorkout() {
         final Workout workout = new Workout();
         workout.setOwnerUserId(1);
-        workout.setCommunityId(1);
         workout.setPrivate(false);
         workout.setRouteId(1);
         workout.setSportType(SportType.BICYCLE);
