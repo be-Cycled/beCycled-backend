@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -34,6 +35,18 @@ public class CompetitionController {
             return new ResponseEntity<>("Not found competition", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(competition);
+    }
+
+    @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+        final User user = daoFactory.getUserDao().getByLogin(login);
+        if (user == null) {
+            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(daoFactory.getWorkoutDao().getAll().stream() // todo getByUserId
+            .filter(workout -> workout.getUserIds().contains(user.getId()))
+            .collect(Collectors.toList()));
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)

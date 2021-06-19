@@ -37,6 +37,15 @@ public class CommunityController {
         return ResponseEntity.ok(community);
     }
 
+    @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+        final User user = daoFactory.getUserDao().getByLogin(login);
+        if (user == null) {
+            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(daoFactory.getCommunityDao().getUserId(user.getId()));
+    }
+
     @RequestMapping(value = "/login/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getByLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
