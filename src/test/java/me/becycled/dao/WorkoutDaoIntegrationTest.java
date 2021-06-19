@@ -14,9 +14,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author I1yi4
@@ -58,5 +60,51 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(workout.getCommunityId(), bdWorkout.getCommunityId());
         assertEquals(workout.getDescription(), bdWorkout.getDescription());
         assertEquals(workout.getCreatedAt(), bdWorkout.getCreatedAt());
+    }
+
+    @Test
+    void getById() {
+        final User testUser = TestUtils.getTestUser();
+        daoFactory.getUserDao().create(testUser);
+
+        final Route testRoute = TestUtils.getTestRoute();
+        daoFactory.getRouteDao().create(testRoute);
+
+        final Workout workout = daoFactory.getWorkoutDao().create(TestUtils.getTestWorkout());
+        final Workout createdWorkout = daoFactory.getWorkoutDao().getById(workout.getId());
+
+        assertEquals(createdWorkout, workout);
+    }
+
+    @Test
+    void update() {
+        final User testUser = TestUtils.getTestUser();
+        daoFactory.getUserDao().create(testUser);
+        final Route testRoute = TestUtils.getTestRoute();
+        daoFactory.getRouteDao().create(testRoute);
+
+        final Workout community = daoFactory.getWorkoutDao().create(TestUtils.getTestWorkout());
+
+        final Workout testWorkout = new Workout();
+        testWorkout.setId(community.getId());
+        testWorkout.setOwnerUserId(1);
+        testWorkout.setPrivateWorkout(false);
+        testWorkout.setRouteId(1);
+        testWorkout.setSportTypes(List.of(SportType.BICYCLE));
+        testWorkout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
+        testWorkout.setDescription("description");
+        testWorkout.setCreatedAt(community.getCreatedAt());
+
+        final Workout bdWorkout = daoFactory.getWorkoutDao().update(testWorkout);
+        assertEquals(1, bdWorkout.getId().intValue());
+        assertEquals(1, bdWorkout.getOwnerUserId().intValue());
+        assertEquals(false, bdWorkout.getPrivateWorkout());
+        assertEquals(1, bdWorkout.getRouteId().intValue());
+        assertEquals(List.of(SportType.BICYCLE), bdWorkout.getSportTypes());
+        assertEquals(List.of(SportType.BICYCLE), bdWorkout.getSportTypes());
+        assertEquals(Collections.emptyList(), bdWorkout.getUserIds());
+        assertEquals(Instant.parse("2021-06-19T00:00:00Z"), bdWorkout.getStartDate());
+        assertEquals("description", bdWorkout.getDescription());
+        assertEquals(community.getCreatedAt(), bdWorkout.getCreatedAt());
     }
 }
