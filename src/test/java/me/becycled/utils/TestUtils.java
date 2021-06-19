@@ -185,10 +185,9 @@ public class TestUtils {
     public static Workout getTestWorkout() {
         final Workout workout = new Workout();
         workout.setOwnerUserId(1);
-        workout.setCommunityId(1);
         workout.setPrivate(false);
         workout.setRouteId(1);
-        workout.setSportTypes(List.of(SportType.BICYCLE));
+        workout.setSportType(SportType.BICYCLE);
         workout.setUserIds(Collections.emptyList());
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         workout.setDescription("description");
@@ -211,7 +210,7 @@ public class TestUtils {
         competition.setOwnerUserId(1);
         competition.setIsPrivate(false);
         competition.setRouteId(1);
-        competition.setSportTypes(List.of(SportType.BICYCLE));
+        competition.setSportType(SportType.BICYCLE);
         competition.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         competition.setUserIds(Collections.emptyList());
         competition.setDescription("description");

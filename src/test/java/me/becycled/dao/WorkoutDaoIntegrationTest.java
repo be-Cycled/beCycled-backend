@@ -16,7 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,7 +53,7 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(testWorkout.getPrivate(), workout.getPrivate());
         assertEquals(testWorkout.getStartDate(), workout.getStartDate());
         assertEquals(testWorkout.getRouteId(), workout.getRouteId());
-        assertEquals(testWorkout.getSportTypes(), workout.getSportTypes());
+        assertEquals(testWorkout.getSportType(), workout.getSportType());
         assertEquals(testWorkout.getUserIds(), workout.getUserIds());
         assertEquals(testWorkout.getVenue(), workout.getVenue());
         assertEquals(testWorkout.getDuration(), workout.getDuration());
@@ -64,12 +63,14 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getByCommunityNickname() {
-        final Workout workout = daoFactory.getWorkoutDao().create(TestUtils.getTestWorkout());
-        final String nickname = daoFactory.getCommunityDao().getById(workout.getId()).getNickname();
-        final List<Workout> dbWorkouts = daoFactory.getWorkoutDao().getByCommunityNickname(nickname);
+        final Workout testWorkout = TestUtils.getTestWorkout();
+        testWorkout.setCommunityId(1);
+        final Workout workout = daoFactory.getWorkoutDao().create(testWorkout);
+        final String nickname = daoFactory.getCommunityDao().getById(testWorkout.getId()).getNickname();
+        final List<Workout> bdWorkout = daoFactory.getWorkoutDao().getByCommunityNickname(nickname);
 
-        assertEquals(1, dbWorkouts.size());
-        assertEquals(workout, dbWorkouts.get(0));
+        assertEquals(1, bdWorkout.size());
+        assertEquals(workout, bdWorkout.get(0));
     }
 
     @Test
@@ -111,7 +112,7 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
         testWorkout.setPrivate(true);
         testWorkout.setStartDate(Instant.now());
         testWorkout.setRouteId(route.getId());
-        testWorkout.setSportTypes(Arrays.asList(SportType.values()));
+        testWorkout.setSportType(SportType.BICYCLE);
         testWorkout.setUserIds(List.of(1, 2));
         testWorkout.setVenue("BQ 128");
         testWorkout.setDuration(123);
@@ -126,7 +127,7 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(testWorkout.getCommunityId(), dbWorkout.getCommunityId());
         assertEquals(testWorkout.getPrivate(), dbWorkout.getPrivate());
         assertEquals(workout.getRouteId(), dbWorkout.getRouteId());
-        assertEquals(testWorkout.getSportTypes(), dbWorkout.getSportTypes());
+        assertEquals(testWorkout.getSportType(), dbWorkout.getSportType());
         assertEquals(testWorkout.getUserIds(), dbWorkout.getUserIds());
         assertEquals(testWorkout.getVenue(), dbWorkout.getVenue());
         assertEquals(testWorkout.getDuration(), dbWorkout.getDuration());

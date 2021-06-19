@@ -11,14 +11,14 @@ import java.util.List;
 public interface WorkoutMapper {
 
     @Insert(
-        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_types, user_ids, venue, duration, description) "
+        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) "
             + "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
             "#{isPrivate}," +
             "#{startDate}," +
             "#{routeId}," +
-            "#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, " +
+            "#{sportType}::SPORT_TYPE, " +
             "#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}," +
             "#{venue}, " +
             "#{duration}, " +
@@ -34,7 +34,7 @@ public interface WorkoutMapper {
         @Result(column = "private", property = "isPrivate"),
         @Result(column = "start_date", property = "startDate"),
         @Result(column = "route_id", property = "routeId"),
-        @Result(column = "sport_types", property = "sportTypes", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler.class),
+        @Result(column = "sport_type", property = "sportType"),
         @Result(column = "user_ids", property = "userIds", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler.class),
         @Result(column = "venue", property = "venue"),
         @Result(column = "duration", property = "duration"),
@@ -58,7 +58,7 @@ public interface WorkoutMapper {
             + "community_id=#{communityId}, "
             + "private=#{isPrivate}, "
             + "start_date=#{startDate}, "
-            + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
+            + "sport_type=#{sportType}::SPORT_TYPE, "
             + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
             + "description=#{description}, "
             + "venue=#{venue}, "

@@ -18,7 +18,7 @@ public final class Competition {
     private Boolean isPrivate;
     private Instant startDate;
     private Integer routeId;
-    private List<SportType> sportTypes;
+    private SportType sportType;
     private List<Integer> userIds;
     private String venue;
     private Integer duration;
@@ -73,12 +73,12 @@ public final class Competition {
         this.routeId = routeId;
     }
 
-    public List<SportType> getSportTypes() {
-        return sportTypes;
+    public SportType getSportType() {
+        return sportType;
     }
 
-    public void setSportTypes(final List<SportType> sportTypes) {
-        this.sportTypes = sportTypes;
+    public void setSportType(final SportType sportType) {
+        this.sportType = sportType;
     }
 
     public List<Integer> getUserIds() {
@@ -145,7 +145,7 @@ public final class Competition {
             && Objects.equals(isPrivate, competition.isPrivate)
             && Objects.equals(startDate, competition.startDate)
             && Objects.equals(routeId, competition.routeId)
-            && Objects.equals(sportTypes, competition.sportTypes)
+            && Objects.equals(sportType, competition.sportType)
             && Objects.equals(userIds, competition.userIds)
             && Objects.equals(venue, competition.venue)
             && Objects.equals(duration, competition.duration)
@@ -155,7 +155,7 @@ public final class Competition {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ownerUserId, communityId, isPrivate, startDate, routeId, sportTypes, userIds, venue, duration, description, createdAt);
+        return Objects.hash(id, ownerUserId, communityId, isPrivate, startDate, routeId, sportType, userIds, venue, duration, description, createdAt);
     }
 
     @Override
@@ -167,7 +167,7 @@ public final class Competition {
             .append("isPrivate", isPrivate)
             .append("startDate", startDate)
             .append("routeId", routeId)
-            .append("sportTypes", sportTypes)
+            .append("sportTypes", sportType)
             .append("userIds", userIds)
             .append("description", description)
             .append("venue", venue)
