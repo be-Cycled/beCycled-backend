@@ -48,6 +48,10 @@ public interface CommunityMapper {
     @ResultMap("communityResult")
     List<Community> getUserId(Integer userId);
 
+    @Select("SELECT * FROM communities WHERE nickname=#{nickname}")
+    @ResultMap("communityResult")
+    Community getByNickname(String nickname);
+
     @Select("SELECT * FROM communities")
     @ResultMap("communityResult")
     List<Community> getAll();

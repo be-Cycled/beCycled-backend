@@ -2,6 +2,7 @@ package me.becycled.utils;
 
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.community.CommunityType;
+import me.becycled.backend.model.entity.competition.Competition;
 import me.becycled.backend.model.entity.post.Post;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.route.RoutePhoto;
@@ -183,7 +184,7 @@ public class TestUtils {
     public static Workout getTestWorkout() {
         final Workout workout = new Workout();
         workout.setOwnerUserId(1);
-        workout.setPrivateWorkout(false);
+        workout.setIsPrivate(false);
         workout.setRouteId(1);
         workout.setSportTypes(List.of(SportType.BICYCLE));
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
@@ -198,5 +199,17 @@ public class TestUtils {
         post.setContent("content");
         post.setPoster("poster");
         return post;
+    }
+
+    public static Competition getTestCompetition() {
+        final Competition competition = new Competition();
+        competition.setOwnerUserId(1);
+        competition.setIsPrivate(false);
+        competition.setRouteId(1);
+        competition.setSportTypes(List.of(SportType.BICYCLE));
+        competition.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
+        competition.setDescription("description");
+        return competition;
+
     }
 }

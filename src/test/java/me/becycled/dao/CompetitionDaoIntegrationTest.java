@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
+public class CompetitionDaoIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void create() {
@@ -40,7 +40,7 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
 
         final Workout workout = new Workout();
         workout.setOwnerUserId(1);
-        workout.setPrivateWorkout(false);
+        workout.setIsPrivate(false);
         workout.setRouteId(1);
         workout.setSportTypes(List.of(SportType.BICYCLE));
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
@@ -88,7 +88,7 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
         final Workout testWorkout = new Workout();
         testWorkout.setId(community.getId());
         testWorkout.setOwnerUserId(1);
-        testWorkout.setPrivateWorkout(false);
+        testWorkout.setIsPrivate(false);
         testWorkout.setRouteId(1);
         testWorkout.setSportTypes(List.of(SportType.BICYCLE));
         testWorkout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
@@ -98,7 +98,7 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
         final Workout bdWorkout = daoFactory.getWorkoutDao().update(testWorkout);
         assertEquals(1, bdWorkout.getId().intValue());
         assertEquals(1, bdWorkout.getOwnerUserId().intValue());
-        assertEquals(false, bdWorkout.getPrivateWorkout());
+        assertEquals(false, bdWorkout.getIsPrivate());
         assertEquals(1, bdWorkout.getRouteId().intValue());
         assertEquals(List.of(SportType.BICYCLE), bdWorkout.getSportTypes());
         assertEquals(List.of(SportType.BICYCLE), bdWorkout.getSportTypes());

@@ -46,6 +46,11 @@ public class CommunityController {
         return ResponseEntity.ok(daoFactory.getCommunityDao().getUserId(user.getId()));
     }
 
+    @RequestMapping(value = "/nickname/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getByNickname(@PathVariable("nickname") final String nickname) {
+        return ResponseEntity.ok(daoFactory.getCommunityDao().getByNickname(nickname));
+    }
+
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Community>> getAll() {
         return ResponseEntity.ok(daoFactory.getCommunityDao().getAll());

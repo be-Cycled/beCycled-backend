@@ -1,6 +1,6 @@
-package me.becycled.backend.model.dao.mybatis.workout;
+package me.becycled.backend.model.dao.mybatis.competition;
 
-import me.becycled.backend.model.entity.workout.Workout;
+import me.becycled.backend.model.entity.competition.Competition;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -8,10 +8,10 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public interface WorkoutMapper {
+public interface CompetitionMapper {
 
     @Insert(
-        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_types, user_ids, description) "
+        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_types, user_ids, description) "
             + "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
@@ -22,10 +22,10 @@ public interface WorkoutMapper {
             "#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}," +
             "#{description})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    int create(Workout user);
+    int create(Competition user);
 
 
-    @Results(id = "workoutResult", value = {
+    @Results(id = "competitionResult", value = {
         @Result(id = true, column = "id", property = "id"),
         @Result(column = "owner_user_id", property = "ownerUserId"),
         @Result(column = "community_id", property = "communityId"),
@@ -37,15 +37,15 @@ public interface WorkoutMapper {
         @Result(column = "description", property = "description"),
         @Result(column = "created_at", property = "createdAt")
     })
-    @Select("SELECT * FROM workouts WHERE id=#{id}")
-    Workout getById(Integer id);
+    @Select("SELECT * FROM competitions WHERE id=#{id}")
+    Competition getById(Integer id);
 
-    @Select("SELECT * FROM workouts")
-    @ResultMap("workoutResult")
-    List<Workout> getAll();
+    @Select("SELECT * FROM competitions")
+    @ResultMap("competitionResult")
+    List<Competition> getAll();
 
     @Update(
-        "UPDATE workouts SET "
+        "UPDATE competitions SET "
             + "owner_user_id=#{ownerUserId}, "
             + "community_id=#{communityId}, "
             + "private=#{isPrivate}, "
@@ -55,5 +55,5 @@ public interface WorkoutMapper {
             + "description=#{description}, "
             + "created_at=#{createdAt} "
             + "WHERE id=#{id}")
-    int update(Workout workout);
+    int update(Competition workout);
 }

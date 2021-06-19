@@ -1,4 +1,4 @@
-package me.becycled.backend.model.entity.workout;
+package me.becycled.backend.model.entity.competition;
 
 import me.becycled.backend.model.entity.route.SportType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-public class Workout {
+public class Competition {
 
     private Integer id;
     private Integer ownerUserId;
@@ -112,7 +112,7 @@ public class Workout {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Workout workout = (Workout) o;
+        final Competition workout = (Competition) o;
         return Objects.equals(id, workout.id) && Objects.equals(ownerUserId, workout.ownerUserId) && Objects.equals(communityId, workout.communityId) && Objects.equals(isPrivate, workout.isPrivate) && Objects.equals(startDate, workout.startDate) && Objects.equals(routeId, workout.routeId) && Objects.equals(sportTypes, workout.sportTypes) && Objects.equals(userIds, workout.userIds) && Objects.equals(description, workout.description) && Objects.equals(createdAt, workout.createdAt);
     }
 
