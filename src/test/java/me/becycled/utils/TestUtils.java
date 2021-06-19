@@ -2,6 +2,7 @@ package me.becycled.utils;
 
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.community.CommunityType;
+import me.becycled.backend.model.entity.post.Post;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.route.RoutePhoto;
 import me.becycled.backend.model.entity.route.SportType;
@@ -188,5 +189,14 @@ public class TestUtils {
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         workout.setDescription("description");
         return workout;
+    }
+
+    public static Post getTestPost() {
+        Post post = new Post();
+        post.setUserId(1);
+        post.setTitle("title");
+        post.setContent("content");
+        post.setPoster("poster");
+        return post;
     }
 }

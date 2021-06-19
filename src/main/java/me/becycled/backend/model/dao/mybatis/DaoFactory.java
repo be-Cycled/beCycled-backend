@@ -1,6 +1,7 @@
 package me.becycled.backend.model.dao.mybatis;
 
 import me.becycled.backend.model.dao.mybatis.community.CommunityDao;
+import me.becycled.backend.model.dao.mybatis.post.PostDao;
 import me.becycled.backend.model.dao.mybatis.route.RouteDao;
 import me.becycled.backend.model.dao.mybatis.routephoto.RoutePhotoDao;
 import me.becycled.backend.model.dao.mybatis.telemetry.TelemetryDao;
@@ -24,6 +25,7 @@ public class DaoFactory {
     private final TelemetryDao telemetryDao;
     private final TrackerDao trackerDao;
     private final WorkoutDao workoutDao;
+    private final PostDao postDao;
 
     public DaoFactory(final SqlSessionFactory sqlSessionFactory) {
         userDao = new UserDao(sqlSessionFactory);
@@ -34,6 +36,7 @@ public class DaoFactory {
         telemetryDao = new TelemetryDao(sqlSessionFactory);
         trackerDao = new TrackerDao(sqlSessionFactory);
         workoutDao = new WorkoutDao(sqlSessionFactory);
+        postDao = new PostDao(sqlSessionFactory);
     }
 
     public UserDao getUserDao() {
@@ -66,5 +69,9 @@ public class DaoFactory {
 
     public WorkoutDao getWorkoutDao() {
         return workoutDao;
+    }
+
+    public PostDao getPostDao() {
+        return postDao;
     }
 }

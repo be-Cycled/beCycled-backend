@@ -27,6 +27,7 @@
         <mapper resource="mybatis/mappers/TelemetryMapper.xml"/>
         <mapper resource="mybatis/mappers/TrackerMapper.xml"/>
         <mapper resource="mybatis/mappers/WorkoutMapper.xml"/>
+        <mapper resource="mybatis/mappers/PostMapper.xml"/>
     </mappers>
 
 </configuration>
