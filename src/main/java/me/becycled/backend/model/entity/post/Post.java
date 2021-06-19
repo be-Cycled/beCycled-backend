@@ -1,6 +1,7 @@
 package me.becycled.backend.model.entity.post;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -98,7 +99,7 @@ public final class Post {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("id", id)
             .append("userId", userId)
             .append("title", title)
