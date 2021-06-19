@@ -48,7 +48,11 @@ public class CommunityController {
 
     @RequestMapping(value = "/nickname/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getByNickname(@PathVariable("nickname") final String nickname) {
-        return ResponseEntity.ok(daoFactory.getCommunityDao().getByNickname(nickname));
+        final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
+        if (community == null) {
+            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(community);
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
