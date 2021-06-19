@@ -88,16 +88,12 @@ public final class Post {
             && Objects.equals(title, post.title)
             && Objects.equals(content, post.content)
             && Objects.equals(poster, post.poster)
-            && Objects.equals(createdAt, post.createdAt)
-//            && Objects.equals(updatedAt, post.updatedAt)
-            ;
+            && Objects.equals(createdAt, post.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, title, content, poster, createdAt
-//            , updatedAt
-        );
+        return Objects.hash(id, userId, title, content, poster, createdAt);
     }
 
     @Override
