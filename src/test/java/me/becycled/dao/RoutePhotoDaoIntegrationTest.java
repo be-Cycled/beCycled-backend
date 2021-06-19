@@ -12,7 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * @author I1yi4
@@ -55,6 +56,17 @@ public class RoutePhotoDaoIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void getByRouteId() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        daoFactory.getRouteDao().create(TestUtils.getTestRoute());
+
+        final RoutePhoto routePhoto = daoFactory.getRoutePhotoDao().create(TestUtils.getTestRoutePhoto());
+        List<RoutePhoto> routePhotos = daoFactory.getRoutePhotoDao().getByRouteId(routePhoto.getRouteId());
+
+        assertEquals(routePhoto, routePhotos.get(0));
+    }
+
+    @Test
     void getAll() {
         daoFactory.getUserDao().create(TestUtils.getTestUser());
         daoFactory.getRouteDao().create(TestUtils.getTestRoute());
@@ -66,5 +78,19 @@ public class RoutePhotoDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(2, all.size());
         assertTrue(all.stream().anyMatch(routePhotoFirst::equals));
         assertTrue(all.stream().anyMatch(routePhotoSecond::equals));
+    }
+
+    @Test
+    void delete() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        daoFactory.getRouteDao().create(TestUtils.getTestRoute());
+
+        final RoutePhoto routePhoto = daoFactory.getRoutePhotoDao().create(TestUtils.getTestRoutePhoto());
+
+        final int delete = daoFactory.getRoutePhotoDao().delete(routePhoto.getId());
+        assertEquals(1, delete);
+
+        final int anotherDelete = daoFactory.getRoutePhotoDao().delete(routePhoto.getId());
+        assertEquals(0, anotherDelete);
     }
 }

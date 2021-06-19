@@ -35,6 +35,6 @@ public interface RoutePhotoMapper {
     @ResultMap("routePhotoResult")
     List<RoutePhoto> getAll();
 
-    @Select("DELETE FROM route_photos WHERE id=#{id}")
+    @Delete("DELETE FROM route_photos WHERE id=#{id}")
     int delete(Integer id);
 }
