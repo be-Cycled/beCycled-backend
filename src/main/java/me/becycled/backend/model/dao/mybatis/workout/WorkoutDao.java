@@ -33,6 +33,14 @@ public class WorkoutDao extends BaseMyBatisDao {
         }
     }
 
+    public List<Workout> getByCommunityNickname(final String nickname) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
+
+            return mapper.getByCommunityNickname(nickname);
+        }
+    }
+
     public List<Workout> getAll() {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);

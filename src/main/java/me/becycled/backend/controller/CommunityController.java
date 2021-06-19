@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -53,6 +54,19 @@ public class CommunityController {
             return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(community);
+    }
+
+    @RequestMapping(value = "/nickname/{nickname}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUsersByNickname(@PathVariable("nickname") final String nickname) {
+        final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
+        if (community == null) {
+            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(
+            community.getUserIds().stream()
+                .map(id -> daoFactory.getUserDao().getById(id))
+                .collect(Collectors.toList()));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)

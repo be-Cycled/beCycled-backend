@@ -40,6 +40,10 @@ public interface CompetitionMapper {
     @Select("SELECT * FROM competitions WHERE id=#{id}")
     Competition getById(Integer id);
 
+    @Select("SELECT * FROM competitions WHERE community_id IN (SELECT id FROM communities WHERE nickname=#{nickname})")
+    @ResultMap("competitionResult")
+    List<Competition> getByCommunityNickname(String nickname);
+
     @Select("SELECT * FROM competitions")
     @ResultMap("competitionResult")
     List<Competition> getAll();

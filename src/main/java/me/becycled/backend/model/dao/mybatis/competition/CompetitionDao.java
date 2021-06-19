@@ -33,6 +33,14 @@ public class CompetitionDao extends BaseMyBatisDao {
         }
     }
 
+    public List<Competition> getByCommunityNickname(final String nickname) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
+
+            return mapper.getByCommunityNickname(nickname);
+        }
+    }
+
     public List<Competition> getAll() {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);

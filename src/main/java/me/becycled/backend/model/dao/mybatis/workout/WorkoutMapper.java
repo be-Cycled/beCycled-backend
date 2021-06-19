@@ -40,6 +40,10 @@ public interface WorkoutMapper {
     @Select("SELECT * FROM workouts WHERE id=#{id}")
     Workout getById(Integer id);
 
+    @Select("SELECT * FROM workouts WHERE community_id IN (SELECT id FROM communities WHERE nickname=#{nickname})")
+    @ResultMap("workoutResult")
+    List<Workout> getByCommunityNickname(String nickname);
+
     @Select("SELECT * FROM workouts")
     @ResultMap("workoutResult")
     List<Workout> getAll();

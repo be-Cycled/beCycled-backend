@@ -36,6 +36,11 @@ public class CompetitionController {
         return ResponseEntity.ok(competition);
     }
 
+    @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+        return ResponseEntity.ok(daoFactory.getCompetitionDao().getByCommunityNickname(nickname));
+    }
+
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Competition>> getAll() {
         return ResponseEntity.ok(daoFactory.getCompetitionDao().getAll());

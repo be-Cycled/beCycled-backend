@@ -36,6 +36,11 @@ public class WorkoutController {
         return ResponseEntity.ok(workout);
     }
 
+    @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+        return ResponseEntity.ok(daoFactory.getWorkoutDao().getByCommunityNickname(nickname));
+    }
+
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Workout>> getAll() {
         return ResponseEntity.ok(daoFactory.getWorkoutDao().getAll());
