@@ -2,6 +2,7 @@ package me.becycled.backend.controller;
 
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.telemetry.Tracker;
+import me.becycled.backend.model.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,23 @@ public class TrackerController {
         if (tracker == null) {
             return new ResponseEntity<>("Tracker is not found", HttpStatus.NOT_FOUND);
         }
+        return ResponseEntity.ok(tracker);
+    }
+
+    @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+        final User user = daoFactory.getUserDao().getByLogin(login);
+        if (user == null) {
+            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
+        }
+
+        final Tracker tracker = daoFactory.getTrackerDao().getAll().stream()
+            .filter(t -> t.getUserId().equals(user.getId())).findFirst()
+            .orElse(null);
+        if (tracker == null) {
+            return new ResponseEntity<>("Tracker is not found", HttpStatus.NOT_FOUND);
+        }
+
         return ResponseEntity.ok(tracker);
     }
 

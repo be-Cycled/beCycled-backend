@@ -41,11 +41,11 @@ public class UserDao extends BaseMyBatisDao {
         }
     }
 
-    public User getByEmail(final String login) {
+    public User getByEmail(final String email) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final UserMapper mapper = session.getMapper(UserMapper.class);
 
-            return mapper.getByEmail(login);
+            return mapper.getByEmail(email);
         }
     }
 
