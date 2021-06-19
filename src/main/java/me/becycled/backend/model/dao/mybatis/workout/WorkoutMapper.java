@@ -3,6 +3,8 @@ package me.becycled.backend.model.dao.mybatis.workout;
 import me.becycled.backend.model.entity.workout.Workout;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 /**
  * @author I1yi4
  */
@@ -38,4 +40,20 @@ public interface WorkoutMapper {
     @Select("SELECT * FROM workouts WHERE id=#{id}")
     Workout getById(Integer id);
 
+    @Select("SELECT * FROM workouts")
+    @ResultMap("workoutResult")
+    List<Workout> getAll();
+
+    @Update(
+        "UPDATE workouts SET "
+            + "owner_user_id=#{ownerUserId}, "
+            + "community_id=#{communityId}, "
+            + "private=#{privateWorkout}, "
+            + "start_date=#{startDate}, "
+            + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
+            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
+            + "description=#{description}, "
+            + "created_at=#{createdAt} "
+            + "WHERE id=#{id}")
+    int update(Workout workout);
 }
