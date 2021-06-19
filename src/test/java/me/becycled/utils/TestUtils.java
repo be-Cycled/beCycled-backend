@@ -213,6 +213,7 @@ public class TestUtils {
         competition.setRouteId(1);
         competition.setSportTypes(List.of(SportType.BICYCLE));
         competition.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
+        competition.setUserIds(Collections.emptyList());
         competition.setDescription("description");
         competition.setVenue("venue");
         competition.setDuration(100500);

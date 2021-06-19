@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author I1yi4
@@ -106,6 +106,16 @@ public class CommunityDaoIntegrationTest extends BaseIntegrationTest {
         final List<Community> byOwedUserId = daoFactory.getCommunityDao().getUserId(3);
         assertEquals(2, byOwedUserId.size());
         assertEquals(2,byOwedUserId.stream().filter(community -> community.getUserIds().contains(3)).count());
+    }
+
+    @Test
+    void getByNickname() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+
+        final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
+        final Community createdCommunity = daoFactory.getCommunityDao().getByNickname(community.getNickname());
+
+        assertEquals(createdCommunity, community);
     }
 
     @Test

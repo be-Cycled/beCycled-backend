@@ -65,10 +65,11 @@ public class WorkoutDaoIntegrationTest extends BaseIntegrationTest {
     @Test
     void getByCommunityNickname() {
         final Workout workout = daoFactory.getWorkoutDao().create(TestUtils.getTestWorkout());
-        final String nickname = daoFactory.getCommunityDao().getById(1).getNickname();
-        final List<Workout> byCommunityNickname = daoFactory.getWorkoutDao().getByCommunityNickname(nickname);
+        final String nickname = daoFactory.getCommunityDao().getById(workout.getId()).getNickname();
+        final List<Workout> dbWorkouts = daoFactory.getWorkoutDao().getByCommunityNickname(nickname);
 
-        assertEquals(byCommunityNickname.get(0), workout);
+        assertEquals(1, dbWorkouts.size());
+        assertEquals(workout, dbWorkouts.get(0));
     }
 
     @Test

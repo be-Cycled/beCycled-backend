@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-public class Competition {
+public final class Competition {
 
     private Integer id;
     private Integer ownerUserId;
@@ -138,19 +138,19 @@ public class Competition {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Competition workout = (Competition) o;
-        return Objects.equals(id, workout.id)
-            && Objects.equals(ownerUserId, workout.ownerUserId)
-            && Objects.equals(communityId, workout.communityId)
-            && Objects.equals(isPrivate, workout.isPrivate)
-            && Objects.equals(startDate, workout.startDate)
-            && Objects.equals(routeId, workout.routeId)
-            && Objects.equals(sportTypes, workout.sportTypes)
-            && Objects.equals(userIds, workout.userIds)
-            && Objects.equals(venue, workout.venue)
-            && Objects.equals(duration, workout.duration)
-            && Objects.equals(description, workout.description)
-            && Objects.equals(createdAt, workout.createdAt);
+        final Competition competition = (Competition) o;
+        return Objects.equals(id, competition.id)
+            && Objects.equals(ownerUserId, competition.ownerUserId)
+            && Objects.equals(communityId, competition.communityId)
+            && Objects.equals(isPrivate, competition.isPrivate)
+            && Objects.equals(startDate, competition.startDate)
+            && Objects.equals(routeId, competition.routeId)
+            && Objects.equals(sportTypes, competition.sportTypes)
+            && Objects.equals(userIds, competition.userIds)
+            && Objects.equals(venue, competition.venue)
+            && Objects.equals(duration, competition.duration)
+            && Objects.equals(description, competition.description)
+            && Objects.equals(createdAt, competition.createdAt);
     }
 
     @Override

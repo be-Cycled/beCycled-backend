@@ -11,7 +11,7 @@ import java.util.List;
 public interface CompetitionMapper {
 
     @Insert(
-        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_types, user_ids, venue, duration description) "
+        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_types, user_ids, venue, duration, description) "
             + "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
