@@ -11,7 +11,7 @@ import java.util.List;
 public interface WorkoutMapper {
 
     @Insert(
-        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_types, user_ids, duration, description) "
+        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_types, user_ids, venue, duration, description) "
             + "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
@@ -20,6 +20,7 @@ public interface WorkoutMapper {
             "#{routeId}," +
             "#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, " +
             "#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}," +
+            "#{venue}, " +
             "#{duration}, " +
             "#{description})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -35,6 +36,7 @@ public interface WorkoutMapper {
         @Result(column = "route_id", property = "routeId"),
         @Result(column = "sport_types", property = "sportTypes", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler.class),
         @Result(column = "user_ids", property = "userIds", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler.class),
+        @Result(column = "venue", property = "venue"),
         @Result(column = "duration", property = "duration"),
         @Result(column = "description", property = "description"),
         @Result(column = "created_at", property = "createdAt")
@@ -59,6 +61,7 @@ public interface WorkoutMapper {
             + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
             + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
             + "description=#{description}, "
+            + "venue=#{venue}, "
             + "duration=#{duration}, "
             + "created_at=#{createdAt} "
             + "WHERE id=#{id}")

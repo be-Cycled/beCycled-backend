@@ -20,6 +20,7 @@ public class Competition {
     private Integer routeId;
     private List<SportType> sportTypes;
     private List<Integer> userIds;
+    private String venue;
     private Integer duration;
     private String description;
     private Instant createdAt;
@@ -96,6 +97,14 @@ public class Competition {
         isPrivate = aPrivate;
     }
 
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(final String venue) {
+        this.venue = venue;
+    }
+
     public Integer getDuration() {
         return duration;
     }
@@ -130,12 +139,23 @@ public class Competition {
             return false;
         }
         final Competition workout = (Competition) o;
-        return Objects.equals(id, workout.id) && Objects.equals(ownerUserId, workout.ownerUserId) && Objects.equals(communityId, workout.communityId) && Objects.equals(isPrivate, workout.isPrivate) && Objects.equals(startDate, workout.startDate) && Objects.equals(routeId, workout.routeId) && Objects.equals(sportTypes, workout.sportTypes) && Objects.equals(userIds, workout.userIds) && Objects.equals(duration, workout.duration) && Objects.equals(description, workout.description) && Objects.equals(createdAt, workout.createdAt);
+        return Objects.equals(id, workout.id)
+            && Objects.equals(ownerUserId, workout.ownerUserId)
+            && Objects.equals(communityId, workout.communityId)
+            && Objects.equals(isPrivate, workout.isPrivate)
+            && Objects.equals(startDate, workout.startDate)
+            && Objects.equals(routeId, workout.routeId)
+            && Objects.equals(sportTypes, workout.sportTypes)
+            && Objects.equals(userIds, workout.userIds)
+            && Objects.equals(venue, workout.venue)
+            && Objects.equals(duration, workout.duration)
+            && Objects.equals(description, workout.description)
+            && Objects.equals(createdAt, workout.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ownerUserId, communityId, isPrivate, startDate, routeId, sportTypes, userIds, duration, description, createdAt);
+        return Objects.hash(id, ownerUserId, communityId, isPrivate, startDate, routeId, sportTypes, userIds, venue, duration, description, createdAt);
     }
 
     @Override
@@ -150,6 +170,7 @@ public class Competition {
             .append("sportTypes", sportTypes)
             .append("userIds", userIds)
             .append("description", description)
+            .append("venue", venue)
             .append("duration", duration)
             .append("createdAt", createdAt)
             .toString();

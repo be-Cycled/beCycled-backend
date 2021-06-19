@@ -189,6 +189,7 @@ public class TestUtils {
         workout.setSportTypes(List.of(SportType.BICYCLE));
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         workout.setDescription("description");
+        workout.setVenue("venue");
         workout.setDuration(100500);
         return workout;
     }
@@ -210,6 +211,8 @@ public class TestUtils {
         competition.setSportTypes(List.of(SportType.BICYCLE));
         competition.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         competition.setDescription("description");
+        competition.setVenue("venue");
+        competition.setDuration(100500);
         return competition;
 
     }

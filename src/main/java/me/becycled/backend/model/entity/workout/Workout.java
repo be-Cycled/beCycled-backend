@@ -20,6 +20,7 @@ public class Workout {
     private Integer routeId;
     private List<SportType> sportTypes;
     private List<Integer> userIds;
+    private String venue;
     private Integer duration;
     private String description;
     private Instant createdAt;
@@ -92,6 +93,14 @@ public class Workout {
         return duration;
     }
 
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(final String venue) {
+        this.venue = venue;
+    }
+
     public void setDuration(final Integer duration) {
         this.duration = duration;
     }
@@ -122,7 +131,18 @@ public class Workout {
             return false;
         }
         final Workout workout = (Workout) o;
-        return Objects.equals(id, workout.id) && Objects.equals(ownerUserId, workout.ownerUserId) && Objects.equals(communityId, workout.communityId) && Objects.equals(isPrivate, workout.isPrivate) && Objects.equals(startDate, workout.startDate) && Objects.equals(routeId, workout.routeId) && Objects.equals(sportTypes, workout.sportTypes) && Objects.equals(userIds, workout.userIds) && Objects.equals(description, workout.description) && Objects.equals(createdAt, workout.createdAt);
+        return Objects.equals(id, workout.id)
+            && Objects.equals(ownerUserId, workout.ownerUserId)
+            && Objects.equals(communityId, workout.communityId)
+            && Objects.equals(isPrivate, workout.isPrivate)
+            && Objects.equals(startDate, workout.startDate)
+            && Objects.equals(routeId, workout.routeId)
+            && Objects.equals(sportTypes, workout.sportTypes)
+            && Objects.equals(userIds, workout.userIds)
+            && Objects.equals(venue, workout.venue)
+            && Objects.equals(duration, workout.duration)
+            && Objects.equals(description, workout.description)
+            && Objects.equals(createdAt, workout.createdAt);
     }
 
     @Override
@@ -142,6 +162,7 @@ public class Workout {
             .append("sportTypes", sportTypes)
             .append("userIds", userIds)
             .append("description", description)
+            .append("venue", venue)
             .append("duration", duration)
             .append("createdAt", createdAt)
             .toString();
