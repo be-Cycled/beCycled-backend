@@ -8,6 +8,7 @@ import me.becycled.backend.model.entity.route.SportType;
 import me.becycled.backend.model.entity.telemetry.Telemetry;
 import me.becycled.backend.model.entity.telemetry.Tracker;
 import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.entity.workout.Workout;
 
 import java.time.Instant;
 import java.util.List;
@@ -176,5 +177,16 @@ public class TestUtils {
         tracker.setUserId(1);
         tracker.setImei("100000000000000");
         return tracker;
+    }
+
+    public static Workout getTestWorkout() {
+        final Workout workout = new Workout();
+        workout.setOwnerUserId(1);
+        workout.setPrivateWorkout(false);
+        workout.setRouteId(1);
+        workout.setSportTypes(List.of(SportType.BICYCLE));
+        workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
+        workout.setDescription("description");
+        return workout;
     }
 }
