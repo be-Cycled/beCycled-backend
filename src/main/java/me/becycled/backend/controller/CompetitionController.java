@@ -44,8 +44,8 @@ public class CompetitionController {
             return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok(daoFactory.getWorkoutDao().getAll().stream() // todo getByUserId
-            .filter(workout -> workout.getUserIds().contains(user.getId()))
+        return ResponseEntity.ok(daoFactory.getCompetitionDao().getAll().stream() // todo getByUserId
+            .filter(competition -> competition.getUserIds().contains(user.getId()))
             .collect(Collectors.toList()));
     }
 
