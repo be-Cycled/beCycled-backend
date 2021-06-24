@@ -15,7 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author I1yi4
@@ -36,7 +38,7 @@ public class RouteDaoIntegrationTest extends BaseIntegrationTest {
         testRoute.setUserId(1);
         testRoute.setName("name");
         testRoute.setRouteInfo(TestUtils.getTestRoute().getRouteInfo());
-
+        testRoute.setRoutePreview("new preview");
         testRoute.setSportTypes(List.of(SportType.BICYCLE, SportType.RUN));
         testRoute.setDisposable(false);
         testRoute.setDescription("description");
@@ -51,6 +53,7 @@ public class RouteDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(testRoute.getId(), route.getId());
         assertEquals(testRoute.getName(), route.getName());
         assertEquals(testRoute.getRouteInfo(), route.getRouteInfo());
+        assertEquals(testRoute.getRoutePreview(), route.getRoutePreview());
         assertEquals(testRoute.getDescription(), route.getDescription());
         assertEquals(testRoute.getDisposable(), route.getDisposable());
         assertEquals(0, route.getPopularity().intValue());
@@ -99,6 +102,7 @@ public class RouteDaoIntegrationTest extends BaseIntegrationTest {
         testRoute.setUserId(2);
         testRoute.setName("qwe");
         testRoute.setRouteInfo("test");
+        testRoute.setRoutePreview("I1yi4");
         testRoute.setSportTypes(List.of(SportType.BICYCLE));
         testRoute.setDisposable(true);
         testRoute.setDescription("1");
@@ -110,6 +114,7 @@ public class RouteDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals(1, bdRoute.getUserId().intValue());
         assertEquals("qwe", bdRoute.getName());
         assertEquals("test", bdRoute.getRouteInfo());
+        assertEquals("I1yi4", bdRoute.getRoutePreview());
         assertEquals(List.of(SportType.BICYCLE), bdRoute.getSportTypes());
         assertEquals(true, bdRoute.getDisposable());
         assertEquals(route.getPopularity(), bdRoute.getPopularity());

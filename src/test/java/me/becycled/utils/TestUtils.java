@@ -134,6 +134,7 @@ public class TestUtils {
             "    }\n" +
             "  ]\n" +
             "}\n");
+        route.setRoutePreview("route preview");
         route.setSportTypes(List.of(SportType.BICYCLE, SportType.RUN));
         route.setDisposable(false);
         route.setDescription("description");

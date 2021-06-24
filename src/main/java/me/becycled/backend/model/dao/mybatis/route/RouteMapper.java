@@ -11,11 +11,12 @@ import java.util.List;
 public interface RouteMapper {
 
     @Insert(
-        "INSERT INTO routes (user_id, name, route_info, sport_types, disposable, description) "
+        "INSERT INTO routes (user_id, name, route_info, route_preview, sport_types, disposable, description) "
             + "VALUES ("
             + "#{userId},"
             + "#{name},"
             + "#{routeInfo},"
+            + "#{routePreview},"
             + "#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler},"
             + "#{disposable},"
             + "#{description})")
@@ -27,6 +28,7 @@ public interface RouteMapper {
         @Result(column = "user_id", property = "userId"),
         @Result(column = "name", property = "name"),
         @Result(column = "route_info", property = "routeInfo"),
+        @Result(column = "route_preview", property = "routePreview"),
         @Result(column = "sport_types", property = "sportTypes", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler.class),
         @Result(column = "disposable", property = "disposable"),
         @Result(column = "description", property = "description"),
@@ -44,6 +46,7 @@ public interface RouteMapper {
         "UPDATE routes SET "
             + "name=#{name}, "
             + "route_info=#{routeInfo}, "
+            + "route_preview=#{routePreview}, "
             + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
             + "disposable=#{disposable}, "
             + "description=#{description} "

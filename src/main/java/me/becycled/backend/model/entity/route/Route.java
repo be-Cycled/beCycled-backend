@@ -15,6 +15,7 @@ public class Route {
     private Integer userId;
     private String name;
     private String routeInfo;
+    private String routePreview;
     private List<SportType> sportTypes;
     private Boolean disposable;
     private String description;
@@ -51,6 +52,14 @@ public class Route {
 
     public void setRouteInfo(final String routeInfo) {
         this.routeInfo = routeInfo;
+    }
+
+    public String getRoutePreview() {
+        return routePreview;
+    }
+
+    public void setRoutePreview(final String routePreview) {
+        this.routePreview = routePreview;
     }
 
     public List<SportType> getSportTypes() {
@@ -107,6 +116,7 @@ public class Route {
             && Objects.equals(userId, route.userId)
             && Objects.equals(name, route.name)
             && Objects.equals(routeInfo, route.routeInfo)
+            && Objects.equals(routePreview, route.routePreview)
             && Objects.equals(sportTypes, route.sportTypes)
             && Objects.equals(disposable, route.disposable)
             && Objects.equals(description, route.description)
@@ -116,7 +126,7 @@ public class Route {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, name, routeInfo, sportTypes, disposable, description, popularity, createdAt);
+        return Objects.hash(id, userId, name, routeInfo, routePreview, sportTypes, disposable, description, popularity, createdAt);
     }
 
     @Override
@@ -125,7 +135,8 @@ public class Route {
             .append("id", id)
             .append("userId", userId)
             .append("name", name)
-            .append("routePoints", routeInfo)
+            .append("routeInfo", routeInfo)
+            .append("routePreview", routePreview)
             .append("sportTypes", sportTypes)
             .append("disposable", disposable)
             .append("description", description)
