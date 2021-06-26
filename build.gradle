@@ -45,15 +45,12 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-  //Auth
   implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
   implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.0.RELEASE'
 
-  //DAO
   implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
   implementation 'org.postgresql:postgresql'
 
-  //Utils
   implementation 'org.apache.commons:commons-lang3:3.9'
   implementation 'commons-io:commons-io:2.6'
   implementation 'com.google.code.findbugs:annotations:3.0.1'

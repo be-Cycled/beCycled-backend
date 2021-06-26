@@ -2,6 +2,7 @@ package me.becycled.backend.model.entity.community;
 
 import me.becycled.backend.model.entity.route.SportType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,6 +24,8 @@ public class Community {
     private String url;
     private String description;
     private Instant createdAt;
+
+    //region GETTERS & SETTERS
 
     public Integer getId() {
         return id;
@@ -112,6 +115,8 @@ public class Community {
         this.createdAt = createdAt;
     }
 
+    //endregion GETTERS & SETTERS
+
     @Override
     @SuppressWarnings("CyclomaticComplexity")
     public boolean equals(final Object o) {
@@ -137,12 +142,15 @@ public class Community {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ownerUserId, name, nickname, avatar, communityType, sportTypes, userIds, url, description, createdAt);
+        return Objects.hash(id, ownerUserId,
+            name, nickname, avatar,
+            communityType, sportTypes, userIds,
+            url, description, createdAt);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("id", id)
             .append("ownerUserId", ownerUserId)
             .append("name", name)

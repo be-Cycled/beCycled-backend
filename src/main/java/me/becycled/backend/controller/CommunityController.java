@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,39 +34,19 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    @SuppressWarnings("PMD.AvoidDuplicateLiterals")
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
-            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(community);
-    }
-
-    @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
-        final User user = daoFactory.getUserDao().getByLogin(login);
-        if (user == null) {
-            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(daoFactory.getCommunityDao().getUserId(user.getId()));
-    }
-
-    @RequestMapping(value = "/login/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByLogin(@PathVariable("login") final String login) {
-        final User user = daoFactory.getUserDao().getByLogin(login);
-        if (user == null) {
-            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
-        }
-
-        return ResponseEntity.ok(daoFactory.getCommunityDao().getUserId(user.getId()));
     }
 
     @RequestMapping(value = "/nickname/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getByNickname(@PathVariable("nickname") final String nickname) {
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
-            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(community);
     }
@@ -71,57 +55,12 @@ public class CommunityController {
     public ResponseEntity<?> getUsersByNickname(@PathVariable("nickname") final String nickname) {
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
-            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
         }
-
         return ResponseEntity.ok(
             community.getUserIds().stream()
                 .map(id -> daoFactory.getUserDao().getById(id))
                 .collect(Collectors.toList()));
-    }
-
-    @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> join(@PathVariable("id") final int id) {
-        final Community community = daoFactory.getCommunityDao().getById(id);
-        if (community == null) {
-            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
-        }
-
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
-        }
-
-        if (community.getUserIds().contains(curUser.getId())) {
-            return new ResponseEntity<>("Current user already joined", HttpStatus.BAD_REQUEST);
-        }
-        final List<Integer> userIds = community.getUserIds() != null ? community.getUserIds() : new ArrayList<>();
-        userIds.add(curUser.getId());
-
-        community.setUserIds(userIds);
-        return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));
-    }
-
-    @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
-        final Community community = daoFactory.getCommunityDao().getById(id);
-        if (community == null) {
-            return new ResponseEntity<>("Not found community", HttpStatus.NOT_FOUND);
-        }
-
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
-        }
-
-        if (!community.getUserIds().contains(curUser.getId())) {
-            return new ResponseEntity<>("Current user not in community", HttpStatus.BAD_REQUEST);
-        }
-        final List<Integer> userIds = community.getUserIds() != null ? community.getUserIds() : new ArrayList<>();
-        userIds.remove(curUser.getId());
-
-        community.setUserIds(userIds);
-        return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
@@ -143,17 +82,71 @@ public class CommunityController {
 
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
         }
 
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
-            return new ResponseEntity<>("Community not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
         }
+
         if (!community.getOwnerUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Only owner can update community", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Community can be updated by owner only", HttpStatus.FORBIDDEN);
         }
 
         return ResponseEntity.ok(daoFactory.getCommunityDao().update(entity));
+    }
+
+    @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+        final User user = daoFactory.getUserDao().getByLogin(login);
+        if (user == null) {
+            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(daoFactory.getCommunityDao().getByMemberUserId(user.getId()));
+    }
+
+    @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> join(@PathVariable("id") final int id) {
+        final Community community = daoFactory.getCommunityDao().getById(id);
+        if (community == null) {
+            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+        }
+
+        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        if (curUser == null) {
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (community.getUserIds().contains(curUser.getId())) {
+            return new ResponseEntity<>("Current user is already joined", HttpStatus.BAD_REQUEST);
+        }
+
+        final List<Integer> userIds = community.getUserIds() != null ? community.getUserIds() : new ArrayList<>();
+        userIds.add(curUser.getId());
+        community.setUserIds(userIds);
+        return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));
+    }
+
+    @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
+        final Community community = daoFactory.getCommunityDao().getById(id);
+        if (community == null) {
+            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+        }
+
+        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        if (curUser == null) {
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (!community.getUserIds().contains(curUser.getId())) {
+            return new ResponseEntity<>("Current user is not joined", HttpStatus.BAD_REQUEST);
+        }
+
+        final List<Integer> userIds = community.getUserIds() != null ? community.getUserIds() : new ArrayList<>();
+        userIds.remove(curUser.getId());
+        community.setUserIds(userIds);
+        return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));
     }
 }

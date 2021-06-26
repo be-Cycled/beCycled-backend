@@ -1,6 +1,6 @@
 package me.becycled.backend.controller;
 
-import me.becycled.backend.dto.RegisterDto;
+import me.becycled.backend.dto.UserRegistrationDto;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
@@ -36,7 +36,7 @@ public class RegisterController {
 
     @SuppressWarnings("ReturnCount")
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> create(@RequestBody @Validated final RegisterDto entity) {
+    public ResponseEntity<String> create(@RequestBody @Validated final UserRegistrationDto entity) {
         final User userByLogin = daoFactory.getUserDao().getByLogin(entity.getLogin());
         if (userByLogin != null) {
             return ResponseEntity.badRequest().body("Login already using");

@@ -1,7 +1,13 @@
 package me.becycled.backend.model.dao.mybatis.community;
 
 import me.becycled.backend.model.entity.community.Community;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -24,6 +30,19 @@ public interface CommunityMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(Community community);
 
+    @Update(
+        "UPDATE communities SET "
+            + "name=#{name}, "
+            + "nickname=#{nickname}, "
+            + "avatar=#{avatar}, "
+            + "community_type=#{communityType}::COMMUNITY_TYPE, "
+            + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
+            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
+            + "url=#{url}, "
+            + "description=#{description} "
+            + "WHERE id=#{id}")
+    int update(Community community);
+
     @Results(id = "communityResult", value = {
         @Result(id = true, column = "id", property = "id"),
         @Result(column = "owner_user_id", property = "ownerUserId"),
@@ -40,32 +59,20 @@ public interface CommunityMapper {
     @Select("SELECT * FROM communities WHERE id=#{id}")
     Community getById(Integer id);
 
-    @Select("SELECT * FROM communities WHERE owner_user_id=#{ownerUserId}")
-    @ResultMap("communityResult")
-    List<Community> getUserOwnerId(Integer ownerUserId);
-
-    @Select("SELECT * FROM communities WHERE #{userId} = ANY(user_ids)")
-    @ResultMap("communityResult")
-    List<Community> getUserId(Integer userId);
-
     @Select("SELECT * FROM communities WHERE nickname=#{nickname}")
     @ResultMap("communityResult")
     Community getByNickname(String nickname);
 
+    @Select("SELECT * FROM communities WHERE owner_user_id=#{ownerUserId}")
+    @ResultMap("communityResult")
+    List<Community> getByOwnerUserId(Integer ownerUserId);
+
+    @Select("SELECT * FROM communities WHERE #{memberUserId} = ANY(user_ids)")
+    @ResultMap("communityResult")
+    List<Community> getByMemberUserId(Integer memberUserId);
+
+
     @Select("SELECT * FROM communities")
     @ResultMap("communityResult")
     List<Community> getAll();
-
-    @Update(
-        "UPDATE communities SET "
-            + "name=#{name}, "
-            + "nickname=#{nickname}, "
-            + "avatar=#{avatar}, "
-            + "community_type=#{communityType}::COMMUNITY_TYPE, "
-            + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
-            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
-            + "url=#{url}, "
-            + "description=#{description} "
-            + "WHERE id=#{id}")
-    int update(Community community);
 }

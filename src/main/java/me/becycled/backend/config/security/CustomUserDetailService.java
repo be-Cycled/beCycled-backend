@@ -33,11 +33,11 @@ public class CustomUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
         final User user = daoFactory.getUserDao().getByLogin(username);
         if (user == null) {
-            throw new BadCredentialsException("Username not found");
+            throw new BadCredentialsException("Username is not found");
         }
         final UserAccount userAccount = daoFactory.getUserAccountDao().getByUserId(user.getId());
         if (userAccount == null) {
-            throw new BadCredentialsException("Account not found");
+            throw new BadCredentialsException("Account is not found");
         }
 
         return new org.springframework.security.core.userdetails.User(user.getLogin(), userAccount.getPassword(), Collections.emptyList());

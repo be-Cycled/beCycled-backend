@@ -25,27 +25,20 @@ public class CommunityDao extends BaseMyBatisDao {
         }
     }
 
+    public Community update(final Community entity) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+
+            mapper.update(entity);
+            return mapper.getById(entity.getId());
+        }
+    }
+
     public Community getById(final Integer id) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
 
             return mapper.getById(id);
-        }
-    }
-
-    public List<Community> getUserOwnerId(final Integer ownerUserId) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
-
-            return mapper.getUserOwnerId(ownerUserId);
-        }
-    }
-
-    public List<Community> getUserId(final Integer userId) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
-
-            return mapper.getUserId(userId);
         }
     }
 
@@ -57,6 +50,22 @@ public class CommunityDao extends BaseMyBatisDao {
         }
     }
 
+    public List<Community> getByOwnerUserId(final Integer ownerUserId) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+
+            return mapper.getByOwnerUserId(ownerUserId);
+        }
+    }
+
+    public List<Community> getByMemberUserId(final Integer memberUserId) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+
+            return mapper.getByMemberUserId(memberUserId);
+        }
+    }
+
     public List<Community> getAll() {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
@@ -64,13 +73,4 @@ public class CommunityDao extends BaseMyBatisDao {
             return mapper.getAll();
         }
     }
-
-    public Community update(final Community entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
-            mapper.update(entity);
-            return mapper.getById(entity.getId());
-        }
-    }
 }
-
