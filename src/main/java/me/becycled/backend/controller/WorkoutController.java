@@ -1,13 +1,18 @@
 package me.becycled.backend.controller;
 
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
+import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.workout.Workout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +37,7 @@ public class WorkoutController {
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Workout workout = daoFactory.getWorkoutDao().getById(id);
         if (workout == null) {
-            return new ResponseEntity<>("Not found workout", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(workout);
     }
@@ -41,16 +46,20 @@ public class WorkoutController {
     public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
-            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok(daoFactory.getWorkoutDao().getAll().stream() // todo getByUserId
-            .filter(workout -> workout.getUserIds().contains(user.getId()))
+        return ResponseEntity.ok(daoFactory.getWorkoutDao().getAll().stream() // // TODO getByMemberUserId
+            .filter(w -> w.getUserIds().contains(user.getId()))
             .collect(Collectors.toList()));
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+        final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
+        if (community == null) {
+            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(daoFactory.getWorkoutDao().getByCommunityNickname(nickname));
     }
 
@@ -73,15 +82,16 @@ public class WorkoutController {
 
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
         }
 
         final Workout workout = daoFactory.getWorkoutDao().getById(id);
         if (workout == null) {
-            return new ResponseEntity<>("Workout not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Workout is not exist", HttpStatus.NOT_FOUND);
         }
+
         if (!workout.getOwnerUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Only owner can update route", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Workout can be updated by owner only", HttpStatus.FORBIDDEN);
         }
 
         return ResponseEntity.ok(daoFactory.getWorkoutDao().update(entity));

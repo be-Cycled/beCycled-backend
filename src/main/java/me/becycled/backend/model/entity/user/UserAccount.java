@@ -9,11 +9,13 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-public class UserAccount {
+public final class UserAccount {
 
     private Integer userId;
     private String password;
     private Instant lastAuthTime;
+
+    //region GETTERS & SETTERS
 
     public Integer getUserId() {
         return userId;
@@ -39,6 +41,8 @@ public class UserAccount {
         this.lastAuthTime = lastAuthTime;
     }
 
+    //endregion GETTERS & SETTERS
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -62,9 +66,8 @@ public class UserAccount {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("userId", userId)
-            .append("password", password)
+            .append("password", "******")
             .append("lastAuthTime", lastAuthTime)
             .toString();
     }
 }
-

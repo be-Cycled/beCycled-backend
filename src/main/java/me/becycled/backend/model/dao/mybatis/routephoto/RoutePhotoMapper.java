@@ -1,7 +1,13 @@
 package me.becycled.backend.model.dao.mybatis.routephoto;
 
 import me.becycled.backend.model.entity.route.RoutePhoto;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -11,10 +17,10 @@ import java.util.List;
 public interface RoutePhotoMapper {
 
     @Insert(
-        "INSERT INTO route_photos (route_id, photo) "
-            + "VALUES ("
-            + "#{routeId}, "
-            + "#{photo})")
+        "INSERT INTO route_photos (route_id, photo) " +
+            "VALUES (" +
+            "#{routeId}, " +
+            "#{photo})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(RoutePhoto routePhoto);
 

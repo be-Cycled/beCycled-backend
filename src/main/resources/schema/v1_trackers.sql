@@ -7,8 +7,8 @@ CREATE TABLE trackers
 
 CREATE TABLE telemetries
 (
-    tracker_id INTEGER NOT NULL,
-    fix_time   TIMESTAMPTZ CHECK (fix_time < now() + INTERVAL '1 minute'),
+    tracker_id  INTEGER     NOT NULL,
+    fix_time    TIMESTAMPTZ CHECK (fix_time < now() + INTERVAL '1 minute'),
     server_time TIMESTAMPTZ NOT NULL DEFAULT now(),
     latitude    DOUBLE PRECISION CHECK (latitude > -90 AND latitude < 90),
     longitude   DOUBLE PRECISION CHECK (longitude > -180 AND longitude < 180),

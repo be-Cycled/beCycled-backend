@@ -25,6 +25,15 @@ public class RouteDao extends BaseMyBatisDao {
         }
     }
 
+    public Route update(final Route entity) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final RouteMapper mapper = session.getMapper(RouteMapper.class);
+
+            mapper.update(entity);
+            return mapper.getById(entity.getId());
+        }
+    }
+
     public Route getById(final Integer id) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final RouteMapper mapper = session.getMapper(RouteMapper.class);
@@ -38,14 +47,6 @@ public class RouteDao extends BaseMyBatisDao {
             final RouteMapper mapper = session.getMapper(RouteMapper.class);
 
             return mapper.getAll();
-        }
-    }
-
-    public Route update(final Route entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final RouteMapper mapper = session.getMapper(RouteMapper.class);
-            mapper.update(entity);
-            return mapper.getById(entity.getId());
         }
     }
 }

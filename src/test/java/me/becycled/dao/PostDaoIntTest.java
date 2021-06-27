@@ -14,7 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Suren Kalaychyan
@@ -24,7 +26,7 @@ import static org.junit.Assert.*;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PostDaoIntegrationTest extends BaseIntegrationTest {
+public class PostDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {

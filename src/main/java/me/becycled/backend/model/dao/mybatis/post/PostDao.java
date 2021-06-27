@@ -26,6 +26,16 @@ public final class PostDao extends BaseMyBatisDao {
         }
     }
 
+    public Post update(final Post entity) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final PostMapper mapper = session.getMapper(PostMapper.class);
+
+            entity.setUpdatedAt(Instant.now());
+            mapper.update(entity);
+            return mapper.getById(entity.getId());
+        }
+    }
+
     public Post getById(final Integer id) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final PostMapper mapper = session.getMapper(PostMapper.class);
@@ -39,15 +49,6 @@ public final class PostDao extends BaseMyBatisDao {
             final PostMapper mapper = session.getMapper(PostMapper.class);
 
             return mapper.getAll();
-        }
-    }
-
-    public Post update(final Post entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final PostMapper mapper = session.getMapper(PostMapper.class);
-            entity.setUpdatedAt(Instant.now());
-            mapper.update(entity);
-            return mapper.getById(entity.getId());
         }
     }
 }

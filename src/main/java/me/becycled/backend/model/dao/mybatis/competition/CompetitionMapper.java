@@ -1,7 +1,13 @@
 package me.becycled.backend.model.dao.mybatis.competition;
 
 import me.becycled.backend.model.entity.competition.Competition;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -11,8 +17,8 @@ import java.util.List;
 public interface CompetitionMapper {
 
     @Insert(
-        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) "
-            + "VALUES (" +
+        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) " +
+            "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
             "#{isPrivate}," +
@@ -26,6 +32,20 @@ public interface CompetitionMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(Competition user);
 
+    @Update(
+        "UPDATE competitions SET "
+            + "owner_user_id=#{ownerUserId}, "
+            + "community_id=#{communityId}, "
+            + "private=#{isPrivate}, "
+            + "start_date=#{startDate}, "
+            + "sport_type=#{sportType}::SPORT_TYPE, "
+            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
+            + "venue=#{venue}, "
+            + "duration=#{duration}, "
+            + "description=#{description}, "
+            + "created_at=#{createdAt} "
+            + "WHERE id=#{id}")
+    int update(Competition workout);
 
     @Results(id = "competitionResult", value = {
         @Result(id = true, column = "id", property = "id"),
@@ -51,19 +71,4 @@ public interface CompetitionMapper {
     @Select("SELECT * FROM competitions")
     @ResultMap("competitionResult")
     List<Competition> getAll();
-
-    @Update(
-        "UPDATE competitions SET "
-            + "owner_user_id=#{ownerUserId}, "
-            + "community_id=#{communityId}, "
-            + "private=#{isPrivate}, "
-            + "start_date=#{startDate}, "
-            + "sport_type=#{sportType}::SPORT_TYPE, "
-            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
-            + "venue=#{venue}, "
-            + "duration=#{duration}, "
-            + "description=#{description}, "
-            + "created_at=#{createdAt} "
-            + "WHERE id=#{id}")
-    int update(Competition workout);
 }

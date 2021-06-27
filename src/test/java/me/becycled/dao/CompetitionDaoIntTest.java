@@ -18,7 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -29,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CompetitionDaoIntegrationTest extends BaseIntegrationTest {
+public class CompetitionDaoIntTest extends BaseIntegrationTest {
 
     @BeforeEach
     public void setUp() {

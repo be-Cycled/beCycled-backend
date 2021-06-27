@@ -129,12 +129,13 @@
         <exclude name="UseLocaleWithCaseConversions"/>
         <exclude name="UseProperClassLoader"/> <!-- earlier j2ee group-->
         <exclude name="MissingStaticMethodInNonInstantiatableClass"/>
+        <exclude name="AvoidDuplicateLiterals"/>
     </rule>
-    <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals">
-        <properties>
-            <property name="skipAnnotations" value="true"/>
-        </properties>
-    </rule>
+    <!--<rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals">-->
+    <!--    <properties>-->
+    <!--        <property name="skipAnnotations" value="true"/>-->
+    <!--    </properties>-->
+    <!--</rule>-->
     <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
         <properties>
             <property name="ignoreMagicNumbers" value="-1,0,1"/>

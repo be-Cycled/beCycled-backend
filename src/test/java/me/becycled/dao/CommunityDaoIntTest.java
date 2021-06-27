@@ -16,7 +16,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.Instant;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author I1yi4
@@ -26,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CommunityDaoIntegrationTest extends BaseIntegrationTest {
+public class CommunityDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {
@@ -51,86 +53,6 @@ public class CommunityDaoIntegrationTest extends BaseIntegrationTest {
         community.setCreatedAt(dbCommunity.getCreatedAt());
 
         assertEquals(community, dbCommunity);
-    }
-
-    @Test
-    void getById() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
-
-        final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
-        final Community createdCommunity = daoFactory.getCommunityDao().getById(community.getId());
-
-        assertEquals(createdCommunity, community);
-    }
-
-    @Test
-    void getUserOwnerId() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
-        final User user = new User();
-        user.setLogin("login1");
-        user.setEmail("email1@gmail.com");
-        daoFactory.getUserDao().create(user);
-
-        Community testCommunity = TestUtils.getTestCommunity();
-        final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);
-        testCommunity.setNickname("qwe");
-        Community communitySecond = daoFactory.getCommunityDao().create(testCommunity);
-        testCommunity.setNickname("rty");
-        testCommunity.setOwnerUserId(2);
-        Community communityThird = daoFactory.getCommunityDao().create(testCommunity);
-
-        final List<Community> byOwedUserId = daoFactory.getCommunityDao().getUserOwnerId(1);
-        assertEquals(2, byOwedUserId.size());
-        assertTrue(byOwedUserId.stream().anyMatch(communityFirst::equals));
-        assertTrue(byOwedUserId.stream().anyMatch(communitySecond::equals));
-    }
-
-    @Test
-    void getUserId() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
-        final User user = new User();
-        user.setLogin("login1");
-        user.setEmail("email1@gmail.com");
-        daoFactory.getUserDao().create(user);
-
-        Community testCommunity = TestUtils.getTestCommunity();
-        final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);
-        testCommunity.setNickname("qwe");
-        testCommunity.setUserIds(List.of(1,2,3));
-        Community communitySecond = daoFactory.getCommunityDao().create(testCommunity);
-        testCommunity.setNickname("rty");
-        testCommunity.setOwnerUserId(2);
-        testCommunity.setUserIds(List.of(3));
-        Community communityThird = daoFactory.getCommunityDao().create(testCommunity);
-
-        final List<Community> byOwedUserId = daoFactory.getCommunityDao().getUserId(3);
-        assertEquals(2, byOwedUserId.size());
-        assertEquals(2,byOwedUserId.stream().filter(community -> community.getUserIds().contains(3)).count());
-    }
-
-    @Test
-    void getByNickname() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
-
-        final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
-        final Community createdCommunity = daoFactory.getCommunityDao().getByNickname(community.getNickname());
-
-        assertEquals(createdCommunity, community);
-    }
-
-    @Test
-    void getAll() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
-
-        Community testCommunity = TestUtils.getTestCommunity();
-        final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);
-        testCommunity.setNickname("qwe");
-        Community communitySecond = daoFactory.getCommunityDao().create(testCommunity);
-
-        final List<Community> all = daoFactory.getCommunityDao().getAll();
-        assertEquals(2, all.size());
-        assertTrue(all.stream().anyMatch(communityFirst::equals));
-        assertTrue(all.stream().anyMatch(communitySecond::equals));
     }
 
     @Test
@@ -170,5 +92,85 @@ public class CommunityDaoIntegrationTest extends BaseIntegrationTest {
         assertEquals("1000", bdCommunity.getUrl());
         assertEquals("1", bdCommunity.getDescription());
         assertEquals(community.getCreatedAt(), bdCommunity.getCreatedAt());
+    }
+
+    @Test
+    void getById() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+
+        final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
+        final Community createdCommunity = daoFactory.getCommunityDao().getById(community.getId());
+
+        assertEquals(createdCommunity, community);
+    }
+
+    @Test
+    void getByNickname() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+
+        final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
+        final Community createdCommunity = daoFactory.getCommunityDao().getByNickname(community.getNickname());
+
+        assertEquals(createdCommunity, community);
+    }
+
+    @Test
+    void getByUserOwnerId() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        final User user = new User();
+        user.setLogin("login1");
+        user.setEmail("email1@gmail.com");
+        daoFactory.getUserDao().create(user);
+
+        Community testCommunity = TestUtils.getTestCommunity();
+        final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);
+        testCommunity.setNickname("qwe");
+        Community communitySecond = daoFactory.getCommunityDao().create(testCommunity);
+        testCommunity.setNickname("rty");
+        testCommunity.setOwnerUserId(2);
+        Community communityThird = daoFactory.getCommunityDao().create(testCommunity);
+
+        final List<Community> byOwedUserId = daoFactory.getCommunityDao().getByOwnerUserId(1);
+        assertEquals(2, byOwedUserId.size());
+        assertTrue(byOwedUserId.stream().anyMatch(communityFirst::equals));
+        assertTrue(byOwedUserId.stream().anyMatch(communitySecond::equals));
+    }
+
+    @Test
+    void getByMemberUserId() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        final User user = new User();
+        user.setLogin("login1");
+        user.setEmail("email1@gmail.com");
+        daoFactory.getUserDao().create(user);
+
+        Community testCommunity = TestUtils.getTestCommunity();
+        final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);
+        testCommunity.setNickname("qwe");
+        testCommunity.setUserIds(List.of(1, 2, 3));
+        Community communitySecond = daoFactory.getCommunityDao().create(testCommunity);
+        testCommunity.setNickname("rty");
+        testCommunity.setOwnerUserId(2);
+        testCommunity.setUserIds(List.of(3));
+        Community communityThird = daoFactory.getCommunityDao().create(testCommunity);
+
+        final List<Community> byOwedUserId = daoFactory.getCommunityDao().getByMemberUserId(3);
+        assertEquals(2, byOwedUserId.size());
+        assertEquals(2, byOwedUserId.stream().filter(community -> community.getUserIds().contains(3)).count());
+    }
+
+    @Test
+    void getAll() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+
+        Community testCommunity = TestUtils.getTestCommunity();
+        final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);
+        testCommunity.setNickname("qwe");
+        Community communitySecond = daoFactory.getCommunityDao().create(testCommunity);
+
+        final List<Community> all = daoFactory.getCommunityDao().getAll();
+        assertEquals(2, all.size());
+        assertTrue(all.stream().anyMatch(communityFirst::equals));
+        assertTrue(all.stream().anyMatch(communitySecond::equals));
     }
 }

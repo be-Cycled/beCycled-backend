@@ -23,6 +23,8 @@ public final class Telemetry {
     private Telemetry() {
     }
 
+    //region GETTERS & SETTERS
+
     public Integer getTrackerId() {
         return trackerId;
     }
@@ -86,6 +88,8 @@ public final class Telemetry {
     public void setCourse(final Integer course) {
         this.course = course;
     }
+
+    //endregion GETTERS & SETTERS
 
     @Override
     @SuppressWarnings("CyclomaticComplexity")

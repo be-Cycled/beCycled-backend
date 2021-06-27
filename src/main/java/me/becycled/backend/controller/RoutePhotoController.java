@@ -8,7 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -32,7 +36,7 @@ public class RoutePhotoController {
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final RoutePhoto routePhoto = daoFactory.getRoutePhotoDao().getById(id);
         if (routePhoto == null) {
-            return new ResponseEntity<>("Not found route photo", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Route photo is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(routePhoto);
     }
@@ -56,20 +60,21 @@ public class RoutePhotoController {
     public ResponseEntity<?> delete(@PathVariable("id") final int id) {
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
         }
 
         final RoutePhoto routePhoto = daoFactory.getRoutePhotoDao().getById(id);
         if (routePhoto == null) {
-            return new ResponseEntity<>("Route photo not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Route photo is not exist", HttpStatus.NOT_FOUND);
         }
 
         final Route route = daoFactory.getRouteDao().getById(routePhoto.getRouteId());
         if (route == null) {
-            return new ResponseEntity<>("Route photo not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Route is not exist", HttpStatus.NOT_FOUND);
         }
+
         if (!route.getUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Only owner can delete photo from route", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Route photo can be deleted by owner only", HttpStatus.FORBIDDEN);
         }
 
         return ResponseEntity.ok(daoFactory.getRoutePhotoDao().delete(id));

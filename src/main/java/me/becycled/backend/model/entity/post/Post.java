@@ -19,6 +19,8 @@ public final class Post {
     private Instant createdAt;
     private Instant updatedAt;
 
+    //region GETTERS & SETTERS
+
     public Integer getId() {
         return id;
     }
@@ -75,6 +77,8 @@ public final class Post {
         this.updatedAt = updatedAt;
     }
 
+    //endregion GETTERS & SETTERS
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -83,13 +87,13 @@ public final class Post {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Post post = (Post) o;
-        return Objects.equals(id, post.id)
-            && Objects.equals(userId, post.userId)
-            && Objects.equals(title, post.title)
-            && Objects.equals(content, post.content)
-            && Objects.equals(poster, post.poster)
-            && Objects.equals(createdAt, post.createdAt);
+        final Post that = (Post) o;
+        return Objects.equals(id, that.id)
+            && Objects.equals(userId, that.userId)
+            && Objects.equals(title, that.title)
+            && Objects.equals(content, that.content)
+            && Objects.equals(poster, that.poster)
+            && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override

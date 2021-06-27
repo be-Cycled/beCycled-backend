@@ -25,6 +25,15 @@ public class UserDao extends BaseMyBatisDao {
         }
     }
 
+    public User update(final User entity) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final UserMapper mapper = session.getMapper(UserMapper.class);
+
+            mapper.update(entity);
+            return mapper.getById(entity.getId());
+        }
+    }
+
     public User getById(final Integer id) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final UserMapper mapper = session.getMapper(UserMapper.class);
@@ -54,14 +63,6 @@ public class UserDao extends BaseMyBatisDao {
             final UserMapper mapper = session.getMapper(UserMapper.class);
 
             return mapper.getAll();
-        }
-    }
-
-    public User update(final User entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final UserMapper mapper = session.getMapper(UserMapper.class);
-            mapper.update(entity);
-            return mapper.getById(entity.getId());
         }
     }
 }

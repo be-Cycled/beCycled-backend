@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public class TestUtils {
+public enum TestUtils {;
 
     public static User getTestUser() {
         final User user = new User();

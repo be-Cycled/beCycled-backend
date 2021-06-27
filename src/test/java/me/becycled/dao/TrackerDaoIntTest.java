@@ -4,7 +4,6 @@ import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
 import me.becycled.backend.model.entity.telemetry.Tracker;
 import me.becycled.utils.TestUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TrackerDaoIntegrationTest extends BaseIntegrationTest {
+class TrackerDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {

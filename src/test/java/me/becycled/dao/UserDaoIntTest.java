@@ -12,7 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author I1yi4
@@ -22,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserDaoIntegrationTest extends BaseIntegrationTest {
+public class UserDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {
