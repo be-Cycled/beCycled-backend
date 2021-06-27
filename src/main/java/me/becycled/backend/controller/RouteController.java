@@ -35,7 +35,7 @@ public class RouteController {
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Route route = daoFactory.getRouteDao().getById(id);
         if (route == null) {
-            return new ResponseEntity<>("Not found route", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Route is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(route);
     }
@@ -59,15 +59,15 @@ public class RouteController {
 
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
         }
 
         final Route route = daoFactory.getRouteDao().getById(id);
         if (route == null) {
-            return new ResponseEntity<>("Route not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Route is not exist", HttpStatus.NOT_FOUND);
         }
         if (!route.getUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Only owner can update route", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Route can be updated by owner only", HttpStatus.FORBIDDEN);
         }
 
         return ResponseEntity.ok(daoFactory.getRouteDao().update(entity));

@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserDaoIntegrationTest extends BaseIntegrationTest {
+public class UserDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {

@@ -17,17 +17,28 @@ import java.util.List;
 public interface RouteMapper {
 
     @Insert(
-        "INSERT INTO routes (user_id, name, route_info, route_preview, sport_types, disposable, description) "
-            + "VALUES ("
-            + "#{userId},"
-            + "#{name},"
-            + "#{routeInfo},"
-            + "#{routePreview},"
-            + "#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler},"
-            + "#{disposable},"
-            + "#{description})")
+        "INSERT INTO routes (user_id, name, route_info, route_preview, sport_types, disposable, description) " +
+            "VALUES (" +
+            "#{userId}," +
+            "#{name}," +
+            "#{routeInfo}," +
+            "#{routePreview}," +
+            "#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}," +
+            "#{disposable}," +
+            "#{description})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(Route route);
+
+    @Update(
+        "UPDATE routes SET " +
+            "name=#{name}, " +
+            "route_info=#{routeInfo}, " +
+            "route_preview=#{routePreview}, " +
+            "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, " +
+            "disposable=#{disposable}, " +
+            "description=#{description} " +
+            "WHERE id=#{id}")
+    int update(Route route);
 
     @Results(id = "routeResult", value = {
         @Result(id = true, column = "id", property = "id"),
@@ -47,15 +58,4 @@ public interface RouteMapper {
     @Select("SELECT * FROM routes")
     @ResultMap("routeResult")
     List<Route> getAll();
-
-    @Update(
-        "UPDATE routes SET "
-            + "name=#{name}, "
-            + "route_info=#{routeInfo}, "
-            + "route_preview=#{routePreview}, "
-            + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
-            + "disposable=#{disposable}, "
-            + "description=#{description} "
-            + "WHERE id=#{id}")
-    int update(Route route);
 }

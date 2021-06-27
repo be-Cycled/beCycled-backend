@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<?> getMe() {
         final Object login = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (login == null) {
-            return new ResponseEntity<>("User not auth", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("User not auth", HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(daoFactory.getUserDao().getByLogin(login.toString()));
     }
@@ -43,16 +43,16 @@ public class UserController {
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final User user = daoFactory.getUserDao().getById(id);
         if (user == null) {
-            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(user);
     }
 
     @RequestMapping(value = "/login/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getBylogin(@PathVariable("login") final String login) {
+    public ResponseEntity<?> getByLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
-            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(user);
     }
@@ -71,10 +71,11 @@ public class UserController {
 
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
         }
+
         if (!curUser.getId().equals(id)) {
-            return new ResponseEntity<>("Allow update only yourself", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("User can be updated by itself only", HttpStatus.FORBIDDEN);
         }
 
         return ResponseEntity.ok(daoFactory.getUserDao().update(entity));

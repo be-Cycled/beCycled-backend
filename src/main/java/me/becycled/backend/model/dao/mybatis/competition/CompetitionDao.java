@@ -25,6 +25,15 @@ public class CompetitionDao extends BaseMyBatisDao {
         }
     }
 
+    public Competition update(final Competition entity) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
+
+            mapper.update(entity);
+            return mapper.getById(entity.getId());
+        }
+    }
+
     public Competition getById(final Integer id) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
@@ -46,14 +55,6 @@ public class CompetitionDao extends BaseMyBatisDao {
             final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
 
             return mapper.getAll();
-        }
-    }
-
-    public Competition update(final Competition entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
-            mapper.update(entity);
-            return mapper.getById(entity.getId());
         }
     }
 }

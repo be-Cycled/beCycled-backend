@@ -39,14 +39,14 @@ public class RegisterController {
     public ResponseEntity<String> create(@RequestBody @Validated final UserRegistrationDto entity) {
         final User userByLogin = daoFactory.getUserDao().getByLogin(entity.getLogin());
         if (userByLogin != null) {
-            return ResponseEntity.badRequest().body("Login already using");
+            return ResponseEntity.badRequest().body("Login is already using");
         }
         final User userByEmail = daoFactory.getUserDao().getByEmail(entity.getEmail());
         if (userByEmail != null) {
-            return ResponseEntity.badRequest().body("Email already using");
+            return ResponseEntity.badRequest().body("Email is already using");
         }
 
-        // TODO transaction
+        // TODO Transactional
         final User user = new User();
         user.setLogin(entity.getLogin());
         user.setEmail(entity.getEmail());

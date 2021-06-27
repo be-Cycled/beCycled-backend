@@ -2,6 +2,7 @@ package me.becycled.backend.model.entity.workout;
 
 import me.becycled.backend.model.entity.route.SportType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.Instant;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-public class Workout {
+public final class Workout {
 
     private Integer id;
     private Integer ownerUserId;
@@ -24,6 +25,8 @@ public class Workout {
     private Integer duration;
     private String description;
     private Instant createdAt;
+
+    //region GETTERS & SETTERS
 
     public Integer getId() {
         return id;
@@ -121,6 +124,8 @@ public class Workout {
         this.createdAt = createdAt;
     }
 
+    //endregion GETTERS & SETTERS
+
     @Override
     @SuppressWarnings("CyclomaticComplexity")
     public boolean equals(final Object o) {
@@ -130,29 +135,30 @@ public class Workout {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Workout workout = (Workout) o;
-        return Objects.equals(id, workout.id)
-            && Objects.equals(ownerUserId, workout.ownerUserId)
-            && Objects.equals(communityId, workout.communityId)
-            && Objects.equals(isPrivate, workout.isPrivate)
-            && Objects.equals(startDate, workout.startDate)
-            && Objects.equals(routeId, workout.routeId)
-            && Objects.equals(sportType, workout.sportType)
-            && Objects.equals(userIds, workout.userIds)
-            && Objects.equals(venue, workout.venue)
-            && Objects.equals(duration, workout.duration)
-            && Objects.equals(description, workout.description)
-            && Objects.equals(createdAt, workout.createdAt);
+        final Workout that = (Workout) o;
+        return Objects.equals(id, that.id)
+            && Objects.equals(ownerUserId, that.ownerUserId)
+            && Objects.equals(communityId, that.communityId)
+            && Objects.equals(isPrivate, that.isPrivate)
+            && Objects.equals(startDate, that.startDate)
+            && Objects.equals(routeId, that.routeId)
+            && Objects.equals(sportType, that.sportType)
+            && Objects.equals(userIds, that.userIds)
+            && Objects.equals(venue, that.venue)
+            && Objects.equals(duration, that.duration)
+            && Objects.equals(description, that.description)
+            && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ownerUserId, communityId, isPrivate, startDate, routeId, sportType, userIds, description, createdAt);
+        return Objects.hash(id, ownerUserId, communityId, isPrivate,
+            startDate, routeId, sportType, userIds, description, createdAt);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("id", id)
             .append("ownerUserId", ownerUserId)
             .append("communityId", communityId)

@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-public class Community {
+public final class Community {
 
     private Integer id;
     private Integer ownerUserId;

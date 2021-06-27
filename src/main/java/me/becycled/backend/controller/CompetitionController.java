@@ -1,6 +1,7 @@
 package me.becycled.backend.controller;
 
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
+import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.competition.Competition;
 import me.becycled.backend.model.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class CompetitionController {
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
-            return new ResponseEntity<>("Not found competition", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Competition is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(competition);
     }
@@ -45,16 +46,19 @@ public class CompetitionController {
     public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
-            return new ResponseEntity<>("Not found user", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
         }
-
-        return ResponseEntity.ok(daoFactory.getCompetitionDao().getAll().stream() // todo getByUserId
-            .filter(competition -> competition.getUserIds().contains(user.getId()))
+        return ResponseEntity.ok(daoFactory.getCompetitionDao().getAll().stream() // TODO getByCompetitorUserId
+            .filter(c -> c.getUserIds().contains(user.getId()))
             .collect(Collectors.toList()));
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+        final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
+        if (community == null) {
+            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+        }
         return ResponseEntity.ok(daoFactory.getCompetitionDao().getByCommunityNickname(nickname));
     }
 
@@ -77,15 +81,16 @@ public class CompetitionController {
 
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
         }
 
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
-            return new ResponseEntity<>("Competition not exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Competition is not exist", HttpStatus.NOT_FOUND);
         }
+
         if (!competition.getOwnerUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Only owner can update route", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Competition can be updated by owner only", HttpStatus.FORBIDDEN);
         }
 
         return ResponseEntity.ok(daoFactory.getCompetitionDao().update(entity));

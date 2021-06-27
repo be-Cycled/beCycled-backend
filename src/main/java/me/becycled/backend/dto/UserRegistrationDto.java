@@ -65,7 +65,7 @@ public final class UserRegistrationDto {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("login", login)
-            .append("password", password)
+            .append("password", "******")
             .append("email", email)
             .toString();
     }

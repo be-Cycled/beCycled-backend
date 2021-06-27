@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class TrackerDaoIntegrationTest extends BaseIntegrationTest {
+class TrackerDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {

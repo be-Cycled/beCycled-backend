@@ -17,14 +17,22 @@ import java.util.List;
 public interface UserMapper {
 
     @Insert(
-        "INSERT INTO users ("
-            + "   login, first_name, last_name, email, "
-            + "   phone, about, avatar) "
-            + "VALUES ("
-            + "   #{login}, #{firstName}, #{lastName}, #{email}, "
-            + "   #{phone}, #{about}, #{avatar})")
+        "INSERT INTO users (login, first_name, last_name, email, phone, about, avatar) " +
+            "VALUES (#{login}, #{firstName}, #{lastName}, #{email}, #{phone}, #{about}, #{avatar})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(User user);
+
+    @Update(
+        "UPDATE users SET " +
+            "login=#{login}, " +
+            "first_name=#{firstName}, " +
+            "last_name=#{lastName}, " +
+            "email=#{email}, " +
+            "phone=#{phone}, " +
+            "about=#{about}, " +
+            "avatar=#{avatar} " +
+            "WHERE id=#{id}")
+    int update(User user);
 
     @Results(id = "userResult", value = {
         @Result(id = true, column = "id", property = "id"),
@@ -51,9 +59,4 @@ public interface UserMapper {
     @Select("SELECT * FROM users")
     @ResultMap("userResult")
     List<User> getAll();
-
-    @Update(
-        "UPDATE users SET login=#{login}, first_name=#{firstName}, last_name=#{lastName}, email=#{email}, phone=#{phone}, about=#{about}, avatar=#{avatar}"
-            + "WHERE id=#{id}")
-    int update(User user);
 }

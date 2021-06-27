@@ -17,10 +17,10 @@ import java.util.List;
 public interface RoutePhotoMapper {
 
     @Insert(
-        "INSERT INTO route_photos (route_id, photo) "
-            + "VALUES ("
-            + "#{routeId}, "
-            + "#{photo})")
+        "INSERT INTO route_photos (route_id, photo) " +
+            "VALUES (" +
+            "#{routeId}, " +
+            "#{photo})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(RoutePhoto routePhoto);
 

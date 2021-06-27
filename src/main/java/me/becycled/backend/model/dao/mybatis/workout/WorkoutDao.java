@@ -52,6 +52,7 @@ public class WorkoutDao extends BaseMyBatisDao {
     public Workout update(final Workout entity) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
+
             mapper.update(entity);
             return mapper.getById(entity.getId());
         }

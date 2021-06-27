@@ -12,8 +12,8 @@ import org.apache.ibatis.annotations.Select;
 public interface UserAccountMapper {
 
     @Insert(
-        "INSERT INTO user_accounts (user_id ,password, last_auth_time) "
-            + "VALUES (#{userId}, #{password}, #{lastAuthTime})")
+        "INSERT INTO user_accounts (user_id ,password, last_auth_time) " +
+            "VALUES (#{userId}, #{password}, #{lastAuthTime})")
     int create(UserAccount user);
 
     @Results(id = "userAccountResult", value = {
@@ -24,4 +24,3 @@ public interface UserAccountMapper {
     @Select("SELECT * FROM user_accounts WHERE user_id=#{userId}")
     UserAccount getByUserId(Integer userId);
 }
-

@@ -1,6 +1,7 @@
 package me.becycled.backend.model.entity.route;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -8,12 +9,14 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-public class RoutePhoto {
+public final class RoutePhoto {
 
     private Integer id;
     private Integer routeId;
     private String photo;
     private Instant createdAt;
+
+    //region GETTERS & SETTERS
 
     public Integer getId() {
         return id;
@@ -47,6 +50,8 @@ public class RoutePhoto {
         this.createdAt = createdAt;
     }
 
+    //endregion GETTERS & SETTERS
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -69,7 +74,7 @@ public class RoutePhoto {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("id", id)
             .append("routeId", routeId)
             .append("photo", photo)

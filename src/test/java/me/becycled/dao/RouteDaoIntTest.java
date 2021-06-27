@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RouteDaoIntegrationTest extends BaseIntegrationTest {
+public class RouteDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {

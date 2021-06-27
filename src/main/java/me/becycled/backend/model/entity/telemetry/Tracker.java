@@ -14,6 +14,8 @@ public final class Tracker {
     private Integer userId;
     private String imei;
 
+    //region GETTERS & SETTERS
+
     public Integer getId() {
         return id;
     }
@@ -37,6 +39,8 @@ public final class Tracker {
     public void setImei(final String imei) {
         this.imei = imei;
     }
+
+    //endregion GETTERS & SETTERS
 
     @Override
     public boolean equals(final Object o) {

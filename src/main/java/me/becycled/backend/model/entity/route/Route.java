@@ -1,6 +1,7 @@
 package me.becycled.backend.model.entity.route;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.Instant;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-public class Route {
+public final class Route {
 
     private Integer id;
     private Integer userId;
@@ -21,6 +22,8 @@ public class Route {
     private String description;
     private Integer popularity;
     private Instant createdAt;
+
+    //region GETTERS & SETTERS
 
     public Integer getId() {
         return id;
@@ -102,6 +105,8 @@ public class Route {
         this.createdAt = createdAt;
     }
 
+    //endregion GETTERS & SETTERS
+
     @Override
     @SuppressWarnings("CyclomaticComplexity")
     public boolean equals(final Object o) {
@@ -111,27 +116,29 @@ public class Route {
         if (!(o instanceof Route)) {
             return false;
         }
-        final Route route = (Route) o;
-        return Objects.equals(id, route.id)
-            && Objects.equals(userId, route.userId)
-            && Objects.equals(name, route.name)
-            && Objects.equals(routeInfo, route.routeInfo)
-            && Objects.equals(routePreview, route.routePreview)
-            && Objects.equals(sportTypes, route.sportTypes)
-            && Objects.equals(disposable, route.disposable)
-            && Objects.equals(description, route.description)
-            && Objects.equals(popularity, route.popularity)
-            && Objects.equals(createdAt, route.createdAt);
+        final Route that = (Route) o;
+        return Objects.equals(id, that.id)
+            && Objects.equals(userId, that.userId)
+            && Objects.equals(name, that.name)
+            && Objects.equals(routeInfo, that.routeInfo)
+            && Objects.equals(routePreview, that.routePreview)
+            && Objects.equals(sportTypes, that.sportTypes)
+            && Objects.equals(disposable, that.disposable)
+            && Objects.equals(description, that.description)
+            && Objects.equals(popularity, that.popularity)
+            && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, name, routeInfo, routePreview, sportTypes, disposable, description, popularity, createdAt);
+        return Objects.hash(id, userId, name,
+            routeInfo, routePreview, sportTypes, disposable,
+            description, popularity, createdAt);
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("id", id)
             .append("userId", userId)
             .append("name", name)

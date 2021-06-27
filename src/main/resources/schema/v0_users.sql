@@ -5,7 +5,7 @@ CREATE TABLE users
     first_name TEXT,
     last_name  TEXT,
     email      TEXT        NOT NULL UNIQUE,
-    phone      TEXT        UNIQUE,
+    phone      TEXT UNIQUE,
     about      TEXT,
     avatar     TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()

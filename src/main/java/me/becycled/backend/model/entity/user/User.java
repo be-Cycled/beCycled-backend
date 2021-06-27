@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-public class User {
+public final class User {
 
     private Integer id;
     private String login;
@@ -20,6 +20,8 @@ public class User {
     private String about;
     private String avatar;
     private Instant createdAt;
+
+    //region GETTERS & SETTERS
 
     public Integer getId() {
         return id;
@@ -93,6 +95,8 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    //endregion GETTERS & SETTERS
+
     @Override
     @SuppressWarnings("CyclomaticComplexity")
     public boolean equals(final Object o) {
@@ -102,16 +106,16 @@ public class User {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final User user = (User) o;
-        return Objects.equals(id, user.id)
-            && Objects.equals(login, user.login)
-            && Objects.equals(firstName, user.firstName)
-            && Objects.equals(lastName, user.lastName)
-            && Objects.equals(email, user.email)
-            && Objects.equals(phone, user.phone)
-            && Objects.equals(about, user.about)
-            && Objects.equals(avatar, user.avatar)
-            && Objects.equals(createdAt, user.createdAt);
+        final User that = (User) o;
+        return Objects.equals(id, that.id)
+            && Objects.equals(login, that.login)
+            && Objects.equals(firstName, that.firstName)
+            && Objects.equals(lastName, that.lastName)
+            && Objects.equals(email, that.email)
+            && Objects.equals(phone, that.phone)
+            && Objects.equals(about, that.about)
+            && Objects.equals(avatar, that.avatar)
+            && Objects.equals(createdAt, that.createdAt);
     }
 
     @Override
@@ -134,4 +138,3 @@ public class User {
             .toString();
     }
 }
-

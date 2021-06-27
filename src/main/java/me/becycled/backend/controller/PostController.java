@@ -35,7 +35,7 @@ public class PostController {
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Post post = daoFactory.getPostDao().getById(id);
         if (post == null) {
-            return new ResponseEntity<>("Not found post", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Post is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(post);
     }
@@ -59,15 +59,16 @@ public class PostController {
 
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
         }
 
         final Post post = daoFactory.getPostDao().getById(id);
         if (post == null) {
             return new ResponseEntity<>("Post not exist", HttpStatus.NOT_FOUND);
         }
+
         if (!post.getUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Only owner can update post", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Post can be updated by owner only", HttpStatus.FORBIDDEN);
         }
 
         return ResponseEntity.ok(daoFactory.getPostDao().update(entity));

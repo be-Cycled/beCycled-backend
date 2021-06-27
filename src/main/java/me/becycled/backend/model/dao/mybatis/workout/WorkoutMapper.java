@@ -17,8 +17,8 @@ import java.util.List;
 public interface WorkoutMapper {
 
     @Insert(
-        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) "
-            + "VALUES (" +
+        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) " +
+            "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
             "#{isPrivate}," +
@@ -32,6 +32,20 @@ public interface WorkoutMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(Workout user);
 
+    @Update(
+        "UPDATE workouts SET "
+            + "owner_user_id=#{ownerUserId}, "
+            + "community_id=#{communityId}, "
+            + "private=#{isPrivate}, "
+            + "start_date=#{startDate}, "
+            + "sport_type=#{sportType}::SPORT_TYPE, "
+            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
+            + "description=#{description}, "
+            + "venue=#{venue}, "
+            + "duration=#{duration}, "
+            + "created_at=#{createdAt} "
+            + "WHERE id=#{id}")
+    int update(Workout workout);
 
     @Results(id = "workoutResult", value = {
         @Result(id = true, column = "id", property = "id"),
@@ -57,19 +71,4 @@ public interface WorkoutMapper {
     @Select("SELECT * FROM workouts")
     @ResultMap("workoutResult")
     List<Workout> getAll();
-
-    @Update(
-        "UPDATE workouts SET "
-            + "owner_user_id=#{ownerUserId}, "
-            + "community_id=#{communityId}, "
-            + "private=#{isPrivate}, "
-            + "start_date=#{startDate}, "
-            + "sport_type=#{sportType}::SPORT_TYPE, "
-            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
-            + "description=#{description}, "
-            + "venue=#{venue}, "
-            + "duration=#{duration}, "
-            + "created_at=#{createdAt} "
-            + "WHERE id=#{id}")
-    int update(Workout workout);
 }
