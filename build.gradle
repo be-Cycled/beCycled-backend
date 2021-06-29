@@ -55,6 +55,8 @@ dependencies {
   implementation 'commons-io:commons-io:2.6'
   implementation 'com.google.code.findbugs:annotations:3.0.1'
 
+  implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.testcontainers:postgresql:1.15.3'
 }
