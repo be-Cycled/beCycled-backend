@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,5 +96,49 @@ public class WorkoutController {
         }
 
         return ResponseEntity.ok(daoFactory.getWorkoutDao().update(entity));
+    }
+
+    @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> join(@PathVariable("id") final int id) {
+        final Workout workout = daoFactory.getWorkoutDao().getById(id);
+        if (workout == null) {
+            return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);
+        }
+
+        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        if (curUser == null) {
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (workout.getUserIds().contains(curUser.getId())) {
+            return new ResponseEntity<>("Current user is already joined", HttpStatus.BAD_REQUEST);
+        }
+
+        final List<Integer> userIds = workout.getUserIds() != null ? workout.getUserIds() : new ArrayList<>();
+        userIds.add(curUser.getId());
+        workout.setUserIds(userIds);
+        return ResponseEntity.ok(daoFactory.getWorkoutDao().update(workout));
+    }
+
+    @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
+        final Workout workout = daoFactory.getWorkoutDao().getById(id);
+        if (workout == null) {
+            return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);
+        }
+
+        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        if (curUser == null) {
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (!workout.getUserIds().contains(curUser.getId())) {
+            return new ResponseEntity<>("Current user is not joined", HttpStatus.BAD_REQUEST);
+        }
+
+        final List<Integer> userIds = workout.getUserIds() != null ? workout.getUserIds() : new ArrayList<>();
+        userIds.remove(curUser.getId());
+        workout.setUserIds(userIds);
+        return ResponseEntity.ok(daoFactory.getWorkoutDao().update(workout));
     }
 }

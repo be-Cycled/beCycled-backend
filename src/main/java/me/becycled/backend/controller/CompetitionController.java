@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -94,5 +95,49 @@ public class CompetitionController {
         }
 
         return ResponseEntity.ok(daoFactory.getCompetitionDao().update(entity));
+    }
+
+    @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> join(@PathVariable("id") final int id) {
+        final Competition competition = daoFactory.getCompetitionDao().getById(id);
+        if (competition == null) {
+            return new ResponseEntity<>("Competition is not found", HttpStatus.NOT_FOUND);
+        }
+
+        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        if (curUser == null) {
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (competition.getUserIds().contains(curUser.getId())) {
+            return new ResponseEntity<>("Current user is already joined", HttpStatus.BAD_REQUEST);
+        }
+
+        final List<Integer> userIds = competition.getUserIds() != null ? competition.getUserIds() : new ArrayList<>();
+        userIds.add(curUser.getId());
+        competition.setUserIds(userIds);
+        return ResponseEntity.ok(daoFactory.getCompetitionDao().update(competition));
+    }
+
+    @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
+        final Competition competition = daoFactory.getCompetitionDao().getById(id);
+        if (competition == null) {
+            return new ResponseEntity<>("Competition is not found", HttpStatus.NOT_FOUND);
+        }
+
+        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        if (curUser == null) {
+            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (!competition.getUserIds().contains(curUser.getId())) {
+            return new ResponseEntity<>("Current user is not joined", HttpStatus.BAD_REQUEST);
+        }
+
+        final List<Integer> userIds = competition.getUserIds() != null ? competition.getUserIds() : new ArrayList<>();
+        userIds.remove(curUser.getId());
+        competition.setUserIds(userIds);
+        return ResponseEntity.ok(daoFactory.getCompetitionDao().update(competition));
     }
 }
