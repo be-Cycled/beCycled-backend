@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Instant;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -30,6 +32,17 @@ public class UserAccountDaoIntTest extends BaseIntegrationTest {
         daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
     }
 
+
+    @Test
+    void getByUserId() {
+        final UserAccount createUserAccount = daoFactory.getUserAccountDao().create(TestUtils.getTestUserAccount());
+        final UserAccount dbUserAccount = daoFactory.getUserAccountDao().getByUserId(createUserAccount.getUserId());
+
+        assertEquals(createUserAccount.getUserId(), dbUserAccount.getUserId());
+        assertEquals(createUserAccount.getPassword(), dbUserAccount.getPassword());
+        assertEquals(createUserAccount.getLastAuthTime(), dbUserAccount.getLastAuthTime());
+    }
+
     @Test
     void create() {
         final UserAccount testUserAccount = TestUtils.getTestUserAccount();
@@ -41,12 +54,22 @@ public class UserAccountDaoIntTest extends BaseIntegrationTest {
     }
 
     @Test
-    void getByUserId() {
-        final UserAccount createUserAccount = daoFactory.getUserAccountDao().create(TestUtils.getTestUserAccount());
-        final UserAccount dbUserAccount = daoFactory.getUserAccountDao().getByUserId(createUserAccount.getUserId());
+    void update() {
+        final UserAccount testUserAccount = TestUtils.getTestUserAccount();
+        final UserAccount dbUserAccount = daoFactory.getUserAccountDao().create(testUserAccount);
 
-        assertEquals(createUserAccount.getUserId(), dbUserAccount.getUserId());
-        assertEquals(createUserAccount.getPassword(), dbUserAccount.getPassword());
-        assertEquals(createUserAccount.getLastAuthTime(), dbUserAccount.getLastAuthTime());
+        assertEquals(testUserAccount.getUserId(), dbUserAccount.getUserId());
+        assertEquals(testUserAccount.getPassword(), dbUserAccount.getPassword());
+        assertEquals(testUserAccount.getLastAuthTime(), dbUserAccount.getLastAuthTime());
+
+        final UserAccount update = daoFactory.getUserAccountDao().getByUserId(testUserAccount.getUserId());
+        update.setPassword("NEW_PASSWORD");
+        update.setLastAuthTime(Instant.now());
+        daoFactory.getUserAccountDao().update(update);
+
+        final UserAccount afterUpdate = daoFactory.getUserAccountDao().getByUserId(testUserAccount.getUserId());
+        assertEquals(afterUpdate.getUserId(), dbUserAccount.getUserId());
+        assertEquals(afterUpdate.getPassword(), "NEW_PASSWORD");
+        assertEquals(afterUpdate.getLastAuthTime(), dbUserAccount.getLastAuthTime());
     }
 }

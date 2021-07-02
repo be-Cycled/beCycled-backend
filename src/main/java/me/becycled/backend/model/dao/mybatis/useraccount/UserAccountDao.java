@@ -14,20 +14,29 @@ public class UserAccountDao extends BaseMyBatisDao {
         super(sqlSessionFactory);
     }
 
-    public UserAccount create(final UserAccount entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final UserAccountMapper mapper = session.getMapper(UserAccountMapper.class);
-
-            mapper.create(entity);
-            return entity;
-        }
-    }
-
     public UserAccount getByUserId(final Integer userId) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final UserAccountMapper mapper = session.getMapper(UserAccountMapper.class);
 
             return mapper.getByUserId(userId);
+        }
+    }
+
+    public UserAccount create(final UserAccount entity) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final UserAccountMapper mapper = session.getMapper(UserAccountMapper.class);
+
+            mapper.create(entity);
+            return mapper.getByUserId(entity.getUserId());
+        }
+    }
+
+    public UserAccount update(final UserAccount entity) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final UserAccountMapper mapper = session.getMapper(UserAccountMapper.class);
+
+            mapper.update(entity);
+            return entity;
         }
     }
 }
