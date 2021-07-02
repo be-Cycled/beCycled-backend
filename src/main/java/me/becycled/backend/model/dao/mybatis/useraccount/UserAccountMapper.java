@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * @author I1yi4
@@ -14,7 +15,13 @@ public interface UserAccountMapper {
     @Insert(
         "INSERT INTO user_accounts (user_id ,password, last_auth_time) " +
             "VALUES (#{userId}, #{password}, #{lastAuthTime})")
-    int create(UserAccount user);
+    int create(UserAccount userAccount);
+
+    @Update(
+        "UPDATE user_accounts SET " +
+            "password=#{password} " +
+            "WHERE user_id=#{userId}")
+    int update(UserAccount userAccount);
 
     @Results(id = "userAccountResult", value = {
         @Result(column = "user_id", property = "userId"),
