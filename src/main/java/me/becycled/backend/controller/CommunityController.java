@@ -122,7 +122,7 @@ public class CommunityController {
             return new ResponseEntity<>("Current user is already joined", HttpStatus.BAD_REQUEST);
         }
 
-        final List<Integer> userIds = community.getUserIds() != null ? community.getUserIds() : new ArrayList<>();
+        final List<Integer> userIds = community.getUserIds() != null ? new ArrayList<>(community.getUserIds()) : new ArrayList<>();
         userIds.add(curUser.getId());
         community.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));
@@ -144,7 +144,7 @@ public class CommunityController {
             return new ResponseEntity<>("Current user is not joined", HttpStatus.BAD_REQUEST);
         }
 
-        final List<Integer> userIds = community.getUserIds() != null ? community.getUserIds() : new ArrayList<>();
+        final List<Integer> userIds = community.getUserIds() != null ? new ArrayList<>(community.getUserIds()) : new ArrayList<>();
         userIds.remove(curUser.getId());
         community.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));

@@ -113,7 +113,7 @@ public class CompetitionController {
             return new ResponseEntity<>("Current user is already joined", HttpStatus.BAD_REQUEST);
         }
 
-        final List<Integer> userIds = competition.getUserIds() != null ? competition.getUserIds() : new ArrayList<>();
+        final List<Integer> userIds = competition.getUserIds() != null ? new ArrayList<>(competition.getUserIds()) : new ArrayList<>();
         userIds.add(curUser.getId());
         competition.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getCompetitionDao().update(competition));
@@ -135,7 +135,7 @@ public class CompetitionController {
             return new ResponseEntity<>("Current user is not joined", HttpStatus.BAD_REQUEST);
         }
 
-        final List<Integer> userIds = competition.getUserIds() != null ? competition.getUserIds() : new ArrayList<>();
+        final List<Integer> userIds = competition.getUserIds() != null ? new ArrayList<>(competition.getUserIds()) : new ArrayList<>();
         userIds.remove(curUser.getId());
         competition.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getCompetitionDao().update(competition));

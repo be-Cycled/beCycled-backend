@@ -114,7 +114,7 @@ public class WorkoutController {
             return new ResponseEntity<>("Current user is already joined", HttpStatus.BAD_REQUEST);
         }
 
-        final List<Integer> userIds = workout.getUserIds() != null ? workout.getUserIds() : new ArrayList<>();
+        final List<Integer> userIds = workout.getUserIds() != null ? new ArrayList<>(workout.getUserIds()) : new ArrayList<>();
         userIds.add(curUser.getId());
         workout.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getWorkoutDao().update(workout));
@@ -136,7 +136,7 @@ public class WorkoutController {
             return new ResponseEntity<>("Current user is not joined", HttpStatus.BAD_REQUEST);
         }
 
-        final List<Integer> userIds = workout.getUserIds() != null ? workout.getUserIds() : new ArrayList<>();
+        final List<Integer> userIds = workout.getUserIds() != null ? new ArrayList<>(workout.getUserIds()) : new ArrayList<>();
         userIds.remove(curUser.getId());
         workout.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getWorkoutDao().update(workout));
