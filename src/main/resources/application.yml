@@ -26,3 +26,7 @@ management:
 mybatis:
   configLocation: classpath:mybatis-config.xml
   checkConfigLocation: true
+
+logging:
+  level:
+    root: INFO

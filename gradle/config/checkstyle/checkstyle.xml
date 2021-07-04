@@ -69,7 +69,7 @@
 
 
         <!-- Coding (http://checkstyle.sourceforge.net/config_coding.html) -->
-        <module name="ArrayTrailingComma"/>
+        <!--<module name="ArrayTrailingComma"/>-->
         <!--<module name="AvoidDoubleBraceInitialization"/>-->
         <!--<module name="AvoidInlineConditionals"/>-->
         <module name="AvoidNoArgumentSuperConstructorCall"/>
