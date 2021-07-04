@@ -48,6 +48,9 @@ public interface UserMapper {
     @Select("SELECT * FROM users WHERE id=#{id}")
     User getById(Integer id);
 
+    // see XML
+    List<User> getByIds(List<Integer> ids);
+
     @Select("SELECT * FROM users WHERE login=#{login}")
     @ResultMap("userResult")
     User getByLogin(String login);

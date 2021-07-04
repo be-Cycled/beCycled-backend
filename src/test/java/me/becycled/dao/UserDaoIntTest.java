@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,6 +58,35 @@ public class UserDaoIntTest extends BaseIntegrationTest {
 
         final User bdUser = daoFactory.getUserDao().getById(createdUser.getId());
         assertEquals(createdUser, bdUser);
+    }
+
+    @Test
+    void getByIds() {
+        User firstUser = TestUtils.getTestUser();
+        firstUser = daoFactory.getUserDao().create(firstUser);
+        assertNotNull(firstUser.getId());
+
+        User secondUser = TestUtils.getTestUser();
+        secondUser.setLogin("test");
+        secondUser.setEmail("test@gmail.com");
+        secondUser.setPhone("88005553530");
+        secondUser = daoFactory.getUserDao().create(secondUser);
+        assertNotNull(secondUser.getId());
+
+        User thirdUser = TestUtils.getTestUser();
+        thirdUser.setLogin("test1");
+        thirdUser.setEmail("test1@gmail.com");
+        thirdUser.setPhone("88005553531");
+        thirdUser = daoFactory.getUserDao().create(thirdUser);
+        assertNotNull(thirdUser.getId());
+
+        final List<User> result = daoFactory.getUserDao().getByIds(List.of(firstUser.getId(), thirdUser.getId(), 100500));
+        assertEquals(2, result.size());
+        assertEquals(firstUser, result.get(0));
+        assertEquals(thirdUser, result.get(1));
+
+        final List<User> empty = daoFactory.getUserDao().getByIds(Collections.emptyList());
+        assertEquals(0, empty.size());
     }
 
     @Test
