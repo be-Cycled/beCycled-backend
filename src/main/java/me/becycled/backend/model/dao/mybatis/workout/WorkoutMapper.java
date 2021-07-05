@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public interface WorkoutMapper {
+interface WorkoutMapper {
 
     @Insert(
         "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) " +

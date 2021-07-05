@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -92,6 +93,25 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
         assertEquals("1000", bdCommunity.getUrl());
         assertEquals("1", bdCommunity.getDescription());
         assertEquals(community.getCreatedAt(), bdCommunity.getCreatedAt());
+    }
+
+    @Test
+    void delete() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+
+        final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
+
+        final Community createdCommunity = daoFactory.getCommunityDao().getById(community.getId());
+        assertEquals(createdCommunity, community);
+
+        int delete = daoFactory.getCommunityDao().delete(createdCommunity.getId());
+        assertEquals(1, delete);
+
+        final Community afterDelete = daoFactory.getCommunityDao().getById(community.getId());
+        assertNull(afterDelete);
+
+        int deleteNotExist = daoFactory.getCommunityDao().delete(100500);
+        assertEquals(0, deleteNotExist);
     }
 
     @Test

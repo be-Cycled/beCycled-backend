@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Update;
 /**
  * @author I1yi4
  */
-public interface UserAccountMapper {
+interface UserAccountMapper {
 
     @Insert(
         "INSERT INTO user_accounts (user_id ,password, last_auth_time) " +

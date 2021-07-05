@@ -16,10 +16,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -65,37 +67,6 @@ public class CompetitionDaoIntTest extends BaseIntegrationTest {
     }
 
     @Test
-    void getById() {
-        final Competition competition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
-        final Competition createCompetition = daoFactory.getCompetitionDao().getById(competition.getId());
-
-        assertEquals(createCompetition, competition);
-    }
-
-    @Test
-    void getByCommunityNickname() {
-        final Competition testCompetition = TestUtils.getTestCompetition();
-        testCompetition.setCommunityId(1);
-        final Competition competition = daoFactory.getCompetitionDao().create(testCompetition);
-        final String nickname = daoFactory.getCommunityDao().getById(testCompetition.getId()).getNickname();
-        final List<Competition> bdCompetition = daoFactory.getCompetitionDao().getByCommunityNickname(nickname);
-
-        assertEquals(1, bdCompetition.size());
-        assertEquals(competition, bdCompetition.get(0));
-    }
-
-    @Test
-    void getAll() {
-        final Competition firstCompetition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
-        final Competition secondCompetition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
-
-        final List<Competition> all = daoFactory.getCompetitionDao().getAll();
-        assertEquals(2, all.size());
-        assertTrue(all.stream().anyMatch(firstCompetition::equals));
-        assertTrue(all.stream().anyMatch(secondCompetition::equals));
-    }
-
-    @Test
     void update() {
         User user = TestUtils.getTestUser();
         user.setLogin("1");
@@ -136,5 +107,73 @@ public class CompetitionDaoIntTest extends BaseIntegrationTest {
         assertEquals(testCompetition.getDuration(), dbCompetition.getDuration());
         assertEquals(testCompetition.getDescription(), dbCompetition.getDescription());
         assertEquals(testCompetition.getCreatedAt(), dbCompetition.getCreatedAt());
+    }
+
+    @Test
+    void delete() {
+        final Competition competition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
+
+        final Competition createdCompetition = daoFactory.getCompetitionDao().getById(competition.getId());
+        assertEquals(createdCompetition, competition);
+
+        int delete = daoFactory.getCompetitionDao().delete(createdCompetition.getId());
+        assertEquals(1, delete);
+
+        final Competition afterDelete = daoFactory.getCompetitionDao().getById(competition.getId());
+        assertNull(afterDelete);
+
+        int deleteNotExist = daoFactory.getCompetitionDao().delete(100500);
+        assertEquals(0, deleteNotExist);
+    }
+
+    @Test
+    void getById() {
+        final Competition competition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
+        final Competition createCompetition = daoFactory.getCompetitionDao().getById(competition.getId());
+
+        assertEquals(createCompetition, competition);
+    }
+
+    @Test
+    void getByCommunityNickname() {
+        final Competition testCompetition = TestUtils.getTestCompetition();
+        testCompetition.setCommunityId(1);
+        final Competition competition = daoFactory.getCompetitionDao().create(testCompetition);
+        final String nickname = daoFactory.getCommunityDao().getById(testCompetition.getId()).getNickname();
+        final List<Competition> bdCompetition = daoFactory.getCompetitionDao().getByCommunityNickname(nickname);
+
+        assertEquals(1, bdCompetition.size());
+        assertEquals(competition, bdCompetition.get(0));
+    }
+
+    @Test
+    void getByMemberUserId() {
+        Competition competitionFirst = TestUtils.getTestCompetition();
+        competitionFirst.setUserIds(List.of(1, 2, 3));
+        competitionFirst = daoFactory.getCompetitionDao().create(competitionFirst);
+
+        Competition competitionSecond = TestUtils.getTestCompetition();
+        competitionSecond.setUserIds(List.of(3));
+        competitionSecond = daoFactory.getCompetitionDao().create(competitionSecond);
+
+        Competition competitionThird = TestUtils.getTestCompetition();
+        competitionThird.setUserIds(Collections.emptyList());
+        competitionThird = daoFactory.getCompetitionDao().create(competitionThird);
+
+        final List<Competition> result = daoFactory.getCompetitionDao().getByMemberUserId(3);
+        assertEquals(2, result.size());
+        assertEquals(competitionFirst, result.get(0));
+        assertEquals(competitionSecond, result.get(1));
+    }
+
+    @Test
+    void getAll() {
+        final Competition firstCompetition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
+        final Competition secondCompetition = daoFactory.getCompetitionDao().create(TestUtils.getTestCompetition());
+
+        final List<Competition> all = daoFactory.getCompetitionDao().getAll();
+        assertEquals(2, all.size());
+        assertTrue(all.stream().anyMatch(firstCompetition::equals));
+        assertTrue(all.stream().anyMatch(secondCompetition::equals));
     }
 }

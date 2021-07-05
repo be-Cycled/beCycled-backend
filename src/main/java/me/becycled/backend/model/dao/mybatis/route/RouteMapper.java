@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public interface RouteMapper {
+interface RouteMapper {
 
     @Insert(
         "INSERT INTO routes (user_id, name, route_info, route_preview, sport_types, disposable, description) " +

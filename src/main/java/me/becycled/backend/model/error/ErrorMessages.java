@@ -25,6 +25,10 @@ public enum ErrorMessages {;
         return String.format("%s can be updated by owner only", firstLetterToUpperCase(camelCaseToNormalText(clazz.getSimpleName())));
     }
 
+    public static <T> String onlyOwnerCanDeleteEntity(final Class<T> clazz) {
+        return String.format("%s can be deleted by owner only", firstLetterToUpperCase(camelCaseToNormalText(clazz.getSimpleName())));
+    }
+
     public static String userAlreadyJoin() {
         return "Current user is already joined";
     }

@@ -1,9 +1,14 @@
 package me.becycled.backend.controller;
 
+import me.becycled.backend.exception.AuthException;
+import me.becycled.backend.exception.NotFoundException;
+import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.competition.Competition;
 import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.error.ErrorMessages;
+import me.becycled.backend.service.AccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -28,37 +32,40 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CompetitionController {
 
     private final DaoFactory daoFactory;
+    private final AccessService accessService;
 
     @Autowired
-    public CompetitionController(final DaoFactory daoFactory) {
+    public CompetitionController(final DaoFactory daoFactory,
+                                 final AccessService accessService) {
         this.daoFactory = daoFactory;
+        this.accessService = accessService;
     }
 
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    public ResponseEntity<Competition> getById(@PathVariable("id") final int id) {
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
-            return new ResponseEntity<>("Competition is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Competition.class));
         }
         return ResponseEntity.ok(competition);
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+    public ResponseEntity<List<Competition>> getCompetitionWhichUserMemberByUserLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
-            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(User.class));
         }
-        return ResponseEntity.ok(daoFactory.getCompetitionDao().getAll().stream() // TODO getByCompetitorUserId
-            .filter(c -> c.getUserIds().contains(user.getId()))
-            .collect(Collectors.toList()));
+
+        return ResponseEntity.ok(daoFactory.getCompetitionDao().getByMemberUserId(user.getId()));
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+    public ResponseEntity<List<Competition>> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
-            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
         return ResponseEntity.ok(daoFactory.getCompetitionDao().getByCommunityNickname(nickname));
     }
@@ -70,31 +77,58 @@ public class CompetitionController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Competition> create(@RequestBody final Competition entity) {
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
+        }
+
+        entity.setOwnerUserId(curUser.getId());
+
         return ResponseEntity.ok(daoFactory.getCompetitionDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Competition entity) {
+    public ResponseEntity<Competition> update(@PathVariable("id") final int id,
+                                              @RequestBody final Competition entity) {
         if (id != entity.getId()) {
-            return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.differentIdentifierInPathAndBody());
         }
 
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+            throw new AuthException(ErrorMessages.authError());
         }
 
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
-            return new ResponseEntity<>("Competition is not exist", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Competition.class));
         }
 
         if (!competition.getOwnerUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Competition can be updated by owner only", HttpStatus.FORBIDDEN);
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanUpdateEntity(Competition.class));
         }
 
         return ResponseEntity.ok(daoFactory.getCompetitionDao().update(entity));
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> delete(@PathVariable("id") final int id) {
+
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
+        }
+
+        final Competition competition = daoFactory.getCompetitionDao().getById(id);
+        if (competition == null) {
+            throw new NotFoundException(ErrorMessages.notFound(Competition.class));
+        }
+
+        if (!competition.getOwnerUserId().equals(curUser.getId())) {
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanDeleteEntity(Competition.class));
+        }
+
+        return ResponseEntity.ok(daoFactory.getCompetitionDao().delete(id));
     }
 
     @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)

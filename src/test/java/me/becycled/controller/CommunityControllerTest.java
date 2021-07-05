@@ -258,7 +258,6 @@ public class CommunityControllerTest extends BaseIntegrationTest {
     @Test
     public void create() {
         User user = TestUtils.getTestUser();
-        user.setLogin("auth");
         user = daoFactory.getUserDao().create(user);
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
@@ -310,7 +309,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createWhenNotAuthorize() {
+    public void createWhenNotAuth() {
         daoFactory.getUserDao().create(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
@@ -374,7 +373,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void updateWhenNotAuthorize() {
+    public void updateWhenNotAuth() {
         daoFactory.getUserDao().create(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
@@ -438,6 +437,78 @@ public class CommunityControllerTest extends BaseIntegrationTest {
     }
 
     //endregion update
+
+    //region delete
+
+    @Test
+    public void delete() {
+        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+
+        when(accessService.getCurrentAuthUser()).thenReturn(user);
+
+        Community community = TestUtils.getTestCommunity();
+        community = daoFactory.getCommunityDao().create(community);
+
+        final ResponseEntity<Integer> response = restTemplate.exchange(
+            "http://localhost:" + port + "/communities/" + community.getId(),
+            HttpMethod.DELETE, HttpEntity.EMPTY, Integer.class);
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        then(response.getBody()).isEqualTo(1);
+    }
+
+    @Test
+    public void deleteWhenNotAuth() {
+        daoFactory.getUserDao().create(TestUtils.getTestUser());
+
+        Community community = TestUtils.getTestCommunity();
+        community = daoFactory.getCommunityDao().create(community);
+
+        final ResponseEntity<String> response = restTemplate.exchange(
+            "http://localhost:" + port + "/communities/" + community.getId(),
+            HttpMethod.DELETE, HttpEntity.EMPTY, String.class);
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        then(response.getBody()).isEqualTo("Auth error");
+    }
+
+    @Test
+    public void deleteWhenCommunityNotExist() {
+        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+
+        when(accessService.getCurrentAuthUser()).thenReturn(user);
+
+        Community community = TestUtils.getTestCommunity();
+        community = daoFactory.getCommunityDao().create(community);
+
+        final ResponseEntity<String> response = restTemplate.exchange(
+            "http://localhost:" + port + "/communities/" + 100500,
+            HttpMethod.DELETE, HttpEntity.EMPTY, String.class);
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        then(response.getBody()).isEqualTo("Community is not found");
+    }
+
+    @Test
+    public void deleteWhenCommunityWhenNotOwner() {
+        User owner = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = daoFactory.getUserDao().create(prepareUser("test", "test@gmail.com", "89990001122"));
+
+        when(accessService.getCurrentAuthUser()).thenReturn(user);
+
+        Community community = TestUtils.getTestCommunity();
+        community.setOwnerUserId(owner.getId());
+        community = daoFactory.getCommunityDao().create(community);
+
+        final ResponseEntity<String> response = restTemplate.exchange(
+            "http://localhost:" + port + "/communities/" + community.getId(),
+            HttpMethod.DELETE, HttpEntity.EMPTY, String.class);
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        then(response.getBody()).isEqualTo("Community can be deleted by owner only");
+    }
+
+    //endregion delete
 
     //region join
 

@@ -1,6 +1,7 @@
 package me.becycled.backend.model.dao.mybatis.community;
 
 import me.becycled.backend.model.entity.community.Community;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public interface CommunityMapper {
+interface CommunityMapper {
     @Insert(
         "INSERT INTO communities (owner_user_id, name, nickname, avatar, community_type, sport_types, user_ids, url, description) "
             + "VALUES ("
@@ -43,6 +44,9 @@ public interface CommunityMapper {
             + "WHERE id=#{id}")
     int update(Community community);
 
+    @Delete("DELETE FROM communities WHERE id=#{id}")
+    int delete(Integer id);
+
     @Results(id = "communityResult", value = {
         @Result(id = true, column = "id", property = "id"),
         @Result(column = "owner_user_id", property = "ownerUserId"),
@@ -70,7 +74,6 @@ public interface CommunityMapper {
     @Select("SELECT * FROM communities WHERE #{memberUserId} = ANY(user_ids)")
     @ResultMap("communityResult")
     List<Community> getByMemberUserId(Integer memberUserId);
-
 
     @Select("SELECT * FROM communities")
     @ResultMap("communityResult")

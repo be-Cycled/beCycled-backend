@@ -123,6 +123,26 @@ public class CommunityController {
         return ResponseEntity.ok(daoFactory.getCommunityDao().update(entity));
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> delete(@PathVariable("id") final int id) {
+
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
+        }
+
+        final Community community = daoFactory.getCommunityDao().getById(id);
+        if (community == null) {
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
+        }
+
+        if (!community.getOwnerUserId().equals(curUser.getId())) {
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanDeleteEntity(Community.class));
+        }
+
+        return ResponseEntity.ok(daoFactory.getCommunityDao().delete(id));
+    }
+
     @RequestMapping(value = "/join/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Community> join(@PathVariable("id") final int id) {
         final User curUser = accessService.getCurrentAuthUser();

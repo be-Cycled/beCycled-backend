@@ -34,6 +34,14 @@ public class CompetitionDao extends BaseMyBatisDao {
         }
     }
 
+    public int delete(final Integer id) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
+
+            return mapper.delete(id);
+        }
+    }
+
     public Competition getById(final Integer id) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
@@ -47,6 +55,14 @@ public class CompetitionDao extends BaseMyBatisDao {
             final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
 
             return mapper.getByCommunityNickname(nickname);
+        }
+    }
+
+    public List<Competition> getByMemberUserId(final Integer memberUserId) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final CompetitionMapper mapper = session.getMapper(CompetitionMapper.class);
+
+            return mapper.getByMemberUserId(memberUserId);
         }
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public interface UserMapper {
+interface UserMapper {
 
     @Insert(
         "INSERT INTO users (login, first_name, last_name, email, phone, about, avatar) " +
