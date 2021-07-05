@@ -1,6 +1,7 @@
 package me.becycled.backend.model.dao.mybatis.workout;
 
 import me.becycled.backend.model.entity.workout.Workout;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-interface WorkoutMapper {
+public interface WorkoutMapper {
 
     @Insert(
         "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) " +
@@ -47,6 +48,9 @@ interface WorkoutMapper {
             + "WHERE id=#{id}")
     int update(Workout workout);
 
+    @Delete("DELETE FROM workouts WHERE id=#{id}")
+    int delete(Integer id);
+
     @Results(id = "workoutResult", value = {
         @Result(id = true, column = "id", property = "id"),
         @Result(column = "owner_user_id", property = "ownerUserId"),
@@ -67,6 +71,10 @@ interface WorkoutMapper {
     @Select("SELECT * FROM workouts WHERE community_id IN (SELECT id FROM communities WHERE nickname=#{nickname})")
     @ResultMap("workoutResult")
     List<Workout> getByCommunityNickname(String nickname);
+
+    @Select("SELECT * FROM workouts WHERE #{memberUserId} = ANY(user_ids)")
+    @ResultMap("workoutResult")
+    List<Workout> getByMemberUserId(Integer memberUserId);
 
     @Select("SELECT * FROM workouts")
     @ResultMap("workoutResult")

@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author Suren Kalaychyan
  */
-interface PostMapper {
+public interface PostMapper {
 
     @Insert(
         "INSERT INTO posts (user_id, title, content, poster) " +

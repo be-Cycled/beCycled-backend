@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-interface CompetitionMapper {
+public interface CompetitionMapper {
 
     @Insert(
         "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) " +

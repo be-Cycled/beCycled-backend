@@ -1,6 +1,9 @@
 package me.becycled;
 
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
+import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.entity.user.UserAccount;
+import me.becycled.utils.TestUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -163,5 +166,10 @@ public abstract class BaseIntegrationTest {
         }
 
         throw new UnsupportedOperationException("Error on getting the list of files for URL " + dirURL);
+    }
+
+    protected User createUser(final User user) {
+        UserAccount userAccount = daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
+        return daoFactory.getUserDao().getById(userAccount.getUserId());
     }
 }

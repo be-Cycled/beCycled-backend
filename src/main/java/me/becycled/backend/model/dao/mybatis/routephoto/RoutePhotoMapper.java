@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-interface RoutePhotoMapper {
+public interface RoutePhotoMapper {
 
     @Insert(
         "INSERT INTO route_photos (route_id, photo) " +

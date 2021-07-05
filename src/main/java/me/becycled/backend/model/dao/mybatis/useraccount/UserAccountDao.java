@@ -1,6 +1,8 @@
 package me.becycled.backend.model.dao.mybatis.useraccount;
 
 import me.becycled.backend.model.dao.mybatis.BaseMyBatisDao;
+import me.becycled.backend.model.dao.mybatis.user.UserMapper;
+import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -22,12 +24,15 @@ public class UserAccountDao extends BaseMyBatisDao {
         }
     }
 
-    public UserAccount create(final UserAccount entity) {
+    public UserAccount create(final User user, final UserAccount userAccount) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final UserAccountMapper mapper = session.getMapper(UserAccountMapper.class);
+            final UserAccountMapper userAccountMapper = session.getMapper(UserAccountMapper.class);
+            final UserMapper userMapper = session.getMapper(UserMapper.class);
 
-            mapper.create(entity);
-            return mapper.getByUserId(entity.getUserId());
+            userAccountMapper.create(user, userAccount);
+
+            final User createdUser = userMapper.getByLogin(user.getLogin());
+            return userAccountMapper.getByUserId(createdUser.getId());
         }
     }
 

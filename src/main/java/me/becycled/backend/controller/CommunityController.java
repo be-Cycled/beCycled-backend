@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -95,6 +96,10 @@ public class CommunityController {
         }
 
         entity.setOwnerUserId(curUser.getId());
+
+        final List<Integer> userIds = new ArrayList<>(entity.getUserIds());
+        userIds.add(curUser.getId());
+        entity.setUserIds(userIds.stream().distinct().collect(Collectors.toList()));
 
         return ResponseEntity.ok(daoFactory.getCommunityDao().create(entity));
     }

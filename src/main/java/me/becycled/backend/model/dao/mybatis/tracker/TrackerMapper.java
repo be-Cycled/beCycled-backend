@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author binakot
  */
-interface TrackerMapper {
+public interface TrackerMapper {
 
     @Insert(
         "INSERT INTO trackers (user_id, imei) " +

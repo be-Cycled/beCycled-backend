@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-interface CommunityMapper {
+public interface CommunityMapper {
     @Insert(
         "INSERT INTO communities (owner_user_id, name, nickname, avatar, community_type, sport_types, user_ids, url, description) "
             + "VALUES ("

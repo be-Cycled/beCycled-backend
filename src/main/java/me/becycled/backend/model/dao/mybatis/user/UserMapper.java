@@ -1,8 +1,6 @@
 package me.becycled.backend.model.dao.mybatis.user;
 
 import me.becycled.backend.model.entity.user.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -14,13 +12,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-interface UserMapper {
-
-    @Insert(
-        "INSERT INTO users (login, first_name, last_name, email, phone, about, avatar) " +
-            "VALUES (#{login}, #{firstName}, #{lastName}, #{email}, #{phone}, #{about}, #{avatar})")
-    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    int create(User user);
+public interface UserMapper {
 
     @Update(
         "UPDATE users SET " +

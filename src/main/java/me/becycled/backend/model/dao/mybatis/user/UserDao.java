@@ -17,15 +17,6 @@ public class UserDao extends BaseMyBatisDao {
         super(sqlSessionFactory);
     }
 
-    public User create(final User entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final UserMapper mapper = session.getMapper(UserMapper.class);
-            mapper.create(entity);
-
-            return mapper.getById(entity.getId());
-        }
-    }
-
     public User update(final User entity) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final UserMapper mapper = session.getMapper(UserMapper.class);

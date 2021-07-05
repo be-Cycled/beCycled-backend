@@ -3,9 +3,9 @@ package me.becycled.controller;
 import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
 import me.becycled.backend.model.entity.community.Community;
-import me.becycled.backend.model.entity.competition.Competition;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.entity.workout.Workout;
 import me.becycled.backend.service.AccessService;
 import me.becycled.utils.TestUtils;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(
     classes = ByCycledBackendApplicationTest.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CompetitionControllerTest extends BaseIntegrationTest {
+public class WorkoutControllerTest extends BaseIntegrationTest {
 
     @MockBean
     AccessService accessService;
@@ -53,15 +53,15 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         Route route = TestUtils.getTestRoute();
         route = daoFactory.getRouteDao().create(route);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        final ResponseEntity<Competition> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/" + competition.getId(),
-            HttpMethod.GET, HttpEntity.EMPTY, Competition.class);
+        final ResponseEntity<Workout> response = restTemplate.exchange(
+            "http://localhost:" + port + "/workouts/" + workout.getId(),
+            HttpMethod.GET, HttpEntity.EMPTY, Workout.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        then(response.getBody()).isEqualTo(competition);
+        then(response.getBody()).isEqualTo(workout);
     }
 
     @Test
@@ -71,54 +71,54 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         Route route = TestUtils.getTestRoute();
         route = daoFactory.getRouteDao().create(route);
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/" + 100500,
+            "http://localhost:" + port + "/workouts/" + 100500,
             HttpMethod.GET, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        then(response.getBody()).isEqualTo("Competition is not found");
+        then(response.getBody()).isEqualTo("Workout is not found");
     }
 
     //endregion getById
 
-    //region getCompetitionWhichUserMemberByUserLogin
+    //region getWorkoutWhichUserMemberByUserLogin
 
     @Test
-    public void getCompetitionWhichUserMemberByUserLogin() {
+    public void getWorkoutWhichUserMemberByUserLogin() {
         User user = createUser(TestUtils.getTestUser());
 
         Route route = TestUtils.getTestRoute();
         route = daoFactory.getRouteDao().create(route);
 
-        Competition competitionFirst = TestUtils.getTestCompetition();
-        competitionFirst.setUserIds(List.of(user.getId()));
-        competitionFirst = daoFactory.getCompetitionDao().create(competitionFirst);
+        Workout workoutFirst = TestUtils.getTestWorkout();
+        workoutFirst.setUserIds(List.of(user.getId()));
+        workoutFirst = daoFactory.getWorkoutDao().create(workoutFirst);
 
-        Competition competitionSecond = TestUtils.getTestCompetition();
-        competitionSecond.setUserIds(Collections.emptyList());
-        competitionSecond = daoFactory.getCompetitionDao().create(competitionSecond);
+        Workout workoutSecond = TestUtils.getTestWorkout();
+        workoutSecond.setUserIds(Collections.emptyList());
+        workoutSecond = daoFactory.getWorkoutDao().create(workoutSecond);
 
-        Competition competitionThird = TestUtils.getTestCompetition();
-        competitionThird.setUserIds(List.of(user.getId()));
-        competitionThird = daoFactory.getCompetitionDao().create(competitionThird);
+        Workout workoutThird = TestUtils.getTestWorkout();
+        workoutThird.setUserIds(List.of(user.getId()));
+        workoutThird = daoFactory.getWorkoutDao().create(workoutThird);
 
-        final ResponseEntity<List<Competition>> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/user/" + user.getLogin(),
-            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Competition>>() {
+        final ResponseEntity<List<Workout>> response = restTemplate.exchange(
+            "http://localhost:" + port + "/workouts/user/" + user.getLogin(),
+            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Workout>>() {
             });
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         then(response.getBody().size()).isEqualTo(2);
-        then(response.getBody().get(0)).isEqualTo(competitionFirst);
-        then(response.getBody().get(1)).isEqualTo(competitionThird);
+        then(response.getBody().get(0)).isEqualTo(workoutFirst);
+        then(response.getBody().get(1)).isEqualTo(workoutThird);
     }
 
     @Test
-    public void getCompetitionWhichUserMemberByUserLoginWhenNoOneCompetition() {
+    public void getWorkoutWhichUserMemberByUserLoginWhenNoOneWorkout() {
         User user = createUser(TestUtils.getTestUser());
 
-        final ResponseEntity<List<Competition>> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/user/" + user.getLogin(),
-            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Competition>>() {
+        final ResponseEntity<List<Workout>> response = restTemplate.exchange(
+            "http://localhost:" + port + "/workouts/user/" + user.getLogin(),
+            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Workout>>() {
             });
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -126,16 +126,16 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void getCompetitionWhichUserMemberByUserLoginWhenLoginNotExist() {
+    public void getWorkoutWhichUserMemberByUserLoginWhenLoginNotExist() {
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/user/" + "100500",
+            "http://localhost:" + port + "/workouts/user/" + "100500",
             HttpMethod.GET, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         then(response.getBody()).isEqualTo("User is not found");
     }
 
-    //endregion getCompetitionWhichUserMemberByUserLogin
+    //endregion getWorkoutWhichUserMemberByUserLogin
 
     //region getByCommunityNickname
 
@@ -146,35 +146,35 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
 
-        Competition competitionFirst = TestUtils.getTestCompetition();
-        competitionFirst.setUserIds(List.of(user.getId()));
-        competitionFirst.setCommunityId(community.getId());
-        competitionFirst = daoFactory.getCompetitionDao().create(competitionFirst);
+        Workout workoutFirst = TestUtils.getTestWorkout();
+        workoutFirst.setUserIds(List.of(user.getId()));
+        workoutFirst.setCommunityId(community.getId());
+        workoutFirst = daoFactory.getWorkoutDao().create(workoutFirst);
 
-        Competition competitionSecond = TestUtils.getTestCompetition();
-        competitionSecond.setUserIds(Collections.emptyList());
-        competitionSecond = daoFactory.getCompetitionDao().create(competitionSecond);
+        Workout workoutSecond = TestUtils.getTestWorkout();
+        workoutSecond.setUserIds(Collections.emptyList());
+        workoutSecond = daoFactory.getWorkoutDao().create(workoutSecond);
 
-        Competition competitionThird = TestUtils.getTestCompetition();
-        competitionThird.setUserIds(List.of(user.getId()));
-        competitionThird.setCommunityId(community.getId());
-        competitionThird = daoFactory.getCompetitionDao().create(competitionThird);
+        Workout workoutThird = TestUtils.getTestWorkout();
+        workoutThird.setUserIds(List.of(user.getId()));
+        workoutThird.setCommunityId(community.getId());
+        workoutThird = daoFactory.getWorkoutDao().create(workoutThird);
 
-        final ResponseEntity<List<Competition>> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/community/" + community.getNickname(),
-            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Competition>>() {
+        final ResponseEntity<List<Workout>> response = restTemplate.exchange(
+            "http://localhost:" + port + "/workouts/community/" + community.getNickname(),
+            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Workout>>() {
             });
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         then(response.getBody().size()).isEqualTo(2);
-        then(response.getBody().get(0)).isEqualTo(competitionFirst);
-        then(response.getBody().get(1)).isEqualTo(competitionThird);
+        then(response.getBody().get(0)).isEqualTo(workoutFirst);
+        then(response.getBody().get(1)).isEqualTo(workoutThird);
     }
 
     @Test
     public void getByCommunityNicknameWhenNotExist() {
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/community/" + "100500",
+            "http://localhost:" + port + "/workouts/community/" + "100500",
             HttpMethod.GET, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -190,25 +190,25 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         User user = createUser(TestUtils.getTestUser());
         Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
-        Competition competitionFirst = TestUtils.getTestCompetition();
-        competitionFirst = daoFactory.getCompetitionDao().create(competitionFirst);
+        Workout workoutFirst = TestUtils.getTestWorkout();
+        workoutFirst = daoFactory.getWorkoutDao().create(workoutFirst);
 
-        Competition competitionSecond = TestUtils.getTestCompetition();
-        competitionSecond = daoFactory.getCompetitionDao().create(competitionSecond);
+        Workout workoutSecond = TestUtils.getTestWorkout();
+        workoutSecond = daoFactory.getWorkoutDao().create(workoutSecond);
 
-        Competition competitionThird = TestUtils.getTestCompetition();
-        competitionThird = daoFactory.getCompetitionDao().create(competitionThird);
+        Workout workoutThird = TestUtils.getTestWorkout();
+        workoutThird = daoFactory.getWorkoutDao().create(workoutThird);
 
-        final ResponseEntity<List<Competition>> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/all",
-            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Competition>>() {
+        final ResponseEntity<List<Workout>> response = restTemplate.exchange(
+            "http://localhost:" + port + "/workouts/all",
+            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Workout>>() {
             });
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         then(response.getBody().size()).isEqualTo(3);
-        then(response.getBody().get(0)).isEqualTo(competitionFirst);
-        then(response.getBody().get(1)).isEqualTo(competitionSecond);
-        then(response.getBody().get(2)).isEqualTo(competitionThird);
+        then(response.getBody().get(0)).isEqualTo(workoutFirst);
+        then(response.getBody().get(1)).isEqualTo(workoutSecond);
+        then(response.getBody().get(2)).isEqualTo(workoutThird);
     }
 
     //endregion getAll
@@ -222,27 +222,27 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setOwnerUserId(100500);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setOwnerUserId(100500);
 
-        final RequestEntity<Competition> request = RequestEntity
-            .post(URI.create("http://localhost:" + port + "/competitions"))
+        final RequestEntity<Workout> request = RequestEntity
+            .post(URI.create("http://localhost:" + port + "/workouts"))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(competition);
+            .body(workout);
 
-        final ResponseEntity<Competition> response = restTemplate.exchange(
-            request, Competition.class);
+        final ResponseEntity<Workout> response = restTemplate.exchange(
+            request, Workout.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Competition result = response.getBody();
+        Workout result = response.getBody();
         assertEquals(result.getOwnerUserId(), user.getId());
 
-        competition.setOwnerUserId(user.getId());
-        competition.setId(result.getId());
-        competition.setCreatedAt(result.getCreatedAt());
-        competition.setUserIds(Collections.singletonList(user.getId()));
+        workout.setOwnerUserId(user.getId());
+        workout.setId(result.getId());
+        workout.setCreatedAt(result.getCreatedAt());
+        workout.setUserIds(Collections.singletonList(user.getId()));
 
-        then(result).isEqualTo(competition);
+        then(result).isEqualTo(workout);
     }
 
     @Test
@@ -252,38 +252,38 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setUserIds(Collections.singletonList(user.getId()));
-        competition.setOwnerUserId(100500);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setUserIds(Collections.singletonList(user.getId()));
+        workout.setOwnerUserId(100500);
 
-        final RequestEntity<Competition> request = RequestEntity
-            .post(URI.create("http://localhost:" + port + "/competitions"))
+        final RequestEntity<Workout> request = RequestEntity
+            .post(URI.create("http://localhost:" + port + "/workouts"))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(competition);
+            .body(workout);
 
-        final ResponseEntity<Competition> response = restTemplate.exchange(
-            request, Competition.class);
+        final ResponseEntity<Workout> response = restTemplate.exchange(
+            request, Workout.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Competition result = response.getBody();
+        Workout result = response.getBody();
         assertEquals(result.getOwnerUserId(), user.getId());
 
-        competition.setOwnerUserId(user.getId());
-        competition.setId(result.getId());
-        competition.setCreatedAt(result.getCreatedAt());
-        competition.setUserIds(Collections.singletonList(user.getId()));
+        workout.setOwnerUserId(user.getId());
+        workout.setId(result.getId());
+        workout.setCreatedAt(result.getCreatedAt());
+        workout.setUserIds(Collections.singletonList(user.getId()));
 
-        then(result).isEqualTo(competition);
+        then(result).isEqualTo(workout);
     }
 
     @Test
     public void createWhenNotAuth() {
-        Competition competition = TestUtils.getTestCompetition();
+        Workout workout = TestUtils.getTestWorkout();
 
-        final RequestEntity<Competition> request = RequestEntity
-            .post(URI.create("http://localhost:" + port + "/competitions"))
+        final RequestEntity<Workout> request = RequestEntity
+            .post(URI.create("http://localhost:" + port + "/workouts"))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(competition);
+            .body(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
             request, String.class);
@@ -303,22 +303,22 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setOwnerUserId(user.getId());
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setOwnerUserId(user.getId());
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        competition.setDescription("new");
+        workout.setDescription("new");
 
-        final RequestEntity<Competition> request = RequestEntity
-            .put(URI.create("http://localhost:" + port + "/competitions/" + competition.getId()))
+        final RequestEntity<Workout> request = RequestEntity
+            .put(URI.create("http://localhost:" + port + "/workouts/" + workout.getId()))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(competition);
+            .body(workout);
 
-        final ResponseEntity<Competition> response = restTemplate.exchange(
-            request, Competition.class);
+        final ResponseEntity<Workout> response = restTemplate.exchange(
+            request, Workout.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        then(response.getBody()).isEqualTo(competition);
+        then(response.getBody()).isEqualTo(workout);
     }
 
     @Test
@@ -328,13 +328,13 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        final RequestEntity<Competition> request = RequestEntity
-            .put(URI.create("http://localhost:" + port + "/competitions/" + 100500))
+        final RequestEntity<Workout> request = RequestEntity
+            .put(URI.create("http://localhost:" + port + "/workouts/" + 100500))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(competition);
+            .body(workout);
         final ResponseEntity<String> response = restTemplate.exchange(
             request, String.class);
 
@@ -347,16 +347,16 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         User user = createUser(TestUtils.getTestUser());
         Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setOwnerUserId(user.getId());
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setOwnerUserId(user.getId());
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        competition.setDescription("new");
+        workout.setDescription("new");
 
-        final RequestEntity<Competition> request = RequestEntity
-            .put(URI.create("http://localhost:" + port + "/competitions/" + competition.getId()))
+        final RequestEntity<Workout> request = RequestEntity
+            .put(URI.create("http://localhost:" + port + "/workouts/" + workout.getId()))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(competition);
+            .body(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
             request, String.class);
@@ -372,23 +372,23 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setOwnerUserId(user.getId());
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setOwnerUserId(user.getId());
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        competition.setId(100500);
-        competition.setDescription("new");
+        workout.setId(100500);
+        workout.setDescription("new");
 
-        final RequestEntity<Competition> request = RequestEntity
-            .put(URI.create("http://localhost:" + port + "/competitions/" + competition.getId()))
+        final RequestEntity<Workout> request = RequestEntity
+            .put(URI.create("http://localhost:" + port + "/workouts/" + workout.getId()))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(competition);
+            .body(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
             request, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        then(response.getBody()).isEqualTo("Competition is not found");
+        then(response.getBody()).isEqualTo("Workout is not found");
     }
 
     @Test
@@ -401,22 +401,22 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setOwnerUserId(owner.getId());
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setOwnerUserId(owner.getId());
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        competition.setDescription("new");
+        workout.setDescription("new");
 
-        final RequestEntity<Competition> request = RequestEntity
-            .put(URI.create("http://localhost:" + port + "/competitions/" + competition.getId()))
+        final RequestEntity<Workout> request = RequestEntity
+            .put(URI.create("http://localhost:" + port + "/workouts/" + workout.getId()))
             .contentType(MediaType.APPLICATION_JSON)
-            .body(competition);
+            .body(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
             request, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        then(response.getBody()).isEqualTo("Competition can be updated by owner only");
+        then(response.getBody()).isEqualTo("Workout can be updated by owner only");
     }
 
     //endregion update
@@ -430,11 +430,11 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout = daoFactory.getWorkoutDao().create(workout);
 
         final ResponseEntity<Integer> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/" + competition.getId(),
+            "http://localhost:" + port + "/workouts/" + workout.getId(),
             HttpMethod.DELETE, HttpEntity.EMPTY, Integer.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -446,11 +446,11 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         User user = createUser(TestUtils.getTestUser());
         Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout = daoFactory.getWorkoutDao().create(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/" + competition.getId(),
+            "http://localhost:" + port + "/workouts/" + workout.getId(),
             HttpMethod.DELETE, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -464,11 +464,11 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/" + 100500,
+            "http://localhost:" + port + "/workouts/" + 100500,
             HttpMethod.DELETE, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        then(response.getBody()).isEqualTo("Competition is not found");
+        then(response.getBody()).isEqualTo("Workout is not found");
     }
 
     @Test
@@ -479,16 +479,16 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setOwnerUserId(owner.getId());
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setOwnerUserId(owner.getId());
+        workout = daoFactory.getWorkoutDao().create(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/" + competition.getId(),
+            "http://localhost:" + port + "/workouts/" + workout.getId(),
             HttpMethod.DELETE, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        then(response.getBody()).isEqualTo("Competition can be deleted by owner only");
+        then(response.getBody()).isEqualTo("Workout can be deleted by owner only");
     }
 
     //endregion delete
@@ -511,38 +511,38 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        final ResponseEntity<Competition> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/join/" + competition.getId(),
-            HttpMethod.POST, HttpEntity.EMPTY, Competition.class);
+        final ResponseEntity<Workout> response = restTemplate.exchange(
+            "http://localhost:" + port + "/workouts/join/" + workout.getId(),
+            HttpMethod.POST, HttpEntity.EMPTY, Workout.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        competition.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId(), user.getId()));
-        then(response.getBody()).isEqualTo(competition);
+        workout.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId(), user.getId()));
+        then(response.getBody()).isEqualTo(workout);
     }
 
     @Test
-    public void joinWhenNoOneInCompetition() {
+    public void joinWhenNoOneInWorkout() {
         User user = createUser(TestUtils.getTestUser());
         Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setUserIds(Collections.emptyList());
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setUserIds(Collections.emptyList());
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        final ResponseEntity<Competition> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/join/" + competition.getId(),
-            HttpMethod.POST, HttpEntity.EMPTY, Competition.class);
+        final ResponseEntity<Workout> response = restTemplate.exchange(
+            "http://localhost:" + port + "/workouts/join/" + workout.getId(),
+            HttpMethod.POST, HttpEntity.EMPTY, Workout.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        competition.setUserIds(Collections.singletonList(user.getId()));
+        workout.setUserIds(Collections.singletonList(user.getId()));
 
-        then(response.getBody()).isEqualTo(competition);
+        then(response.getBody()).isEqualTo(workout);
     }
 
     @Test
@@ -550,11 +550,11 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         User user = createUser(TestUtils.getTestUser());
         Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout = daoFactory.getWorkoutDao().create(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/join/" + competition.getId(),
+            "http://localhost:" + port + "/workouts/join/" + workout.getId(),
             HttpMethod.POST, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -568,11 +568,11 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/join/" + 100500,
+            "http://localhost:" + port + "/workouts/join/" + 100500,
             HttpMethod.POST, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        then(response.getBody()).isEqualTo("Competition is not found");
+        then(response.getBody()).isEqualTo("Workout is not found");
     }
 
     @Test
@@ -582,12 +582,12 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setUserIds(Collections.singletonList(user.getId()));
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setUserIds(Collections.singletonList(user.getId()));
+        workout = daoFactory.getWorkoutDao().create(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/join/" + competition.getId(),
+            "http://localhost:" + port + "/workouts/join/" + workout.getId(),
             HttpMethod.POST, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -613,17 +613,17 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         assertNotNull(thirdUser.getId());
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId(), user.getId()));
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId(), user.getId()));
+        workout = daoFactory.getWorkoutDao().create(workout);
 
-        final ResponseEntity<Competition> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/leave/" + competition.getId(),
-            HttpMethod.POST, HttpEntity.EMPTY, Competition.class);
+        final ResponseEntity<Workout> response = restTemplate.exchange(
+            "http://localhost:" + port + "/workouts/leave/" + workout.getId(),
+            HttpMethod.POST, HttpEntity.EMPTY, Workout.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        competition.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
-        then(response.getBody()).isEqualTo(competition);
+        workout.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
+        then(response.getBody()).isEqualTo(workout);
     }
 
     @Test
@@ -631,11 +631,11 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         User user = createUser(TestUtils.getTestUser());
         Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition = daoFactory.getCompetitionDao().create(competition);
+        Workout workout = TestUtils.getTestWorkout();
+        workout = daoFactory.getWorkoutDao().create(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/leave/" + competition.getId(),
+            "http://localhost:" + port + "/workouts/leave/" + workout.getId(),
             HttpMethod.POST, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -648,11 +648,11 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/leave/" + 100500,
+            "http://localhost:" + port + "/workouts/leave/" + 100500,
             HttpMethod.POST, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        then(response.getBody()).isEqualTo("Competition is not found");
+        then(response.getBody()).isEqualTo("Workout is not found");
     }
 
     @Test
@@ -671,13 +671,13 @@ public class CompetitionControllerTest extends BaseIntegrationTest {
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
-        Competition competition = TestUtils.getTestCompetition();
-        competition.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
+        Workout workout = TestUtils.getTestWorkout();
+        workout.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
 
-        competition = daoFactory.getCompetitionDao().create(competition);
+        workout = daoFactory.getWorkoutDao().create(workout);
 
         final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/competitions/leave/" + competition.getId(),
+            "http://localhost:" + port + "/workouts/leave/" + workout.getId(),
             HttpMethod.POST, HttpEntity.EMPTY, String.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);

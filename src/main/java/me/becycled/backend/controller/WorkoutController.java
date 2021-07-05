@@ -1,13 +1,16 @@
 package me.becycled.backend.controller;
 
+import me.becycled.backend.exception.AuthException;
+import me.becycled.backend.exception.NotFoundException;
+import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.workout.Workout;
+import me.becycled.backend.model.error.ErrorMessages;
+import me.becycled.backend.service.AccessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,38 +31,39 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class WorkoutController {
 
     private final DaoFactory daoFactory;
+    private final AccessService accessService;
 
     @Autowired
-    public WorkoutController(final DaoFactory daoFactory) {
+    public WorkoutController(final DaoFactory daoFactory,
+                             final AccessService accessService) {
         this.daoFactory = daoFactory;
+        this.accessService = accessService;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    public ResponseEntity<Workout> getById(@PathVariable("id") final int id) {
         final Workout workout = daoFactory.getWorkoutDao().getById(id);
         if (workout == null) {
-            return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Workout.class));
         }
         return ResponseEntity.ok(workout);
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+    public ResponseEntity<List<Workout>> getWorkoutWhichUserMemberByUserLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
-            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(User.class));
         }
 
-        return ResponseEntity.ok(daoFactory.getWorkoutDao().getAll().stream() // // TODO getByMemberUserId
-            .filter(w -> w.getUserIds().contains(user.getId()))
-            .collect(Collectors.toList()));
+        return ResponseEntity.ok(daoFactory.getWorkoutDao().getByMemberUserId(user.getId()));
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+    public ResponseEntity<List<Workout>> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
-            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
         return ResponseEntity.ok(daoFactory.getWorkoutDao().getByCommunityNickname(nickname));
     }
@@ -71,72 +75,103 @@ public class WorkoutController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Workout> create(@RequestBody final Workout entity) {
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
+        }
+
+        entity.setOwnerUserId(curUser.getId());
+
+        final List<Integer> userIds = new ArrayList<>(entity.getUserIds());
+        userIds.add(curUser.getId());
+        entity.setUserIds(userIds.stream().distinct().collect(Collectors.toList()));
+
         return ResponseEntity.ok(daoFactory.getWorkoutDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Workout entity) {
+    public ResponseEntity<Workout> update(@PathVariable("id") final int id,
+                                          @RequestBody final Workout entity) {
         if (id != entity.getId()) {
-            return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.differentIdentifierInPathAndBody());
         }
 
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+            throw new AuthException(ErrorMessages.authError());
         }
 
         final Workout workout = daoFactory.getWorkoutDao().getById(id);
         if (workout == null) {
-            return new ResponseEntity<>("Workout is not exist", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Workout.class));
         }
 
         if (!workout.getOwnerUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Workout can be updated by owner only", HttpStatus.FORBIDDEN);
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanUpdateEntity(Workout.class));
         }
 
         return ResponseEntity.ok(daoFactory.getWorkoutDao().update(entity));
     }
 
-    @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> join(@PathVariable("id") final int id) {
-        final Workout workout = daoFactory.getWorkoutDao().getById(id);
-        if (workout == null) {
-            return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> delete(@PathVariable("id") final int id) {
+
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
         }
 
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        final Workout workout = daoFactory.getWorkoutDao().getById(id);
+        if (workout == null) {
+            throw new NotFoundException(ErrorMessages.notFound(Workout.class));
+        }
+
+        if (!workout.getOwnerUserId().equals(curUser.getId())) {
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanDeleteEntity(Workout.class));
+        }
+
+        return ResponseEntity.ok(daoFactory.getWorkoutDao().delete(id));
+    }
+
+    @RequestMapping(value = "/join/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Workout> join(@PathVariable("id") final int id) {
+        final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+            throw new AuthException(ErrorMessages.authError());
+        }
+
+        final Workout workout = daoFactory.getWorkoutDao().getById(id);
+        if (workout == null) {
+            throw new NotFoundException(ErrorMessages.notFound(Workout.class));
         }
 
         if (workout.getUserIds().contains(curUser.getId())) {
-            return new ResponseEntity<>("Current user is already joined", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.userAlreadyJoin());
         }
 
-        final List<Integer> userIds = workout.getUserIds() != null ? new ArrayList<>(workout.getUserIds()) : new ArrayList<>();
+        final List<Integer> userIds = new ArrayList<>(workout.getUserIds());
         userIds.add(curUser.getId());
         workout.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getWorkoutDao().update(workout));
     }
 
-    @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
-        final Workout workout = daoFactory.getWorkoutDao().getById(id);
-        if (workout == null) {
-            return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);
+    @RequestMapping(value = "/leave/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Workout> leave(@PathVariable("id") final int id) {
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
         }
 
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+        final Workout workout = daoFactory.getWorkoutDao().getById(id);
+        if (workout == null) {
+            throw new NotFoundException(ErrorMessages.notFound(Workout.class));
         }
 
         if (!workout.getUserIds().contains(curUser.getId())) {
-            return new ResponseEntity<>("Current user is not joined", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.userNotJoin());
         }
 
-        final List<Integer> userIds = workout.getUserIds() != null ? new ArrayList<>(workout.getUserIds()) : new ArrayList<>();
+        final List<Integer> userIds = new ArrayList<>(workout.getUserIds());
         userIds.remove(curUser.getId());
         workout.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getWorkoutDao().update(workout));

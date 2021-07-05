@@ -1,9 +1,11 @@
 package me.becycled.backend.controller;
 
 import me.becycled.backend.dto.UserRegistrationDto;
+import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
+import me.becycled.backend.model.error.ErrorMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,25 +36,24 @@ public class RegisterController {
 
     @SuppressWarnings("ReturnCount")
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> create(@RequestBody @Validated final UserRegistrationDto entity) {
+    public ResponseEntity<Void> create(@RequestBody @Validated final UserRegistrationDto entity) {
         final User userByLogin = daoFactory.getUserDao().getByLogin(entity.getLogin());
         if (userByLogin != null) {
-            return ResponseEntity.badRequest().body("Login is already using");
+            throw new WrongRequestException(ErrorMessages.loginAlreadyExist());
         }
         final User userByEmail = daoFactory.getUserDao().getByEmail(entity.getEmail());
         if (userByEmail != null) {
-            return ResponseEntity.badRequest().body("Email is already using");
+            throw new WrongRequestException(ErrorMessages.emailAlreadyExist());
         }
 
-        // TODO Transactional
         final User user = new User();
         user.setLogin(entity.getLogin());
         user.setEmail(entity.getEmail());
-        final User createdUser = daoFactory.getUserDao().create(user);
+
         final UserAccount userAccount = new UserAccount();
-        userAccount.setUserId(createdUser.getId());
         userAccount.setPassword(passwordEncoder.encode(entity.getPassword()));
-        daoFactory.getUserAccountDao().create(userAccount);
+
+        daoFactory.getUserAccountDao().create(user, userAccount);
 
         return ResponseEntity.ok().build();
     }

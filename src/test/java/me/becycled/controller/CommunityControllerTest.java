@@ -51,7 +51,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void getById() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
         community = daoFactory.getCommunityDao().create(community);
@@ -80,7 +80,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void getByNickname() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
         community = daoFactory.getCommunityDao().create(community);
@@ -109,13 +109,13 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void getUsersByCommunityNickname() {
-        User firstUser = daoFactory.getUserDao().create(prepareUser("test0", "test0@gmail.com", "88005553503"));
+        User firstUser = createUser(prepareUser("test0", "test0@gmail.com", "88005553503"));
         assertNotNull(firstUser.getId());
 
-        User secondUser = daoFactory.getUserDao().create(prepareUser("test", "test@gmail.com", "88005553530"));
+        User secondUser = createUser(prepareUser("test", "test@gmail.com", "88005553530"));
         assertNotNull(secondUser.getId());
 
-        User thirdUser = daoFactory.getUserDao().create(prepareUser("test1", "test1@gmail.com", "88005553531"));
+        User thirdUser = createUser(prepareUser("test1", "test1@gmail.com", "88005553531"));
         assertNotNull(thirdUser.getId());
 
         when(accessService.getCurrentAuthUser()).thenReturn(secondUser);
@@ -137,7 +137,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void getUsersByCommunityNicknameWhenNoOneInCommunity() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
         community.setUserIds(Collections.emptyList());
@@ -168,7 +168,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void getCommunityWhichUserMemberByUserLogin() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         Community firstCommunity = TestUtils.getTestCommunity();
         firstCommunity.setNickname("first");
@@ -198,7 +198,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void getCommunityWhichUserMemberByUserLoginWhenNoOneCommunity() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         final ResponseEntity<List<Community>> response = restTemplate.exchange(
             "http://localhost:" + port + "/communities/user/" + user.getLogin(),
@@ -225,7 +225,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void getAll() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community firstCommunity = TestUtils.getTestCommunity();
         firstCommunity.setNickname("first");
@@ -258,11 +258,12 @@ public class CommunityControllerTest extends BaseIntegrationTest {
     @Test
     public void create() {
         User user = TestUtils.getTestUser();
-        user = daoFactory.getUserDao().create(user);
+        user = createUser(user);
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         Community community = TestUtils.getTestCommunity();
+        community.setUserIds(Collections.emptyList());
         community.setOwnerUserId(100500);
 
         final RequestEntity<Community> request = RequestEntity
@@ -280,6 +281,38 @@ public class CommunityControllerTest extends BaseIntegrationTest {
         community.setOwnerUserId(user.getId());
         community.setId(result.getId());
         community.setCreatedAt(result.getCreatedAt());
+        community.setUserIds(Collections.singletonList(user.getId()));
+
+        then(result).isEqualTo(community);
+    }
+
+    @Test
+    public void createWhenOwnerInsideUserIds() {
+        User user = TestUtils.getTestUser();
+        user = createUser(user);
+
+        when(accessService.getCurrentAuthUser()).thenReturn(user);
+
+        Community community = TestUtils.getTestCommunity();
+        community.setUserIds(Collections.singletonList(user.getId()));
+        community.setOwnerUserId(100500);
+
+        final RequestEntity<Community> request = RequestEntity
+            .post(URI.create("http://localhost:" + port + "/communities"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(community);
+
+        final ResponseEntity<Community> response = restTemplate.exchange(
+            request, Community.class);
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Community result = response.getBody();
+        assertEquals(result.getOwnerUserId(), user.getId());
+
+        community.setOwnerUserId(user.getId());
+        community.setId(result.getId());
+        community.setCreatedAt(result.getCreatedAt());
+        community.setUserIds(Collections.singletonList(user.getId()));
 
         then(result).isEqualTo(community);
     }
@@ -288,7 +321,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
     public void createWhenNicknameAlreadyExist() {
         User user = TestUtils.getTestUser();
         user.setLogin("auth");
-        user = daoFactory.getUserDao().create(user);
+        user = createUser(user);
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -310,7 +343,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void createWhenNotAuth() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
 
@@ -332,7 +365,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void update() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -355,7 +388,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void updateWithDifferentId() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
         community = daoFactory.getCommunityDao().create(community);
@@ -374,7 +407,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void updateWhenNotAuth() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
         community = daoFactory.getCommunityDao().create(community);
@@ -393,7 +426,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void updateWhenNotExist() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -414,8 +447,8 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void updateWhenNotOwner() {
-        User owner = daoFactory.getUserDao().create(TestUtils.getTestUser());
-        User user = daoFactory.getUserDao().create(prepareUser("test", "test@gmail.com", "89990001122"));
+        User owner = createUser(TestUtils.getTestUser());
+        User user = createUser(prepareUser("test", "test@gmail.com", "89990001122"));
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -442,7 +475,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void delete() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -459,7 +492,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void deleteWhenNotAuth() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
         community = daoFactory.getCommunityDao().create(community);
@@ -474,7 +507,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void deleteWhenCommunityNotExist() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -491,8 +524,8 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void deleteWhenCommunityWhenNotOwner() {
-        User owner = daoFactory.getUserDao().create(TestUtils.getTestUser());
-        User user = daoFactory.getUserDao().create(prepareUser("test", "test@gmail.com", "89990001122"));
+        User owner = createUser(TestUtils.getTestUser());
+        User user = createUser(prepareUser("test", "test@gmail.com", "89990001122"));
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -514,15 +547,15 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void join() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
-        User firstUser = daoFactory.getUserDao().create(prepareUser("test0", "test0@gmail.com", "88005553503"));
+        User firstUser = createUser(prepareUser("test0", "test0@gmail.com", "88005553503"));
         assertNotNull(firstUser.getId());
 
-        User secondUser = daoFactory.getUserDao().create(prepareUser("test", "test@gmail.com", "88005553530"));
+        User secondUser = createUser(prepareUser("test", "test@gmail.com", "88005553530"));
         assertNotNull(secondUser.getId());
 
-        User thirdUser = daoFactory.getUserDao().create(prepareUser("test1", "test1@gmail.com", "88005553531"));
+        User thirdUser = createUser(prepareUser("test1", "test1@gmail.com", "88005553531"));
         assertNotNull(thirdUser.getId());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
@@ -542,7 +575,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void joinWhenNoOneInCommunity() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -562,7 +595,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void joinWhenNotAuth() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
         community = daoFactory.getCommunityDao().create(community);
@@ -577,7 +610,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void joinCommunityNotExist() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -591,7 +624,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void joinWhenAlreadyJoined() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -613,15 +646,15 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void leave() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
-        User firstUser = daoFactory.getUserDao().create(prepareUser("test0", "test0@gmail.com", "88005553503"));
+        User firstUser = createUser(prepareUser("test0", "test0@gmail.com", "88005553503"));
         assertNotNull(firstUser.getId());
 
-        User secondUser = daoFactory.getUserDao().create(prepareUser("test", "test@gmail.com", "88005553530"));
+        User secondUser = createUser(prepareUser("test", "test@gmail.com", "88005553530"));
         assertNotNull(secondUser.getId());
 
-        User thirdUser = daoFactory.getUserDao().create(prepareUser("test1", "test1@gmail.com", "88005553531"));
+        User thirdUser = createUser(prepareUser("test1", "test1@gmail.com", "88005553531"));
         assertNotNull(thirdUser.getId());
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
@@ -641,7 +674,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void leaveWhenNotAuth() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
         Community community = TestUtils.getTestCommunity();
         community.setUserIds(List.of(user.getId()));
@@ -658,7 +691,7 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void leaveWhenCommunityNotExist() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         final ResponseEntity<String> response = restTemplate.exchange(
@@ -671,15 +704,15 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     @Test
     public void leaveWhenNotJoined() {
-        User user = daoFactory.getUserDao().create(TestUtils.getTestUser());
+        User user = createUser(TestUtils.getTestUser());
 
-        User firstUser = daoFactory.getUserDao().create(prepareUser("test0", "test0@gmail.com", "88005553503"));
+        User firstUser = createUser(prepareUser("test0", "test0@gmail.com", "88005553503"));
         assertNotNull(firstUser.getId());
 
-        User secondUser = daoFactory.getUserDao().create(prepareUser("test", "test@gmail.com", "88005553530"));
+        User secondUser = createUser(prepareUser("test", "test@gmail.com", "88005553530"));
         assertNotNull(secondUser.getId());
 
-        User thirdUser = daoFactory.getUserDao().create(prepareUser("test1", "test1@gmail.com", "88005553531"));
+        User thirdUser = createUser(prepareUser("test1", "test1@gmail.com", "88005553531"));
         assertNotNull(thirdUser.getId());
 
         when(accessService.getCurrentAuthUser()).thenReturn(user);
@@ -697,6 +730,8 @@ public class CommunityControllerTest extends BaseIntegrationTest {
         then(response.getBody()).isEqualTo("Current user is not joined");
     }
 
+    //endregion leave
+
     private User prepareUser(final String login, String email, String phone) {
         User secondUser = TestUtils.getTestUser();
         secondUser.setLogin(login);
@@ -705,5 +740,4 @@ public class CommunityControllerTest extends BaseIntegrationTest {
         return secondUser;
     }
 
-    //endregion leave
 }

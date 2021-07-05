@@ -37,6 +37,14 @@ public enum ErrorMessages {;
         return "Current user is not joined";
     }
 
+    public static String loginAlreadyExist() {
+        return "Login is already using";
+    }
+
+    public static String emailAlreadyExist() {
+        return "Email is already using";
+    }
+
     public static <T> String alreadyExist(final Class<T> clazz) {
         return String.format("%s is already exist", firstLetterToUpperCase(camelCaseToNormalText(clazz.getSimpleName())));
     }

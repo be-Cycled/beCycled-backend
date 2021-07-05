@@ -37,7 +37,7 @@ public class CompetitionDaoIntTest extends BaseIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
         daoFactory.getRouteDao().create(TestUtils.getTestRoute());
         daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
     }
@@ -72,7 +72,7 @@ public class CompetitionDaoIntTest extends BaseIntegrationTest {
         user.setLogin("1");
         user.setEmail("1@gmail.com");
         user.setPhone("89001600020");
-        user = daoFactory.getUserDao().create(user);
+        user = createUser(user);
         Community community = TestUtils.getTestCommunity();
         community.setNickname("testNickname");
         community = daoFactory.getCommunityDao().create(community);

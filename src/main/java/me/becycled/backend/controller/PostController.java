@@ -1,12 +1,15 @@
 package me.becycled.backend.controller;
 
+import me.becycled.backend.exception.AuthException;
+import me.becycled.backend.exception.NotFoundException;
+import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.post.Post;
 import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.error.ErrorMessages;
+import me.becycled.backend.service.AccessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,17 +28,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class PostController {
 
     private final DaoFactory daoFactory;
+    private final AccessService accessService;
 
     @Autowired
-    public PostController(final DaoFactory daoFactory) {
+    public PostController(final DaoFactory daoFactory,
+                          final AccessService accessService) {
         this.daoFactory = daoFactory;
+        this.accessService = accessService;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    public ResponseEntity<Post> getById(@PathVariable("id") final int id) {
         final Post post = daoFactory.getPostDao().getById(id);
         if (post == null) {
-            return new ResponseEntity<>("Post is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Post.class));
         }
         return ResponseEntity.ok(post);
     }
@@ -51,24 +57,24 @@ public class PostController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Post entity) {
+    public ResponseEntity<Post> update(@PathVariable("id") final int id,
+                                       @RequestBody final Post entity) {
         if (id != entity.getId()) {
-            return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.differentIdentifierInPathAndBody());
         }
 
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+            throw new AuthException(ErrorMessages.authError());
         }
 
         final Post post = daoFactory.getPostDao().getById(id);
         if (post == null) {
-            return new ResponseEntity<>("Post not exist", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Post.class));
         }
 
         if (!post.getUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Post can be updated by owner only", HttpStatus.FORBIDDEN);
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanUpdateEntity(Post.class));
         }
 
         return ResponseEntity.ok(daoFactory.getPostDao().update(entity));

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author binakot
  */
-interface TelemetryMapper {
+public interface TelemetryMapper {
 
     @Insert(
         "INSERT INTO telemetries (tracker_id, fix_time, latitude, longitude, altitude, speed, course) " +

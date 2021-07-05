@@ -1,7 +1,8 @@
 package me.becycled.backend.model.dao.mybatis.useraccount;
 
+import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
-import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -10,12 +11,10 @@ import org.apache.ibatis.annotations.Update;
 /**
  * @author I1yi4
  */
-interface UserAccountMapper {
+public interface UserAccountMapper {
 
-    @Insert(
-        "INSERT INTO user_accounts (user_id ,password, last_auth_time) " +
-            "VALUES (#{userId}, #{password}, #{lastAuthTime})")
-    int create(UserAccount userAccount);
+    // see XML
+    int create(@Param("user") User user, @Param("userAccount") UserAccount userAccount);
 
     @Update(
         "UPDATE user_accounts SET " +
