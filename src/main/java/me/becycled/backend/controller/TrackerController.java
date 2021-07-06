@@ -1,5 +1,7 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.telemetry.Tracker;
 import me.becycled.backend.model.entity.user.User;
@@ -21,6 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/trackers")
+@Api(description = "Трекеры (навигационное оборудование)")
 public class TrackerController {
 
     private final DaoFactory daoFactory;
@@ -31,6 +34,7 @@ public class TrackerController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить трекер по его идентификатору")
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Tracker tracker = daoFactory.getTrackerDao().getById(id);
         if (tracker == null) {
@@ -40,6 +44,7 @@ public class TrackerController {
     }
 
     @RequestMapping(value = "/imei/{imei}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить трекер по его IMEI")
     public ResponseEntity<?> getByImei(@PathVariable("imei") final String imei) {
         final Tracker tracker = daoFactory.getTrackerDao().getByImei(imei.strip());
         if (tracker == null) {
@@ -49,6 +54,7 @@ public class TrackerController {
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить трекер по идентификатору пользователя, к которому он привязан")
     public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
@@ -66,11 +72,13 @@ public class TrackerController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Создать трекер")
     public ResponseEntity<Tracker> create(@RequestBody final Tracker entity) {
         return ResponseEntity.ok(daoFactory.getTrackerDao().create(entity));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все трекеры")
     public ResponseEntity<List<Tracker>> getAll() {
         return ResponseEntity.ok(daoFactory.getTrackerDao().getAll());
     }

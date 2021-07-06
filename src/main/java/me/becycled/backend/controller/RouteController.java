@@ -1,5 +1,7 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.user.User;
@@ -22,6 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/routes")
+@Api(description = "Маршруты")
 public class RouteController {
 
     private final DaoFactory daoFactory;
@@ -32,6 +35,7 @@ public class RouteController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить маршрут по его идентификатору")
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Route route = daoFactory.getRouteDao().getById(id);
         if (route == null) {
@@ -41,16 +45,19 @@ public class RouteController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все маршруты")
     public ResponseEntity<List<Route>> getAll() {
         return ResponseEntity.ok(daoFactory.getRouteDao().getAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Создать маршрут")
     public ResponseEntity<Route> create(@RequestBody final Route entity) {
         return ResponseEntity.ok(daoFactory.getRouteDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Обновить маршрут по его идентификатору")
     public ResponseEntity<?> update(@PathVariable("id") final int id,
                                     @RequestBody final Route entity) {
         if (id != entity.getId()) {

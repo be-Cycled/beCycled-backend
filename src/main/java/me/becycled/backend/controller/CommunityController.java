@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.user.User;
@@ -24,6 +27,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/communities")
+@Api(description = "Сообщества")
 public class CommunityController {
 
     private final DaoFactory daoFactory;
@@ -34,7 +38,10 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    @ApiOperation("Получить сообщество по его идентификатору")
+    public ResponseEntity<?> getById(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
+
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
             return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
@@ -43,7 +50,10 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/nickname/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByNickname(@PathVariable("nickname") final String nickname) {
+    @ApiOperation("Получить сообщество по его никнейму")
+    public ResponseEntity<?> getByNickname(
+        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
             return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
@@ -52,7 +62,10 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/nickname/{nickname}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getUsersByNickname(@PathVariable("nickname") final String nickname) {
+    @ApiOperation("Получить список участников сообщества по его никнейму")
+    public ResponseEntity<?> getUsersByNickname(
+        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
             return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
@@ -64,18 +77,25 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все сообщества")
     public ResponseEntity<List<Community>> getAll() {
         return ResponseEntity.ok(daoFactory.getCommunityDao().getAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Community> create(@RequestBody final Community entity) {
+    @ApiOperation("Создать сообщество")
+    public ResponseEntity<Community> create(
+        @ApiParam("Данные сообщества") @RequestBody final Community entity) {
+
         return ResponseEntity.ok(daoFactory.getCommunityDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Community entity) {
+    @ApiOperation("Обновить сообщество по его идентификатору")
+    public ResponseEntity<?> update(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id,
+        @ApiParam("Данные сообщества") @RequestBody final Community entity) {
+
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }
@@ -98,7 +118,10 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+    @ApiOperation("Получить список сообществ по логину пользователя, который является участником")
+    public ResponseEntity<?> getByUserLogin(
+        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
             return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
@@ -107,7 +130,10 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> join(@PathVariable("id") final int id) {
+    @ApiOperation("Вступить в сообщество по его идентификатору")
+    public ResponseEntity<?> join(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
+
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
             return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
@@ -129,7 +155,10 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
+    @ApiOperation("Покинуть сообщество по его идентификатору")
+    public ResponseEntity<?> leave(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
+
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
             return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);

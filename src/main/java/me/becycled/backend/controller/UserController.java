@@ -1,5 +1,7 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/users")
+@Api(description = "Пользователи")
 public class UserController {
 
     private final DaoFactory daoFactory;
@@ -31,6 +34,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/me", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить данные текущего пользователя")
     public ResponseEntity<?> getMe() {
         final Object login = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (login == null) {
@@ -40,6 +44,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить пользователя по его идентификатору")
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final User user = daoFactory.getUserDao().getById(id);
         if (user == null) {
@@ -49,6 +54,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить пользователя по его логину")
     public ResponseEntity<?> getByLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
@@ -58,11 +64,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить всех пользователей")
     public ResponseEntity<List<User>> getAll() {
         return ResponseEntity.ok(daoFactory.getUserDao().getAll());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Обновить пользователя по его идентификатору")
     public ResponseEntity<?> update(@PathVariable("id") final int id,
                                     @RequestBody final User entity) {
         if (id != entity.getId()) {

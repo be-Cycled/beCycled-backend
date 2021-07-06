@@ -1,5 +1,7 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.competition.Competition;
@@ -25,6 +27,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/competitions")
+@Api(description = "Соревнования")
 public class CompetitionController {
 
     private final DaoFactory daoFactory;
@@ -35,6 +38,7 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить соревнование по его идентификатору")
     public ResponseEntity<?> getById(@PathVariable("id") final int id) {
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
@@ -44,6 +48,7 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить список соревнования по логину пользователя, который является участником")
     public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
@@ -55,6 +60,7 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить список соревнования по никнейму сообщества, где соревнования зарегистрированы")
     public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
@@ -64,16 +70,19 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все соревнования")
     public ResponseEntity<List<Competition>> getAll() {
         return ResponseEntity.ok(daoFactory.getCompetitionDao().getAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Создать соревнование")
     public ResponseEntity<Competition> create(@RequestBody final Competition entity) {
         return ResponseEntity.ok(daoFactory.getCompetitionDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Обновить соревнование по его идентификатору")
     public ResponseEntity<?> update(@PathVariable("id") final int id,
                                     @RequestBody final Competition entity) {
         if (id != entity.getId()) {
@@ -98,6 +107,7 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Добавить на соревнование текущего пользователя по идентификатору соревнования")
     public ResponseEntity<?> join(@PathVariable("id") final int id) {
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
@@ -120,6 +130,7 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Удалить с соревнований текущего пользователя по идентификатору соревнования")
     public ResponseEntity<?> leave(@PathVariable("id") final int id) {
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
