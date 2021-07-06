@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/users")
+@Api(description = "Пользователи")
 public class UserController {
 
     private final DaoFactory daoFactory;
@@ -31,6 +35,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/me", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить данные текущего пользователя")
     public ResponseEntity<?> getMe() {
         final Object login = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (login == null) {
@@ -40,7 +45,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    @ApiOperation("Получить пользователя по его идентификатору")
+    public ResponseEntity<?> getById(
+        @ApiParam("Идентификатор пользователя") @PathVariable("id") final int id) {
+
         final User user = daoFactory.getUserDao().getById(id);
         if (user == null) {
             return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
@@ -49,7 +57,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByLogin(@PathVariable("login") final String login) {
+    @ApiOperation("Получить пользователя по его логину")
+    public ResponseEntity<?> getByLogin(
+        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
             return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
@@ -58,13 +69,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить всех пользователей")
     public ResponseEntity<List<User>> getAll() {
         return ResponseEntity.ok(daoFactory.getUserDao().getAll());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final User entity) {
+    @ApiOperation("Обновить пользователя по его идентификатору")
+    public ResponseEntity<?> update(
+        @ApiParam("Идентификатор пользователя") @PathVariable("id") final int id,
+        @ApiParam("Данные пользователя") @RequestBody final User entity) {
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }

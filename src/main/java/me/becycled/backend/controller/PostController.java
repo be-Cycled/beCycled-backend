@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.post.Post;
 import me.becycled.backend.model.entity.user.User;
@@ -22,6 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/posts")
+@Api(description = "Статьи")
 public class PostController {
 
     private final DaoFactory daoFactory;
@@ -32,7 +36,10 @@ public class PostController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    @ApiOperation("Получить статью по ее идентификатору")
+    public ResponseEntity<?> getById(
+        @ApiParam("Идентификатор статьи") @PathVariable("id") final int id) {
+
         final Post post = daoFactory.getPostDao().getById(id);
         if (post == null) {
             return new ResponseEntity<>("Post is not found", HttpStatus.NOT_FOUND);
@@ -41,18 +48,25 @@ public class PostController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все статьи")
     public ResponseEntity<List<Post>> getAll() {
         return ResponseEntity.ok(daoFactory.getPostDao().getAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Post> create(@RequestBody final Post entity) {
+    @ApiOperation("Создать статью")
+    public ResponseEntity<Post> create(
+        @ApiParam("Данные статьи") @RequestBody final Post entity) {
+
         return ResponseEntity.ok(daoFactory.getPostDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Post entity) {
+    @ApiOperation("Обновить статью по ее идентификатору")
+    public ResponseEntity<?> update(
+        @ApiParam("Идентификатор статьи") @PathVariable("id") final int id,
+        @ApiParam("Данные статьи") @RequestBody final Post entity) {
+
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }

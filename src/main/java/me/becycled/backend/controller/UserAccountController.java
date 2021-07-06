@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
@@ -20,6 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/user-accounts")
+@Api(description = "Авторизационные данные пользователей")
 public class UserAccountController {
 
     private final DaoFactory daoFactory;
@@ -33,7 +37,10 @@ public class UserAccountController {
     }
 
     @RequestMapping(value = "/password", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updatePassword(@RequestBody final String password) {
+    @ApiOperation("Обновить пароль текущего пользователя")
+    public ResponseEntity<?> updatePassword(
+        @ApiParam("Новый пароль пользователя") @RequestBody final String password) {
+
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
             return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);

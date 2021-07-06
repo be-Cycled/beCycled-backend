@@ -1,5 +1,7 @@
 package me.becycled.backend.model.entity.post;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -9,14 +11,22 @@ import java.util.Objects;
 /**
  * @author Suren Kalaychyan
  */
+@ApiModel(description = "Статья")
 public final class Post {
 
+    @ApiModelProperty(notes = "Уникальный идентификатор", required = true, position = 0)
     private Integer id;
+    @ApiModelProperty(notes = "Идентификатор пользователя, который опубликовал статью", required = true, position = 1)
     private Integer userId;
+    @ApiModelProperty(notes = "Заголовок статьи", required = true, position = 2)
     private String title;
+    @ApiModelProperty(notes = "Содержание статьи", required = true, position = 3)
     private String content;
+    @ApiModelProperty(notes = "Изображение", required = true, position = 4)
     private String poster;
+    @ApiModelProperty(notes = "Время создания", required = true, position = 5)
     private Instant createdAt;
+    @ApiModelProperty(notes = "Время обновления", required = true, position = 6)
     private Instant updatedAt;
 
     //region GETTERS & SETTERS

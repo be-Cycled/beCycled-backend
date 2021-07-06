@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.user.User;
@@ -25,6 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/workouts")
+@Api(description = "Тренировки")
 public class WorkoutController {
 
     private final DaoFactory daoFactory;
@@ -35,7 +39,10 @@ public class WorkoutController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    @ApiOperation("Получить тренировку по ее идентификатору")
+    public ResponseEntity<?> getById(
+        @ApiParam("Идентификатор тренировки") @PathVariable("id") final int id) {
+
         final Workout workout = daoFactory.getWorkoutDao().getById(id);
         if (workout == null) {
             return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);
@@ -44,7 +51,10 @@ public class WorkoutController {
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+    @ApiOperation("Получить список тренировок по логину пользователя, который в них учавствует")
+    public ResponseEntity<?> getByUserLogin(
+        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
             return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
@@ -56,7 +66,10 @@ public class WorkoutController {
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+    @ApiOperation("Получить список тренировок по никнейму сообщества, в котором они зарегестрированы")
+    public ResponseEntity<?> getByCommunityNickname(
+        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
             return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
@@ -65,18 +78,25 @@ public class WorkoutController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все тренировки")
     public ResponseEntity<List<Workout>> getAll() {
         return ResponseEntity.ok(daoFactory.getWorkoutDao().getAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Workout> create(@RequestBody final Workout entity) {
+    @ApiOperation("Создать тренировку")
+    public ResponseEntity<Workout> create(
+        @ApiParam("Данные тренировки") @RequestBody final Workout entity) {
+
         return ResponseEntity.ok(daoFactory.getWorkoutDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Workout entity) {
+    @ApiOperation("Обновить тренировку по ее идентификатору")
+    public ResponseEntity<?> update(
+        @ApiParam("Идентификатор тренировки") @PathVariable("id") final int id,
+        @ApiParam("Данные тренировки") @RequestBody final Workout entity) {
+
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }
@@ -99,7 +119,10 @@ public class WorkoutController {
     }
 
     @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> join(@PathVariable("id") final int id) {
+    @ApiOperation("Добавить на тренировку текущего пользователя по идентификатору тренировки")
+    public ResponseEntity<?> join(
+        @ApiParam("Идентификатор тренировки") @PathVariable("id") final int id) {
+
         final Workout workout = daoFactory.getWorkoutDao().getById(id);
         if (workout == null) {
             return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);
@@ -121,7 +144,10 @@ public class WorkoutController {
     }
 
     @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
+    @ApiOperation("Удалить с тренировки текущего пользователя по идентификатору тренировки")
+    public ResponseEntity<?> leave(
+        @ApiParam("Идентификатор тренировки") @PathVariable("id") final int id) {
+
         final Workout workout = daoFactory.getWorkoutDao().getById(id);
         if (workout == null) {
             return new ResponseEntity<>("Workout is not found", HttpStatus.NOT_FOUND);

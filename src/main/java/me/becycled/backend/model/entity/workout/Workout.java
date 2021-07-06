@@ -1,5 +1,7 @@
 package me.becycled.backend.model.entity.workout;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import me.becycled.backend.model.entity.route.SportType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -11,19 +13,32 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
+@ApiModel(description = "Тренировка")
 public final class Workout {
 
+    @ApiModelProperty(notes = "Уникальный идентификатор", required = true, position = 0)
     private Integer id;
+    @ApiModelProperty(notes = "Идентификатор пользователя, который создал соревнование", required = true, position = 1)
     private Integer ownerUserId;
+    @ApiModelProperty(notes = "Идентификатор сообщества, в рамках которого проводится соревнование", required = true, position = 2)
     private Integer communityId;
+    @ApiModelProperty(notes = "Флаг приватности", required = true, position = 3)
     private Boolean isPrivate;
+    @ApiModelProperty(notes = "Время начала соревнования", required = true, position = 4)
     private Instant startDate;
+    @ApiModelProperty(notes = "Идентификатор маршрута, по которому будут проходить соревнования", required = true, position = 5)
     private Integer routeId;
+    @ApiModelProperty(notes = "Вид спорта", required = true, position = 6)
     private SportType sportType;
+    @ApiModelProperty(notes = "Список идентификаторов пользователей, учавствующих в соревновании", required = true, position = 7)
     private List<Integer> userIds;
+    @ApiModelProperty(notes = "Место сбора", required = true, position = 8)
     private String venue;
+    @ApiModelProperty(notes = "Длительность соревнований, секунды", required = true, position = 9)
     private Integer duration;
+    @ApiModelProperty(notes = "Описание соревнования", required = true, position = 10)
     private String description;
+    @ApiModelProperty(notes = "Время создания", required = true, position = 11)
     private Instant createdAt;
 
     //region GETTERS & SETTERS

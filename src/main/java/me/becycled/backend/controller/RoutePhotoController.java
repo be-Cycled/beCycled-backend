@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.route.RoutePhoto;
@@ -23,6 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/route-photos")
+@Api(description = "Фотографии маршрутов")
 public class RoutePhotoController {
 
     private final DaoFactory daoFactory;
@@ -33,7 +37,10 @@ public class RoutePhotoController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    @ApiOperation("Получить фотографию маршрута по ее идентификатору")
+    public ResponseEntity<?> getById(
+        @ApiParam("Идентификатор фотографии маршрута") @PathVariable("id") final int id) {
+
         final RoutePhoto routePhoto = daoFactory.getRoutePhotoDao().getById(id);
         if (routePhoto == null) {
             return new ResponseEntity<>("Route photo is not found", HttpStatus.NOT_FOUND);
@@ -42,22 +49,32 @@ public class RoutePhotoController {
     }
 
     @RequestMapping(value = "/route/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getByRouteId(@PathVariable("id") final int id) {
+    @ApiOperation("Получить список фотографий по идентификатору маршрута")
+    public ResponseEntity<?> getByRouteId(
+        @ApiParam("Идентификатор маршрута") @PathVariable("id") final int id) {
+
         return ResponseEntity.ok(daoFactory.getRoutePhotoDao().getByRouteId(id));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все фотографии всех маршрутов")
     public ResponseEntity<List<RoutePhoto>> getAll() {
         return ResponseEntity.ok(daoFactory.getRoutePhotoDao().getAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<RoutePhoto> create(@RequestBody final RoutePhoto entity) {
+    @ApiOperation("Создать фотографию маршрута")
+    public ResponseEntity<RoutePhoto> create(
+        @ApiParam("Данные фотографии маршрута") @RequestBody final RoutePhoto entity) {
+
         return ResponseEntity.ok(daoFactory.getRoutePhotoDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> delete(@PathVariable("id") final int id) {
+    @ApiOperation("Удалить фотографию маршрута по ее идентификатору")
+    public ResponseEntity<?> delete(
+        @ApiParam("Идентификатор фотографии маршрута") @PathVariable("id") final int id) {
+
         final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         if (curUser == null) {
             return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);

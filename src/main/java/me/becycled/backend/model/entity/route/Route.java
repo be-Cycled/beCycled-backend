@@ -1,5 +1,7 @@
 package me.becycled.backend.model.entity.route;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,17 +12,28 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
+@ApiModel(description = "Маршрут")
 public final class Route {
 
+    @ApiModelProperty(notes = "Уникальный идентификатор", required = true, position = 0)
     private Integer id;
+    @ApiModelProperty(notes = "Идентификатор пользователя, который создал маршрут", required = true, position = 1)
     private Integer userId;
+    @ApiModelProperty(notes = "Название маршрута", required = true, position = 2)
     private String name;
+    @ApiModelProperty(notes = "Данные маршрута", required = true, position = 3)
     private String routeInfo;
+    @ApiModelProperty(notes = "Изображение превью маршрута", required = true, position = 4)
     private String routePreview;
+    @ApiModelProperty(notes = "Список видов спорта", required = true, position = 5)
     private List<SportType> sportTypes;
+    @ApiModelProperty(notes = "Флаг разового использования маршрута", required = true, position = 6)
     private Boolean disposable;
+    @ApiModelProperty(notes = "Описание маршрута", required = true, position = 7)
     private String description;
+    @ApiModelProperty(notes = "Рейтинг популярности маршрута", required = true, position = 8)
     private Integer popularity;
+    @ApiModelProperty(notes = "Время создаения", required = true, position = 9)
     private Instant createdAt;
 
     //region GETTERS & SETTERS
