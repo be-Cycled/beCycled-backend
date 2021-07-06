@@ -1,5 +1,7 @@
 package me.becycled.backend.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -8,10 +10,14 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
+@ApiModel(description = "Регистрационные данные пользователя")
 public final class UserRegistrationDto {
 
+    @ApiModelProperty(notes = "Логин", required = true, position = 0)
     private String login;
+    @ApiModelProperty(notes = "Пароль", required = true, position = 1)
     private String password;
+    @ApiModelProperty(notes = "Электронная почта", required = true, position = 2)
     private String email;
 
     //region GETTERS & SETTERS
@@ -65,7 +71,7 @@ public final class UserRegistrationDto {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("login", login)
-            .append("password", "******")
+            .append("password", "*** hidden ***")
             .append("email", email)
             .toString();
     }

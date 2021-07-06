@@ -1,5 +1,7 @@
 package me.becycled.backend.model.entity.telemetry;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -9,15 +11,24 @@ import java.util.Objects;
 /**
  * @author binakot
  */
+@ApiModel(description = "Телеметрия")
 public final class Telemetry {
 
+    @ApiModelProperty(notes = "Идентификатор трекера", required = true, position = 0)
     private Integer trackerId;
+    @ApiModelProperty(notes = "Время фиксации данных", required = true, position = 1)
     private Instant fixTime;
+    @ApiModelProperty(notes = "Время приема на сервере", required = true, position = 2)
     private Instant serverTime;
+    @ApiModelProperty(notes = "Широта", required = true, position = 3)
     private Double latitude;
+    @ApiModelProperty(notes = "Долгота", required = true, position = 4)
     private Double longitude;
+    @ApiModelProperty(notes = "Высота, метры над уровнем моря", required = true, position = 5)
     private Double altitude;
+    @ApiModelProperty(notes = "Скорость, км/ч", required = true, position = 6)
     private Integer speed;
+    @ApiModelProperty(notes = "Курс, градусы относительно севера по часовой стрелке", required = true, position = 7)
     private Integer course;
 
     private Telemetry() {

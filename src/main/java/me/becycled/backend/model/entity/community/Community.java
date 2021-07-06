@@ -1,5 +1,7 @@
 package me.becycled.backend.model.entity.community;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import me.becycled.backend.model.entity.route.SportType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -11,18 +13,30 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
+@ApiModel(description = "Сообщество")
 public final class Community {
 
+    @ApiModelProperty(notes = "Уникальный идентификатор", required = true, position = 0)
     private Integer id;
+    @ApiModelProperty(notes = "Идентификатор пользователя, который управляет сообществом", required = true, position = 1)
     private Integer ownerUserId;
+    @ApiModelProperty(notes = "Наименование сообщества", required = true, position = 2)
     private String name;
+    @ApiModelProperty(notes = "Никнейм сообщества", required = true, position = 3)
     private String nickname;
+    @ApiModelProperty(notes = "Логотип сообщества", required = true, position = 4)
     private String avatar;
+    @ApiModelProperty(notes = "Тип сообщества", required = true, position = 5)
     private CommunityType communityType;
+    @ApiModelProperty(notes = "Список видов спорта", required = true, position = 6)
     private List<SportType> sportTypes;
+    @ApiModelProperty(notes = "Список участников сообщества", required = true, position = 7)
     private List<Integer> userIds;
+    @ApiModelProperty(notes = "Ссылка на внешний ресурс сообщества", required = true, position = 8)
     private String url;
+    @ApiModelProperty(notes = "Описание сообщества", required = true, position = 9)
     private String description;
+    @ApiModelProperty(notes = "Время создания", required = true, position = 10)
     private Instant createdAt;
 
     //region GETTERS & SETTERS
