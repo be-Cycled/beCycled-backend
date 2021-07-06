@@ -2,6 +2,7 @@ package me.becycled.backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.telemetry.Telemetry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,9 @@ public class TelemetryController {
 
     @RequestMapping(value = "/last/{trackerId}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить последнюю телеметрию по идентификатору трекера")
-    public ResponseEntity<?> getLastByTrackerId(@PathVariable("trackerId") final int trackerId) {
+    public ResponseEntity<?> getLastByTrackerId(
+        @ApiParam("Идентификатор трекера") @PathVariable("trackerId") final int trackerId) {
+
         final Telemetry telemetry = daoFactory.getTelemetryDao().getLastByTrackerId(trackerId);
         if (telemetry == null) {
             return new ResponseEntity<>("Telemetry is not found", HttpStatus.NOT_FOUND);
@@ -44,9 +47,10 @@ public class TelemetryController {
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить список телеметри по идентификатору трекера за указанный временной интервал")
-    public ResponseEntity<?> getRangeByTrackerId(@RequestParam("trackerId") final int trackerId,
-                                                 @RequestParam("from") final Instant from,
-                                                 @RequestParam("to") final Instant to) {
+    public ResponseEntity<?> getRangeByTrackerId(
+        @ApiParam("Идентификатор трекера") @RequestParam("trackerId") final int trackerId,
+        @ApiParam("Время начала в ISO8601") @RequestParam("from") final Instant from,
+        @ApiParam("Время окончания в ISO8601") @RequestParam("to") final Instant to) {
         return ResponseEntity.ok(daoFactory.getTelemetryDao().getRangeByTrackerId(trackerId, from, to));
     }
 }

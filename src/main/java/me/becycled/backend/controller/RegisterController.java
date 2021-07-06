@@ -2,6 +2,7 @@ package me.becycled.backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.dto.UserRegistrationDto;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
@@ -40,7 +41,9 @@ public class RegisterController {
     @SuppressWarnings("ReturnCount")
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Зарегистрировать нового пользователя")
-    public ResponseEntity<String> create(@RequestBody @Validated final UserRegistrationDto entity) {
+    public ResponseEntity<String> create(
+        @ApiParam("Данные пользователя") @RequestBody @Validated final UserRegistrationDto entity) {
+
         final User userByLogin = daoFactory.getUserDao().getByLogin(entity.getLogin());
         if (userByLogin != null) {
             return ResponseEntity.badRequest().body("Login is already using");

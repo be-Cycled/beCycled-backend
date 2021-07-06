@@ -2,6 +2,7 @@ package me.becycled.backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.competition.Competition;
@@ -39,7 +40,9 @@ public class CompetitionController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить соревнование по его идентификатору")
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    public ResponseEntity<?> getById(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id) {
+
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
             return new ResponseEntity<>("Competition is not found", HttpStatus.NOT_FOUND);
@@ -49,7 +52,9 @@ public class CompetitionController {
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить список соревнования по логину пользователя, который является участником")
-    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+    public ResponseEntity<?> getByUserLogin(
+        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
             return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
@@ -61,7 +66,9 @@ public class CompetitionController {
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить список соревнования по никнейму сообщества, где соревнования зарегистрированы")
-    public ResponseEntity<?> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+    public ResponseEntity<?> getByCommunityNickname(
+        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
             return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
@@ -77,14 +84,18 @@ public class CompetitionController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Создать соревнование")
-    public ResponseEntity<Competition> create(@RequestBody final Competition entity) {
+    public ResponseEntity<Competition> create(
+        @ApiParam("Данные соревнования") @RequestBody final Competition entity) {
+
         return ResponseEntity.ok(daoFactory.getCompetitionDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Обновить соревнование по его идентификатору")
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Competition entity) {
+    public ResponseEntity<?> update(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id,
+        @ApiParam("Данные соревнования") @RequestBody final Competition entity) {
+
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }
@@ -108,7 +119,9 @@ public class CompetitionController {
 
     @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Добавить на соревнование текущего пользователя по идентификатору соревнования")
-    public ResponseEntity<?> join(@PathVariable("id") final int id) {
+    public ResponseEntity<?> join(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id) {
+
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
             return new ResponseEntity<>("Competition is not found", HttpStatus.NOT_FOUND);
@@ -131,7 +144,9 @@ public class CompetitionController {
 
     @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Удалить с соревнований текущего пользователя по идентификатору соревнования")
-    public ResponseEntity<?> leave(@PathVariable("id") final int id) {
+    public ResponseEntity<?> leave(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id) {
+
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
             return new ResponseEntity<>("Competition is not found", HttpStatus.NOT_FOUND);

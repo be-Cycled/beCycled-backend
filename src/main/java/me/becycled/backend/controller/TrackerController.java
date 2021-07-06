@@ -2,6 +2,7 @@ package me.becycled.backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.telemetry.Tracker;
 import me.becycled.backend.model.entity.user.User;
@@ -35,7 +36,9 @@ public class TrackerController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить трекер по его идентификатору")
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    public ResponseEntity<?> getById(
+        @ApiParam("Идентификатор трекера") @PathVariable("id") final int id) {
+
         final Tracker tracker = daoFactory.getTrackerDao().getById(id);
         if (tracker == null) {
             return new ResponseEntity<>("Tracker is not found", HttpStatus.NOT_FOUND);
@@ -45,7 +48,9 @@ public class TrackerController {
 
     @RequestMapping(value = "/imei/{imei}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить трекер по его IMEI")
-    public ResponseEntity<?> getByImei(@PathVariable("imei") final String imei) {
+    public ResponseEntity<?> getByImei(
+        @ApiParam("IMEI трекера") @PathVariable("imei") final String imei) {
+
         final Tracker tracker = daoFactory.getTrackerDao().getByImei(imei.strip());
         if (tracker == null) {
             return new ResponseEntity<>("Tracker is not found", HttpStatus.NOT_FOUND);
@@ -55,7 +60,9 @@ public class TrackerController {
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить трекер по идентификатору пользователя, к которому он привязан")
-    public ResponseEntity<?> getByUserLogin(@PathVariable("login") final String login) {
+    public ResponseEntity<?> getByUserLogin(
+        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
             return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
@@ -73,7 +80,9 @@ public class TrackerController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Создать трекер")
-    public ResponseEntity<Tracker> create(@RequestBody final Tracker entity) {
+    public ResponseEntity<Tracker> create(
+        @ApiParam("Данные трекера") @RequestBody final Tracker entity) {
+
         return ResponseEntity.ok(daoFactory.getTrackerDao().create(entity));
     }
 

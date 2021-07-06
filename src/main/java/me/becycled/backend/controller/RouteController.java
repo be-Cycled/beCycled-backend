@@ -2,6 +2,7 @@ package me.becycled.backend.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.user.User;
@@ -36,7 +37,9 @@ public class RouteController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить маршрут по его идентификатору")
-    public ResponseEntity<?> getById(@PathVariable("id") final int id) {
+    public ResponseEntity<?> getById(
+        @ApiParam("Идентификатор маршрута") @PathVariable("id") final int id) {
+
         final Route route = daoFactory.getRouteDao().getById(id);
         if (route == null) {
             return new ResponseEntity<>("Route is not found", HttpStatus.NOT_FOUND);
@@ -52,14 +55,17 @@ public class RouteController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Создать маршрут")
-    public ResponseEntity<Route> create(@RequestBody final Route entity) {
+    public ResponseEntity<Route> create(
+        @ApiParam("Данные маршрута") @RequestBody final Route entity) {
+
         return ResponseEntity.ok(daoFactory.getRouteDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Обновить маршрут по его идентификатору")
-    public ResponseEntity<?> update(@PathVariable("id") final int id,
-                                    @RequestBody final Route entity) {
+    public ResponseEntity<?> update(
+        @ApiParam("Идентификатор маршрута") @PathVariable("id") final int id,
+        @ApiParam("данные маршрута") @RequestBody final Route entity) {
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }
