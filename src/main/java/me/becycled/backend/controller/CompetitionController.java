@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.exception.AuthException;
 import me.becycled.backend.exception.NotFoundException;
 import me.becycled.backend.exception.WrongRequestException;
@@ -28,6 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/competitions")
+@Api(description = "Соревнования")
 public class CompetitionController {
 
     private final DaoFactory daoFactory;
@@ -41,7 +45,10 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Competition> getById(@PathVariable("id") final int id) {
+    @ApiOperation("Получить соревнование по его идентификатору")
+    public ResponseEntity<Competition> getById(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id) {
+
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
             throw new NotFoundException(ErrorMessages.notFound(Competition.class));
@@ -50,7 +57,10 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Competition>> getCompetitionWhichUserMemberByUserLogin(@PathVariable("login") final String login) {
+    @ApiOperation("Получить список соревнования по логину пользователя, который является участником")
+    public ResponseEntity<List<Competition>> getCompetitionWhichUserMemberByUserLogin(
+        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
             throw new NotFoundException(ErrorMessages.notFound(User.class));
@@ -60,7 +70,10 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Competition>> getByCommunityNickname(@PathVariable("nickname") final String nickname) {
+    @ApiOperation("Получить список соревнования по никнейму сообщества, где соревнования зарегистрированы")
+    public ResponseEntity<List<Competition>> getByCommunityNickname(
+        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
             throw new NotFoundException(ErrorMessages.notFound(Community.class));
@@ -69,12 +82,15 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все соревнования")
     public ResponseEntity<List<Competition>> getAll() {
         return ResponseEntity.ok(daoFactory.getCompetitionDao().getAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Competition> create(@RequestBody final Competition entity) {
+    @ApiOperation("Создать соревнования")
+    public ResponseEntity<Competition> create(
+        @ApiParam("Данные соревнования") @RequestBody final Competition entity) {
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
@@ -90,8 +106,11 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Competition> update(@PathVariable("id") final int id,
-                                              @RequestBody final Competition entity) {
+    @ApiOperation("Обновить соревнование по его идентификатору")
+    public ResponseEntity<Competition> update(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id,
+        @ApiParam("Данные соревнования") @RequestBody final Competition entity) {
+
         if (id != entity.getId()) {
             throw new WrongRequestException(ErrorMessages.differentIdentifierInPathAndBody());
         }
@@ -114,7 +133,9 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> delete(@PathVariable("id") final int id) {
+    @ApiOperation("Удалить соревнование по его идентификатору")
+    public ResponseEntity<Integer> delete(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id) {
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
@@ -133,7 +154,9 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/join/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Competition> join(@PathVariable("id") final int id) {
+    @ApiOperation("Добавить на соревнование текущего пользователя по идентификатору соревнования")
+    public ResponseEntity<Competition> join(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id) {
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
@@ -155,12 +178,13 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/leave/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Competition> leave(@PathVariable("id") final int id) {
+    @ApiOperation("Удалить с соревнований текущего пользователя по идентификатору соревнования")
+    public ResponseEntity<Competition> leave(
+        @ApiParam("Идентификатор соревнования") @PathVariable("id") final int id) {
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
         }
-
         final Competition competition = daoFactory.getCompetitionDao().getById(id);
         if (competition == null) {
             throw new NotFoundException(ErrorMessages.notFound(Competition.class));
@@ -176,3 +200,4 @@ public class CompetitionController {
         return ResponseEntity.ok(daoFactory.getCompetitionDao().update(competition));
     }
 }
+

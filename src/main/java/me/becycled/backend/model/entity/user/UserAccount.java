@@ -1,5 +1,7 @@
 package me.becycled.backend.model.entity.user;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -9,10 +11,14 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
+@ApiModel(description = "Авторизационные данные пользователя")
 public final class UserAccount {
 
+    @ApiModelProperty(notes = "Идентификатор пользователя", required = true, position = 0)
     private Integer userId;
+    @ApiModelProperty(notes = "Хеш пароля", required = true, position = 1)
     private String password;
+    @ApiModelProperty(notes = "Время последней успешной авторизации", required = true, position = 2)
     private Instant lastAuthTime;
 
     //region GETTERS & SETTERS
@@ -66,7 +72,7 @@ public final class UserAccount {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
             .append("userId", userId)
-            .append("password", "******")
+            .append("password", "*** hidden ***")
             .append("lastAuthTime", lastAuthTime)
             .toString();
     }

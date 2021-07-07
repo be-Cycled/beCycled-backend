@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.exception.AlreadyExistException;
 import me.becycled.backend.exception.AuthException;
 import me.becycled.backend.exception.NotFoundException;
@@ -28,6 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/communities")
+@Api(description = "Сообщества")
 public class CommunityController {
 
     private final DaoFactory daoFactory;
@@ -41,7 +45,10 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Community> getById(@PathVariable("id") final int id) {
+    @ApiOperation("Получить сообщество по его идентификатору")
+    public ResponseEntity<Community> getById(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
+
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
             throw new NotFoundException(ErrorMessages.notFound(Community.class));
@@ -50,7 +57,11 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/nickname/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Community> getByNickname(@PathVariable("nickname") final String nickname) {
+    @ApiOperation("Получить сообщество по его никнейму")
+    public ResponseEntity<Community> getByNickname(
+        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
+
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
             throw new NotFoundException(ErrorMessages.notFound(Community.class));
@@ -59,7 +70,10 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/nickname/{nickname}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsersByCommunityNickname(@PathVariable("nickname") final String nickname) {
+    @ApiOperation("Получить список участников сообщества по его никнейму")
+    public ResponseEntity<List<User>> getUsersByCommunityNickname(
+        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
             throw new NotFoundException(ErrorMessages.notFound(Community.class));
@@ -69,7 +83,9 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Community>> getCommunityWhichUserMemberByUserLogin(@PathVariable("login") final String login) {
+    @ApiOperation("Получить список сообществ по логину пользователя, который является участником")
+    public ResponseEntity<List<Community>> getCommunityWhichUserMemberByUserLogin(
+        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
             throw new NotFoundException(ErrorMessages.notFound(User.class));
@@ -78,12 +94,15 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить все сообщества")
     public ResponseEntity<List<Community>> getAll() {
         return ResponseEntity.ok(daoFactory.getCommunityDao().getAll());
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Community> create(@RequestBody final Community entity) {
+    @ApiOperation("Создать сообщество")
+    public ResponseEntity<Community> create(
+        @ApiParam("Данные сообщества") @RequestBody final Community entity) {
 
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
@@ -105,8 +124,11 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Community> update(@PathVariable("id") final int id,
-                                            @RequestBody final Community entity) {
+    @ApiOperation("Обновить сообщество по его идентификатору")
+    public ResponseEntity<Community> update(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id,
+        @ApiParam("Данные сообщества") @RequestBody final Community entity) {
+
         if (id != entity.getId()) {
             throw new WrongRequestException(ErrorMessages.differentIdentifierInPathAndBody());
         }
@@ -129,13 +151,14 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> delete(@PathVariable("id") final int id) {
+    @ApiOperation("Удалить сообщество по его идентификатору")
+    public ResponseEntity<Integer> delete(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
 
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
         }
-
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
             throw new NotFoundException(ErrorMessages.notFound(Community.class));
@@ -149,7 +172,9 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/join/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Community> join(@PathVariable("id") final int id) {
+    @ApiOperation("Вступить в сообщество по его идентификатору")
+    public ResponseEntity<Community> join(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
@@ -171,10 +196,13 @@ public class CommunityController {
     }
 
     @RequestMapping(value = "/leave/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Community> leave(@PathVariable("id") final int id) {
+    @ApiOperation("Покинуть сообщество по его идентификатору")
+    public ResponseEntity<Community> leave(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
+
         }
 
         final Community community = daoFactory.getCommunityDao().getById(id);

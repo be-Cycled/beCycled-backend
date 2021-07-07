@@ -20,17 +20,17 @@ $ ./gradlew clean build test check javadoc
 
 ```bash
 docker run \
---name postgres \
--e "POSTGRES_PASSWORD=postgres" \
--p 5432:5432 \
--d postgres-13
+    --name postgres \
+    -e "POSTGRES_PASSWORD=postgres" \
+    -p 5432:5432 \
+    -d postgres-13
 
 docker run \
---name pgadmin4 \
--e "PGADMIN_DEFAULT_EMAIL=admin@mail.com" \
--e "PGADMIN_DEFAULT_PASSWORD=admin" \
--p 5555:80 \
--d dpage/pgadmin4
+    --name pgadmin4 \
+    -e "PGADMIN_DEFAULT_EMAIL=admin@mail.com" \
+    -e "PGADMIN_DEFAULT_PASSWORD=admin" \
+    -p 5555:80 \
+    -d dpage/pgadmin4
 ```
 
 ```bash
@@ -42,4 +42,13 @@ $ ./gradlew bootRun
 ```bash
 $ ./gradlew bootJar
 $ docker build -t becycled-backend .
+```
+
+## Запуск Docker образа локально
+
+```bash
+$ docker run \
+    --name becycled-backend \
+    -p 8080:8080 \
+    -d becycled-backend
 ```

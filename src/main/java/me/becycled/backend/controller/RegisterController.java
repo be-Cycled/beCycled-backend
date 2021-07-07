@@ -1,5 +1,8 @@
 package me.becycled.backend.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import me.becycled.backend.dto.UserRegistrationDto;
 import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
@@ -22,6 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping("/register")
+@Api(description = "Регистрация пользователей")
 public class RegisterController {
 
     private final DaoFactory daoFactory;
@@ -36,7 +40,10 @@ public class RegisterController {
 
     @SuppressWarnings("ReturnCount")
     @RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> create(@RequestBody @Validated final UserRegistrationDto entity) {
+    @ApiOperation("Зарегистрировать нового пользователя")
+    public ResponseEntity<Void> create(
+        @ApiParam("Данные пользователя") @RequestBody @Validated final UserRegistrationDto entity) {
+
         final User userByLogin = daoFactory.getUserDao().getByLogin(entity.getLogin());
         if (userByLogin != null) {
             throw new WrongRequestException(ErrorMessages.loginAlreadyExist());
