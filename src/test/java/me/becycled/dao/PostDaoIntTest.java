@@ -31,7 +31,7 @@ public class PostDaoIntTest extends BaseIntegrationTest {
     @Test
     void create() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        createUser(testUser);
 
         Post testPost = TestUtils.getTestPost();
         Post post = daoFactory.getPostDao().create(testPost);
@@ -51,7 +51,7 @@ public class PostDaoIntTest extends BaseIntegrationTest {
     @Test
     void getById() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        createUser(testUser);
 
         final Post post = daoFactory.getPostDao().create(TestUtils.getTestPost());
         final Post createPost = daoFactory.getPostDao().getById(post.getId());
@@ -62,7 +62,7 @@ public class PostDaoIntTest extends BaseIntegrationTest {
     @Test
     void getAll() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        createUser(testUser);
 
         Post firstPost = daoFactory.getPostDao().create(TestUtils.getTestPost());
         Post secondPost = daoFactory.getPostDao().create(TestUtils.getTestPost());
@@ -76,12 +76,12 @@ public class PostDaoIntTest extends BaseIntegrationTest {
     @Test
     void update() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        createUser(testUser);
         final User user = TestUtils.getTestUser();
         user.setLogin("1");
         user.setEmail("1@gmail.com");
         user.setPhone("89001600020");
-        daoFactory.getUserDao().create(user);
+        createUser(user);
 
         final Post post = daoFactory.getPostDao().create(TestUtils.getTestPost());
 

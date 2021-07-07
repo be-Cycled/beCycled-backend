@@ -34,6 +34,13 @@ public class CommunityDao extends BaseMyBatisDao {
         }
     }
 
+    public int delete(final Integer id) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+            return mapper.delete(id);
+        }
+    }
+
     public Community getById(final Integer id) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final CommunityMapper mapper = session.getMapper(CommunityMapper.class);

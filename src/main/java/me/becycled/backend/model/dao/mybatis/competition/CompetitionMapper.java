@@ -1,6 +1,7 @@
 package me.becycled.backend.model.dao.mybatis.competition;
 
 import me.becycled.backend.model.entity.competition.Competition;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
@@ -47,6 +48,9 @@ public interface CompetitionMapper {
             + "WHERE id=#{id}")
     int update(Competition workout);
 
+    @Delete("DELETE FROM competitions WHERE id=#{id}")
+    int delete(Integer id);
+
     @Results(id = "competitionResult", value = {
         @Result(id = true, column = "id", property = "id"),
         @Result(column = "owner_user_id", property = "ownerUserId"),
@@ -67,6 +71,10 @@ public interface CompetitionMapper {
     @Select("SELECT * FROM competitions WHERE community_id IN (SELECT id FROM communities WHERE nickname=#{nickname})")
     @ResultMap("competitionResult")
     List<Competition> getByCommunityNickname(String nickname);
+
+    @Select("SELECT * FROM competitions WHERE #{memberUserId} = ANY(user_ids)")
+    @ResultMap("competitionResult")
+    List<Competition> getByMemberUserId(Integer memberUserId);
 
     @Select("SELECT * FROM competitions")
     @ResultMap("competitionResult")

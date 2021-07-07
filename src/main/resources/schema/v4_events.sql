@@ -2,7 +2,7 @@ CREATE TABLE workouts
 (
     id            SERIAL PRIMARY KEY,
     owner_user_id INTEGER     NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
-    community_id  INTEGER REFERENCES communities (id) ON DELETE CASCADE,
+    community_id  INTEGER              REFERENCES communities (id) ON DELETE CASCADE,
     private       BOOLEAN     NOT NULL,
     start_date    TIMESTAMPTZ NOT NULL,
     route_id      INTEGER     NOT NULL REFERENCES routes (id),
@@ -20,7 +20,7 @@ CREATE TABLE competitions
 (
     id            SERIAL PRIMARY KEY,
     owner_user_id INTEGER     NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
-    community_id  INTEGER REFERENCES communities (id) ON DELETE CASCADE,
+    community_id  INTEGER              REFERENCES communities (id) ON DELETE CASCADE,
     private       BOOLEAN     NOT NULL,
     start_date    TIMESTAMPTZ NOT NULL,
     route_id      INTEGER     NOT NULL REFERENCES routes (id),

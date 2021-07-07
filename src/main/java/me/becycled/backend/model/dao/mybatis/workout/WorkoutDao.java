@@ -25,6 +25,23 @@ public class WorkoutDao extends BaseMyBatisDao {
         }
     }
 
+    public Workout update(final Workout entity) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
+
+            mapper.update(entity);
+            return mapper.getById(entity.getId());
+        }
+    }
+
+    public int delete(final Integer id) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
+
+            return mapper.delete(id);
+        }
+    }
+
     public Workout getById(final Integer id) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
@@ -41,20 +58,19 @@ public class WorkoutDao extends BaseMyBatisDao {
         }
     }
 
+    public List<Workout> getByMemberUserId(final Integer memberUserId) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
+
+            return mapper.getByMemberUserId(memberUserId);
+        }
+    }
+
     public List<Workout> getAll() {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
 
             return mapper.getAll();
-        }
-    }
-
-    public Workout update(final Workout entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
-
-            mapper.update(entity);
-            return mapper.getById(entity.getId());
         }
     }
 }

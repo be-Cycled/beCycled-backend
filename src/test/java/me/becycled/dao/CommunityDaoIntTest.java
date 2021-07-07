@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -33,7 +34,7 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
     @Test
     void create() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        daoFactory.getUserAccountDao().create(testUser, TestUtils.getTestUserAccount());
 
         final Community community = new Community();
         community.setOwnerUserId(1);
@@ -58,12 +59,12 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
     @Test
     void update() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        daoFactory.getUserAccountDao().create(testUser, TestUtils.getTestUserAccount());
         final User user = TestUtils.getTestUser();
         user.setLogin("1");
         user.setEmail("1@gmail.com");
         user.setPhone("89001600020");
-        daoFactory.getUserDao().create(user);
+        daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
 
         final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
 
@@ -95,8 +96,27 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
     }
 
     @Test
+    void delete() {
+        daoFactory.getUserAccountDao().create(TestUtils.getTestUser(), TestUtils.getTestUserAccount());
+
+        final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
+
+        final Community createdCommunity = daoFactory.getCommunityDao().getById(community.getId());
+        assertEquals(createdCommunity, community);
+
+        int delete = daoFactory.getCommunityDao().delete(createdCommunity.getId());
+        assertEquals(1, delete);
+
+        final Community afterDelete = daoFactory.getCommunityDao().getById(community.getId());
+        assertNull(afterDelete);
+
+        int deleteNotExist = daoFactory.getCommunityDao().delete(100500);
+        assertEquals(0, deleteNotExist);
+    }
+
+    @Test
     void getById() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        daoFactory.getUserAccountDao().create(TestUtils.getTestUser(), TestUtils.getTestUserAccount());
 
         final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
         final Community createdCommunity = daoFactory.getCommunityDao().getById(community.getId());
@@ -106,7 +126,7 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getByNickname() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        daoFactory.getUserAccountDao().create(TestUtils.getTestUser(), TestUtils.getTestUserAccount());
 
         final Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
         final Community createdCommunity = daoFactory.getCommunityDao().getByNickname(community.getNickname());
@@ -116,11 +136,11 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getByUserOwnerId() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        daoFactory.getUserAccountDao().create(TestUtils.getTestUser(), TestUtils.getTestUserAccount());
         final User user = new User();
         user.setLogin("login1");
         user.setEmail("email1@gmail.com");
-        daoFactory.getUserDao().create(user);
+        daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
 
         Community testCommunity = TestUtils.getTestCommunity();
         final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);
@@ -138,11 +158,11 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getByMemberUserId() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        daoFactory.getUserAccountDao().create(TestUtils.getTestUser(), TestUtils.getTestUserAccount());
         final User user = new User();
         user.setLogin("login1");
         user.setEmail("email1@gmail.com");
-        daoFactory.getUserDao().create(user);
+        daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
 
         Community testCommunity = TestUtils.getTestCommunity();
         final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);
@@ -161,7 +181,7 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getAll() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        daoFactory.getUserAccountDao().create(TestUtils.getTestUser(), TestUtils.getTestUserAccount());
 
         Community testCommunity = TestUtils.getTestCommunity();
         final Community communityFirst = daoFactory.getCommunityDao().create(testCommunity);

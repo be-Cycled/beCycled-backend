@@ -38,7 +38,7 @@ public class RouteControllerTest extends BaseIntegrationTest {
     @Test
     public void getById() {
         User user = TestUtils.getTestUser();
-        user = daoFactory.getUserDao().create(user);
+        user = createUser(user);
 
         Route route = TestUtils.getTestRoute();
         route = daoFactory.getRouteDao().create(route);
@@ -54,7 +54,7 @@ public class RouteControllerTest extends BaseIntegrationTest {
     @Test
     public void create() {
         User user = TestUtils.getTestUser();
-        user = daoFactory.getUserDao().create(user);
+        user = createUser(user);
 
         Route route = TestUtils.getTestRoute();
 

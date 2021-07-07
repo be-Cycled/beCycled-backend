@@ -5,6 +5,7 @@ import me.becycled.backend.model.entity.user.User;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,15 +15,6 @@ public class UserDao extends BaseMyBatisDao {
 
     public UserDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);
-    }
-
-    public User create(final User entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
-            final UserMapper mapper = session.getMapper(UserMapper.class);
-            mapper.create(entity);
-
-            return mapper.getById(entity.getId());
-        }
     }
 
     public User update(final User entity) {
@@ -39,6 +31,17 @@ public class UserDao extends BaseMyBatisDao {
             final UserMapper mapper = session.getMapper(UserMapper.class);
 
             return mapper.getById(id);
+        }
+    }
+
+    public List<User> getByIds(final List<Integer> ids) {
+        if (ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            final UserMapper mapper = session.getMapper(UserMapper.class);
+
+            return mapper.getByIds(ids);
         }
     }
 

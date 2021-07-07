@@ -29,7 +29,7 @@ public class RoutePhotoDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
         daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
         final RoutePhoto routePhoto = new RoutePhoto();
@@ -48,7 +48,7 @@ public class RoutePhotoDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getById() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
         daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
         final RoutePhoto routePhoto = daoFactory.getRoutePhotoDao().create(TestUtils.getTestRoutePhoto());
@@ -59,7 +59,7 @@ public class RoutePhotoDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getByRouteId() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
         daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
         final RoutePhoto routePhoto = daoFactory.getRoutePhotoDao().create(TestUtils.getTestRoutePhoto());
@@ -70,7 +70,7 @@ public class RoutePhotoDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getAll() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
         daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
         RoutePhoto routePhotoFirst = daoFactory.getRoutePhotoDao().create(TestUtils.getTestRoutePhoto());
@@ -84,7 +84,7 @@ public class RoutePhotoDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void delete() {
-        daoFactory.getUserDao().create(TestUtils.getTestUser());
+        createUser(TestUtils.getTestUser());
         daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
         final RoutePhoto routePhoto = daoFactory.getRoutePhotoDao().create(TestUtils.getTestRoutePhoto());

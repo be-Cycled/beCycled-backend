@@ -3,4 +3,22 @@
 <!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
   'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 
-<mapper namespace="me.becycled.backend.model.dao.mybatis.useraccount.UserAccountMapper"/>
+<mapper namespace="me.becycled.backend.model.dao.mybatis.useraccount.UserAccountMapper">
+
+  <insert id="create">
+    BEGIN;
+
+    WITH created_user AS (
+    INSERT INTO users (login, first_name, last_name, email, phone, about, avatar)
+    VALUES (#{user.login}, #{user.firstName}, #{user.lastName}, #{user.email}, #{user.phone}, #{user.about}, #{user.avatar})
+    RETURNING id as user_id
+    )
+
+    INSERT INTO user_accounts (user_id, password)
+    SELECT user_id, #{userAccount.password}
+    FROM created_user RETURNING user_id;
+
+    COMMIT;
+  </insert>
+
+</mapper>

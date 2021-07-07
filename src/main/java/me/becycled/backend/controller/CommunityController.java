@@ -3,13 +3,17 @@ package me.becycled.backend.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import me.becycled.backend.exception.AlreadyExistException;
+import me.becycled.backend.exception.AuthException;
+import me.becycled.backend.exception.NotFoundException;
+import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.error.ErrorMessages;
+import me.becycled.backend.service.AccessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,49 +35,62 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CommunityController {
 
     private final DaoFactory daoFactory;
+    private final AccessService accessService;
 
     @Autowired
-    public CommunityController(final DaoFactory daoFactory) {
+    public CommunityController(final DaoFactory daoFactory,
+                               final AccessService accessService) {
         this.daoFactory = daoFactory;
+        this.accessService = accessService;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить сообщество по его идентификатору")
-    public ResponseEntity<?> getById(
+    public ResponseEntity<Community> getById(
         @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
 
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
-            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
         return ResponseEntity.ok(community);
     }
 
     @RequestMapping(value = "/nickname/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить сообщество по его никнейму")
-    public ResponseEntity<?> getByNickname(
+    public ResponseEntity<Community> getByNickname(
         @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
 
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
-            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
         return ResponseEntity.ok(community);
     }
 
     @RequestMapping(value = "/nickname/{nickname}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить список участников сообщества по его никнейму")
-    public ResponseEntity<?> getUsersByNickname(
+    public ResponseEntity<List<User>> getUsersByCommunityNickname(
         @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
 
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
-            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
-        return ResponseEntity.ok(
-            community.getUserIds().stream()
-                .map(id -> daoFactory.getUserDao().getById(id))
-                .collect(Collectors.toList()));
+
+        return ResponseEntity.ok(daoFactory.getUserDao().getByIds(community.getUserIds()));
+    }
+
+    @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить список сообществ по логину пользователя, который является участником")
+    public ResponseEntity<List<Community>> getCommunityWhichUserMemberByUserLogin(
+        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+        final User user = daoFactory.getUserDao().getByLogin(login);
+        if (user == null) {
+            throw new NotFoundException(ErrorMessages.notFound(User.class));
+        }
+        return ResponseEntity.ok(daoFactory.getCommunityDao().getByMemberUserId(user.getId()));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
@@ -87,93 +104,117 @@ public class CommunityController {
     public ResponseEntity<Community> create(
         @ApiParam("Данные сообщества") @RequestBody final Community entity) {
 
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
+        }
+
+        final Community community = daoFactory.getCommunityDao().getByNickname(entity.getNickname());
+        if (community != null) {
+            throw new AlreadyExistException(ErrorMessages.alreadyExist(Community.class));
+        }
+
+        entity.setOwnerUserId(curUser.getId());
+
+        final List<Integer> userIds = new ArrayList<>(entity.getUserIds());
+        userIds.add(curUser.getId());
+        entity.setUserIds(userIds.stream().distinct().collect(Collectors.toList()));
+
         return ResponseEntity.ok(daoFactory.getCommunityDao().create(entity));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Обновить сообщество по его идентификатору")
-    public ResponseEntity<?> update(
+    public ResponseEntity<Community> update(
         @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id,
         @ApiParam("Данные сообщества") @RequestBody final Community entity) {
 
         if (id != entity.getId()) {
-            return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.differentIdentifierInPathAndBody());
         }
 
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+            throw new AuthException(ErrorMessages.authError());
         }
 
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
-            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
 
         if (!community.getOwnerUserId().equals(curUser.getId())) {
-            return new ResponseEntity<>("Community can be updated by owner only", HttpStatus.FORBIDDEN);
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanUpdateEntity(Community.class));
         }
 
         return ResponseEntity.ok(daoFactory.getCommunityDao().update(entity));
     }
 
-    @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("Получить список сообществ по логину пользователя, который является участником")
-    public ResponseEntity<?> getByUserLogin(
-        @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Удалить сообщество по его идентификатору")
+    public ResponseEntity<Integer> delete(
+        @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
 
-        final User user = daoFactory.getUserDao().getByLogin(login);
-        if (user == null) {
-            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
         }
-        return ResponseEntity.ok(daoFactory.getCommunityDao().getByMemberUserId(user.getId()));
+        final Community community = daoFactory.getCommunityDao().getById(id);
+        if (community == null) {
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
+        }
+
+        if (!community.getOwnerUserId().equals(curUser.getId())) {
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanDeleteEntity(Community.class));
+        }
+
+        return ResponseEntity.ok(daoFactory.getCommunityDao().delete(id));
     }
 
-    @RequestMapping(value = "/join/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/join/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Вступить в сообщество по его идентификатору")
-    public ResponseEntity<?> join(
+    public ResponseEntity<Community> join(
         @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
+        }
 
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
-            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
-        }
-
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
 
         if (community.getUserIds().contains(curUser.getId())) {
-            return new ResponseEntity<>("Current user is already joined", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.userAlreadyJoin());
         }
 
-        final List<Integer> userIds = community.getUserIds() != null ? new ArrayList<>(community.getUserIds()) : new ArrayList<>();
+        final List<Integer> userIds = new ArrayList<>(community.getUserIds());
         userIds.add(curUser.getId());
         community.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));
     }
 
-    @RequestMapping(value = "/leave/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/leave/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Покинуть сообщество по его идентификатору")
-    public ResponseEntity<?> leave(
+    public ResponseEntity<Community> leave(
         @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
+
+        }
 
         final Community community = daoFactory.getCommunityDao().getById(id);
         if (community == null) {
-            return new ResponseEntity<>("Community is not found", HttpStatus.NOT_FOUND);
-        }
-
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
 
         if (!community.getUserIds().contains(curUser.getId())) {
-            return new ResponseEntity<>("Current user is not joined", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.userNotJoin());
         }
 
-        final List<Integer> userIds = community.getUserIds() != null ? new ArrayList<>(community.getUserIds()) : new ArrayList<>();
+        final List<Integer> userIds = new ArrayList<>(community.getUserIds());
         userIds.remove(curUser.getId());
         community.setUserIds(userIds);
         return ResponseEntity.ok(daoFactory.getCommunityDao().update(community));

@@ -32,7 +32,7 @@ public class RouteDaoIntTest extends BaseIntegrationTest {
     @Test
     void create() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        createUser(testUser);
 
         final Route testRoute = new Route();
         testRoute.setUserId(1);
@@ -63,7 +63,7 @@ public class RouteDaoIntTest extends BaseIntegrationTest {
     @Test
     void getById() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        createUser(testUser);
 
         final Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
         final Route createdRoute = daoFactory.getRouteDao().getById(route.getId());
@@ -74,7 +74,7 @@ public class RouteDaoIntTest extends BaseIntegrationTest {
     @Test
     void getAll() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        createUser(testUser);
 
         final Route routeFirst = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
         final Route routeSecond = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
@@ -88,12 +88,12 @@ public class RouteDaoIntTest extends BaseIntegrationTest {
     @Test
     void update() {
         final User testUser = TestUtils.getTestUser();
-        daoFactory.getUserDao().create(testUser);
+        createUser(testUser);
         final User user = TestUtils.getTestUser();
         user.setLogin("1");
         user.setEmail("1@gmail.com");
         user.setPhone("89001600020");
-        daoFactory.getUserDao().create(user);
+        createUser(user);
 
         final Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
 
