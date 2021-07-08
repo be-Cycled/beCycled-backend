@@ -3,7 +3,9 @@ package me.becycled.backend.model.dao.mybatis.competition;
 import me.becycled.backend.model.entity.competition.Competition;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -18,7 +20,7 @@ import java.util.List;
 public interface CompetitionMapper {
 
     @Insert(
-        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) " +
+        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_type, venue, duration, description) " +
             "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
@@ -26,7 +28,6 @@ public interface CompetitionMapper {
             "#{startDate}," +
             "#{routeId}," +
             "#{sportType}::SPORT_TYPE, " +
-            "#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}," +
             "#{venue}, " +
             "#{duration}, " +
             "#{description})")
@@ -40,7 +41,6 @@ public interface CompetitionMapper {
             + "private=#{isPrivate}, "
             + "start_date=#{startDate}, "
             + "sport_type=#{sportType}::SPORT_TYPE, "
-            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
             + "venue=#{venue}, "
             + "duration=#{duration}, "
             + "description=#{description}, "
@@ -59,7 +59,7 @@ public interface CompetitionMapper {
         @Result(column = "start_date", property = "startDate"),
         @Result(column = "route_id", property = "routeId"),
         @Result(column = "sport_type", property = "sportType"),
-        @Result(column = "user_ids", property = "userIds", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler.class),
+        @Result(column = "id", property = "userIds", javaType = List.class, many = @Many(select = "getCompetitionMembers")),
         @Result(column = "venue", property = "venue"),
         @Result(column = "duration", property = "duration"),
         @Result(column = "description", property = "description"),
@@ -72,11 +72,20 @@ public interface CompetitionMapper {
     @ResultMap("competitionResult")
     List<Competition> getByCommunityNickname(String nickname);
 
-    @Select("SELECT * FROM competitions WHERE #{memberUserId} = ANY(user_ids)")
+    @Select("SELECT * FROM competitions WHERE id IN (SELECT competition_id FROM competition_members WHERE user_id=#{memberUserId})")
     @ResultMap("competitionResult")
     List<Competition> getByMemberUserId(Integer memberUserId);
 
     @Select("SELECT * FROM competitions")
     @ResultMap("competitionResult")
     List<Competition> getAll();
+
+    @Select("SELECT user_id FROM competition_members WHERE competition_id=#{competitionId}")
+    List<Integer> getCompetitionMembers(Integer competitionId);
+
+    // see XML
+    int insertCompetitionMembers(@Param("competitionId") Integer competitionId, @Param("userIds") List<Integer> userIds);
+
+    @Delete("DELETE FROM competition_members WHERE competition_id=#{competitionId}")
+    int deleteCompetitionMembers(Integer competitionId);
 }

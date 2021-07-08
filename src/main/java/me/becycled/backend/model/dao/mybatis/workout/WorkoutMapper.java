@@ -3,7 +3,9 @@ package me.becycled.backend.model.dao.mybatis.workout;
 import me.becycled.backend.model.entity.workout.Workout;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -18,7 +20,7 @@ import java.util.List;
 public interface WorkoutMapper {
 
     @Insert(
-        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, user_ids, venue, duration, description) " +
+        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, venue, duration, description) " +
             "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
@@ -26,7 +28,6 @@ public interface WorkoutMapper {
             "#{startDate}," +
             "#{routeId}," +
             "#{sportType}::SPORT_TYPE, " +
-            "#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}," +
             "#{venue}, " +
             "#{duration}, " +
             "#{description})")
@@ -40,7 +41,6 @@ public interface WorkoutMapper {
             + "private=#{isPrivate}, "
             + "start_date=#{startDate}, "
             + "sport_type=#{sportType}::SPORT_TYPE, "
-            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
             + "description=#{description}, "
             + "venue=#{venue}, "
             + "duration=#{duration}, "
@@ -59,7 +59,7 @@ public interface WorkoutMapper {
         @Result(column = "start_date", property = "startDate"),
         @Result(column = "route_id", property = "routeId"),
         @Result(column = "sport_type", property = "sportType"),
-        @Result(column = "user_ids", property = "userIds", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler.class),
+        @Result(column = "id", property = "userIds", javaType = List.class, many = @Many(select = "getWorkoutMembers")),
         @Result(column = "venue", property = "venue"),
         @Result(column = "duration", property = "duration"),
         @Result(column = "description", property = "description"),
@@ -72,11 +72,20 @@ public interface WorkoutMapper {
     @ResultMap("workoutResult")
     List<Workout> getByCommunityNickname(String nickname);
 
-    @Select("SELECT * FROM workouts WHERE #{memberUserId} = ANY(user_ids)")
+    @Select("SELECT * FROM workouts WHERE id IN (SELECT workout_id FROM workout_members WHERE user_id=#{memberUserId})")
     @ResultMap("workoutResult")
     List<Workout> getByMemberUserId(Integer memberUserId);
 
     @Select("SELECT * FROM workouts")
     @ResultMap("workoutResult")
     List<Workout> getAll();
+
+    @Select("SELECT user_id FROM workout_members WHERE workout_id=#{workoutId}")
+    List<Integer> getWorkoutMembers(Integer workoutId);
+
+    // see XML
+    int insertWorkoutMembers(@Param("workoutId") Integer workoutId, @Param("userIds") List<Integer> userIds);
+
+    @Delete("DELETE FROM workout_members WHERE workout_id=#{workoutId}")
+    int deleteWorkoutMembers(Integer workoutId);
 }

@@ -61,7 +61,6 @@ public class CommunityController {
     public ResponseEntity<Community> getByNickname(
         @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
 
-
         final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
         if (community == null) {
             throw new NotFoundException(ErrorMessages.notFound(Community.class));

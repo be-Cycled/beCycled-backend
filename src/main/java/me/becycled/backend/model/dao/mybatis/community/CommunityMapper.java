@@ -3,7 +3,9 @@ package me.becycled.backend.model.dao.mybatis.community;
 import me.becycled.backend.model.entity.community.Community;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -17,7 +19,7 @@ import java.util.List;
  */
 public interface CommunityMapper {
     @Insert(
-        "INSERT INTO communities (owner_user_id, name, nickname, avatar, community_type, sport_types, user_ids, url, description) "
+        "INSERT INTO communities (owner_user_id, name, nickname, avatar, community_type, sport_types, url, description) "
             + "VALUES ("
             + "#{ownerUserId},"
             + "#{name},"
@@ -25,7 +27,6 @@ public interface CommunityMapper {
             + "#{avatar},"
             + "#{communityType}::COMMUNITY_TYPE,"
             + "#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler},"
-            + "#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler},"
             + "#{url},"
             + "#{description})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -38,7 +39,6 @@ public interface CommunityMapper {
             + "avatar=#{avatar}, "
             + "community_type=#{communityType}::COMMUNITY_TYPE, "
             + "sport_types=#{sportTypes, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler}, "
-            + "user_ids=#{userIds, typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler}, "
             + "url=#{url}, "
             + "description=#{description} "
             + "WHERE id=#{id}")
@@ -55,7 +55,7 @@ public interface CommunityMapper {
         @Result(column = "avatar", property = "avatar"),
         @Result(column = "community_type", property = "communityType"),
         @Result(column = "sport_types", property = "sportTypes", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.SportTypeListTypeHandler.class),
-        @Result(column = "user_ids", property = "userIds", typeHandler = me.becycled.backend.model.utils.mybatis.typehandler.IntegerListTypeHandler.class),
+        @Result(column = "id", property = "userIds", javaType = List.class, many = @Many(select = "getCommunityMembers")),
         @Result(column = "url", property = "url"),
         @Result(column = "description", property = "description"),
         @Result(column = "created_at", property = "createdAt")
@@ -71,11 +71,20 @@ public interface CommunityMapper {
     @ResultMap("communityResult")
     List<Community> getByOwnerUserId(Integer ownerUserId);
 
-    @Select("SELECT * FROM communities WHERE #{memberUserId} = ANY(user_ids)")
+    @Select("SELECT * FROM communities WHERE id IN (SELECT community_id FROM community_members WHERE user_id=#{memberUserId})")
     @ResultMap("communityResult")
     List<Community> getByMemberUserId(Integer memberUserId);
 
     @Select("SELECT * FROM communities")
     @ResultMap("communityResult")
     List<Community> getAll();
+
+    @Select("SELECT user_id FROM community_members WHERE community_id=#{communityId}")
+    List<Integer> getCommunityMembers(Integer communityId);
+
+    // see XML
+    int insertCommunityMembers(@Param("communityId") Integer communityId, @Param("userIds") List<Integer> userIds);
+
+    @Delete("DELETE FROM community_members WHERE community_id=#{communityId}")
+    int deleteCommunityMembers(Integer communityId);
 }

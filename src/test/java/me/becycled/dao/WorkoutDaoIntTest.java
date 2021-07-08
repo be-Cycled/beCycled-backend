@@ -106,6 +106,14 @@ public class WorkoutDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getByMemberUserId() {
+        final User user = new User();
+        user.setLogin("login1");
+        user.setEmail("email1@gmail.com");
+        daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
+        user.setLogin("login2");
+        user.setEmail("email2@gmail.com");
+        daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
+
         Workout workoutFirst = TestUtils.getTestWorkout();
         workoutFirst.setUserIds(List.of(1, 2, 3));
         workoutFirst = daoFactory.getWorkoutDao().create(workoutFirst);
