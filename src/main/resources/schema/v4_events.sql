@@ -1,16 +1,16 @@
 CREATE TABLE workouts
 (
-    id            SERIAL PRIMARY KEY,
-    owner_user_id INTEGER     NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
-    community_id  INTEGER              REFERENCES communities (id) ON DELETE CASCADE,
-    private       BOOLEAN     NOT NULL,
-    start_date    TIMESTAMPTZ NOT NULL,
-    route_id      INTEGER     NOT NULL REFERENCES routes (id),
-    sport_type    SPORT_TYPE  NOT NULL,
-    venue         TEXT,
-    duration      INTEGER,
-    description   TEXT,
-    created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    id              SERIAL PRIMARY KEY,
+    owner_user_id   INTEGER     NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
+    community_id    INTEGER              REFERENCES communities (id) ON DELETE CASCADE,
+    private         BOOLEAN     NOT NULL,
+    start_date      TIMESTAMPTZ NOT NULL,
+    route_id        INTEGER     NOT NULL REFERENCES routes (id),
+    sport_type      SPORT_TYPE  NOT NULL,
+    venue_geo_data  TEXT,
+    duration        INTEGER,
+    description     TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE workout_members
@@ -25,17 +25,17 @@ CREATE TABLE workout_members
 
 CREATE TABLE competitions
 (
-    id            SERIAL PRIMARY KEY,
-    owner_user_id INTEGER     NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
-    community_id  INTEGER              REFERENCES communities (id) ON DELETE CASCADE,
-    private       BOOLEAN     NOT NULL,
-    start_date    TIMESTAMPTZ NOT NULL,
-    route_id      INTEGER     NOT NULL REFERENCES routes (id),
-    sport_type    SPORT_TYPE  NOT NULL,
-    venue         TEXT,
-    duration      INTEGER,
-    description   TEXT,
-    created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+    id             SERIAL PRIMARY KEY,
+    owner_user_id  INTEGER     NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
+    community_id   INTEGER              REFERENCES communities (id) ON DELETE CASCADE,
+    private        BOOLEAN     NOT NULL,
+    start_date     TIMESTAMPTZ NOT NULL,
+    route_id       INTEGER     NOT NULL REFERENCES routes (id),
+    sport_type     SPORT_TYPE  NOT NULL,
+    venue_geo_data TEXT,
+    duration       INTEGER,
+    description    TEXT,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE competition_members

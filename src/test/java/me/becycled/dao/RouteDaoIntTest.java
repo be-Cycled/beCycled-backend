@@ -37,7 +37,7 @@ public class RouteDaoIntTest extends BaseIntegrationTest {
         final Route testRoute = new Route();
         testRoute.setUserId(1);
         testRoute.setName("name");
-        testRoute.setRouteInfo(TestUtils.getTestRoute().getRouteInfo());
+        testRoute.setRouteGeoData(TestUtils.getTestRoute().getRouteGeoData());
         testRoute.setRoutePreview("new preview");
         testRoute.setSportTypes(List.of(SportType.BICYCLE, SportType.RUN));
         testRoute.setDisposable(false);
@@ -52,7 +52,7 @@ public class RouteDaoIntTest extends BaseIntegrationTest {
 
         assertEquals(testRoute.getId(), route.getId());
         assertEquals(testRoute.getName(), route.getName());
-        assertEquals(testRoute.getRouteInfo(), route.getRouteInfo());
+        assertEquals(testRoute.getRouteGeoData(), route.getRouteGeoData());
         assertEquals(testRoute.getRoutePreview(), route.getRoutePreview());
         assertEquals(testRoute.getDescription(), route.getDescription());
         assertEquals(testRoute.getDisposable(), route.getDisposable());
@@ -101,7 +101,7 @@ public class RouteDaoIntTest extends BaseIntegrationTest {
         testRoute.setId(route.getId());
         testRoute.setUserId(2);
         testRoute.setName("qwe");
-        testRoute.setRouteInfo("test");
+        testRoute.setRouteGeoData("test");
         testRoute.setRoutePreview("I1yi4");
         testRoute.setSportTypes(List.of(SportType.BICYCLE));
         testRoute.setDisposable(true);
@@ -113,7 +113,7 @@ public class RouteDaoIntTest extends BaseIntegrationTest {
         assertNotNull(bdRoute.getId());
         assertEquals(1, bdRoute.getUserId().intValue());
         assertEquals("qwe", bdRoute.getName());
-        assertEquals("test", bdRoute.getRouteInfo());
+        assertEquals("test", bdRoute.getRouteGeoData());
         assertEquals("I1yi4", bdRoute.getRoutePreview());
         assertEquals(List.of(SportType.BICYCLE), bdRoute.getSportTypes());
         assertEquals(true, bdRoute.getDisposable());
