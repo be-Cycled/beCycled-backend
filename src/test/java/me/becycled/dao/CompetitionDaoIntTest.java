@@ -60,7 +60,7 @@ public class CompetitionDaoIntTest extends BaseIntegrationTest {
         assertEquals(testCompetition.getRouteId(), competition.getRouteId());
         assertEquals(testCompetition.getSportType(), competition.getSportType());
         assertEquals(testCompetition.getUserIds(), competition.getUserIds());
-        assertEquals(testCompetition.getVenue(), competition.getVenue());
+        assertEquals(testCompetition.getVenueGeoData(), competition.getVenueGeoData());
         assertEquals(testCompetition.getDuration(), competition.getDuration());
         assertEquals(testCompetition.getDescription(), competition.getDescription());
         assertEquals(testCompetition.getCreatedAt(), competition.getCreatedAt());
@@ -88,7 +88,7 @@ public class CompetitionDaoIntTest extends BaseIntegrationTest {
         testCompetition.setRouteId(route.getId());
         testCompetition.setSportType(SportType.BICYCLE);
         testCompetition.setUserIds(List.of(1, 2));
-        testCompetition.setVenue("BQ 128");
+        testCompetition.setVenueGeoData("BQ 128");
         testCompetition.setDuration(123);
         testCompetition.setDescription("test");
         testCompetition.setCreatedAt(Instant.now());
@@ -103,7 +103,7 @@ public class CompetitionDaoIntTest extends BaseIntegrationTest {
         assertEquals(competition.getRouteId(), dbCompetition.getRouteId());
         assertEquals(testCompetition.getSportType(), dbCompetition.getSportType());
         assertEquals(testCompetition.getUserIds(), dbCompetition.getUserIds());
-        assertEquals(testCompetition.getVenue(), dbCompetition.getVenue());
+        assertEquals(testCompetition.getVenueGeoData(), dbCompetition.getVenueGeoData());
         assertEquals(testCompetition.getDuration(), dbCompetition.getDuration());
         assertEquals(testCompetition.getDescription(), dbCompetition.getDescription());
         assertEquals(testCompetition.getCreatedAt(), dbCompetition.getCreatedAt());

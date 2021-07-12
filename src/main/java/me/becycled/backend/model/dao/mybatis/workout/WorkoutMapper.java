@@ -20,7 +20,7 @@ import java.util.List;
 public interface WorkoutMapper {
 
     @Insert(
-        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, venue, duration, description) " +
+        "INSERT INTO workouts (owner_user_id, community_id, private, start_date, route_id, sport_type, venue_geo_data, duration, description) " +
             "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
@@ -28,7 +28,7 @@ public interface WorkoutMapper {
             "#{startDate}," +
             "#{routeId}," +
             "#{sportType}::SPORT_TYPE, " +
-            "#{venue}, " +
+            "#{venueGeoData}, " +
             "#{duration}, " +
             "#{description})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -42,7 +42,7 @@ public interface WorkoutMapper {
             + "start_date=#{startDate}, "
             + "sport_type=#{sportType}::SPORT_TYPE, "
             + "description=#{description}, "
-            + "venue=#{venue}, "
+            + "venue_geo_data=#{venueGeoData}, "
             + "duration=#{duration}, "
             + "created_at=#{createdAt} "
             + "WHERE id=#{id}")
@@ -60,7 +60,7 @@ public interface WorkoutMapper {
         @Result(column = "route_id", property = "routeId"),
         @Result(column = "sport_type", property = "sportType"),
         @Result(column = "id", property = "userIds", javaType = List.class, many = @Many(select = "getWorkoutMembers")),
-        @Result(column = "venue", property = "venue"),
+        @Result(column = "venue_geo_data", property = "venueGeoData"),
         @Result(column = "duration", property = "duration"),
         @Result(column = "description", property = "description"),
         @Result(column = "created_at", property = "createdAt")

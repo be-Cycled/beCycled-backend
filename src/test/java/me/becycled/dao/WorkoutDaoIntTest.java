@@ -59,7 +59,7 @@ public class WorkoutDaoIntTest extends BaseIntegrationTest {
         assertEquals(testWorkout.getRouteId(), workout.getRouteId());
         assertEquals(testWorkout.getSportType(), workout.getSportType());
         assertEquals(testWorkout.getUserIds(), workout.getUserIds());
-        assertEquals(testWorkout.getVenue(), workout.getVenue());
+        assertEquals(testWorkout.getVenueGeoData(), workout.getVenueGeoData());
         assertEquals(testWorkout.getDuration(), workout.getDuration());
         assertEquals(testWorkout.getDescription(), workout.getDescription());
         assertEquals(testWorkout.getCreatedAt(), workout.getCreatedAt());
@@ -166,7 +166,7 @@ public class WorkoutDaoIntTest extends BaseIntegrationTest {
         testWorkout.setRouteId(route.getId());
         testWorkout.setSportType(SportType.BICYCLE);
         testWorkout.setUserIds(List.of(1, 2));
-        testWorkout.setVenue("BQ 128");
+        testWorkout.setVenueGeoData("BQ 128");
         testWorkout.setDuration(123);
         testWorkout.setDescription("test");
         testWorkout.setCreatedAt(Instant.now());
@@ -181,7 +181,7 @@ public class WorkoutDaoIntTest extends BaseIntegrationTest {
         assertEquals(workout.getRouteId(), dbWorkout.getRouteId());
         assertEquals(testWorkout.getSportType(), dbWorkout.getSportType());
         assertEquals(testWorkout.getUserIds(), dbWorkout.getUserIds());
-        assertEquals(testWorkout.getVenue(), dbWorkout.getVenue());
+        assertEquals(testWorkout.getVenueGeoData(), dbWorkout.getVenueGeoData());
         assertEquals(testWorkout.getDuration(), dbWorkout.getDuration());
         assertEquals(testWorkout.getDescription(), dbWorkout.getDescription());
         assertEquals(testWorkout.getCreatedAt(), dbWorkout.getCreatedAt());

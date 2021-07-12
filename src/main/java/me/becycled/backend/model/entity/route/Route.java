@@ -22,7 +22,7 @@ public final class Route {
     @ApiModelProperty(notes = "Название маршрута", required = true, position = 2)
     private String name;
     @ApiModelProperty(notes = "Данные маршрута", required = true, position = 3)
-    private String routeInfo;
+    private String routeGeoData;
     @ApiModelProperty(notes = "Изображение превью маршрута", required = true, position = 4)
     private String routePreview;
     @ApiModelProperty(notes = "Список видов спорта", required = true, position = 5)
@@ -62,12 +62,12 @@ public final class Route {
         this.name = name;
     }
 
-    public String getRouteInfo() {
-        return routeInfo;
+    public String getRouteGeoData() {
+        return routeGeoData;
     }
 
-    public void setRouteInfo(final String routeInfo) {
-        this.routeInfo = routeInfo;
+    public void setRouteGeoData(final String routeGeoData) {
+        this.routeGeoData = routeGeoData;
     }
 
     public String getRoutePreview() {
@@ -133,7 +133,7 @@ public final class Route {
         return Objects.equals(id, that.id)
             && Objects.equals(userId, that.userId)
             && Objects.equals(name, that.name)
-            && Objects.equals(routeInfo, that.routeInfo)
+            && Objects.equals(routeGeoData, that.routeGeoData)
             && Objects.equals(routePreview, that.routePreview)
             && Objects.equals(sportTypes, that.sportTypes)
             && Objects.equals(disposable, that.disposable)
@@ -145,7 +145,7 @@ public final class Route {
     @Override
     public int hashCode() {
         return Objects.hash(id, userId, name,
-            routeInfo, routePreview, sportTypes, disposable,
+            routeGeoData, routePreview, sportTypes, disposable,
             description, popularity, createdAt);
     }
 
@@ -155,7 +155,7 @@ public final class Route {
             .append("id", id)
             .append("userId", userId)
             .append("name", name)
-            .append("routeInfo", routeInfo)
+            .append("routeGeoData", routeGeoData)
             .append("routePreview", routePreview)
             .append("sportTypes", sportTypes)
             .append("disposable", disposable)

@@ -33,7 +33,7 @@ public final class Workout {
     @ApiModelProperty(notes = "Список идентификаторов пользователей, учавствующих в соревновании", required = true, position = 7)
     private List<Integer> userIds;
     @ApiModelProperty(notes = "Место сбора", required = true, position = 8)
-    private String venue;
+    private String venueGeoData;
     @ApiModelProperty(notes = "Длительность соревнований, секунды", required = true, position = 9)
     private Integer duration;
     @ApiModelProperty(notes = "Описание соревнования", required = true, position = 10)
@@ -111,12 +111,12 @@ public final class Workout {
         return duration;
     }
 
-    public String getVenue() {
-        return venue;
+    public String getVenueGeoData() {
+        return venueGeoData;
     }
 
-    public void setVenue(final String venue) {
-        this.venue = venue;
+    public void setVenueGeoData(final String venueGeoData) {
+        this.venueGeoData = venueGeoData;
     }
 
     public void setDuration(final Integer duration) {
@@ -159,7 +159,7 @@ public final class Workout {
             && Objects.equals(routeId, that.routeId)
             && Objects.equals(sportType, that.sportType)
             && Objects.equals(userIds, that.userIds)
-            && Objects.equals(venue, that.venue)
+            && Objects.equals(venueGeoData, that.venueGeoData)
             && Objects.equals(duration, that.duration)
             && Objects.equals(description, that.description)
             && Objects.equals(createdAt, that.createdAt);
@@ -183,7 +183,7 @@ public final class Workout {
             .append("sportTypes", sportType)
             .append("userIds", userIds)
             .append("description", description)
-            .append("venue", venue)
+            .append("venueGeoData", venueGeoData)
             .append("duration", duration)
             .append("createdAt", createdAt)
             .toString();

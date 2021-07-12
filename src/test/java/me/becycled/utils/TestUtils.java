@@ -37,7 +37,7 @@ public enum TestUtils {;
         final Route route = new Route();
         route.setUserId(1);
         route.setName("name");
-        route.setRouteInfo("{\n" +
+        route.setRouteGeoData("{\n" +
             "  \"type\": \"FeatureCollection\",\n" +
             "  \"features\": [\n" +
             "    {\n" +
@@ -193,7 +193,7 @@ public enum TestUtils {;
         workout.setUserIds(Collections.emptyList());
         workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         workout.setDescription("description");
-        workout.setVenue("venue");
+        workout.setVenueGeoData("venueGeoData");
         workout.setDuration(100500);
         return workout;
     }
@@ -216,7 +216,7 @@ public enum TestUtils {;
         competition.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         competition.setUserIds(Collections.emptyList());
         competition.setDescription("description");
-        competition.setVenue("venue");
+        competition.setVenueGeoData("venueGeoData");
         competition.setDuration(100500);
         return competition;
     }

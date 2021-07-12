@@ -20,7 +20,7 @@ import java.util.List;
 public interface CompetitionMapper {
 
     @Insert(
-        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_type, venue, duration, description) " +
+        "INSERT INTO competitions (owner_user_id, community_id, private, start_date, route_id, sport_type, venue_geo_data, duration, description) " +
             "VALUES (" +
             "#{ownerUserId}," +
             "#{communityId}," +
@@ -28,7 +28,7 @@ public interface CompetitionMapper {
             "#{startDate}," +
             "#{routeId}," +
             "#{sportType}::SPORT_TYPE, " +
-            "#{venue}, " +
+            "#{venueGeoData}, " +
             "#{duration}, " +
             "#{description})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -41,7 +41,7 @@ public interface CompetitionMapper {
             + "private=#{isPrivate}, "
             + "start_date=#{startDate}, "
             + "sport_type=#{sportType}::SPORT_TYPE, "
-            + "venue=#{venue}, "
+            + "venue_geo_data=#{venueGeoData}, "
             + "duration=#{duration}, "
             + "description=#{description}, "
             + "created_at=#{createdAt} "
@@ -60,7 +60,7 @@ public interface CompetitionMapper {
         @Result(column = "route_id", property = "routeId"),
         @Result(column = "sport_type", property = "sportType"),
         @Result(column = "id", property = "userIds", javaType = List.class, many = @Many(select = "getCompetitionMembers")),
-        @Result(column = "venue", property = "venue"),
+        @Result(column = "venue_geo_data", property = "venueGeoData"),
         @Result(column = "duration", property = "duration"),
         @Result(column = "description", property = "description"),
         @Result(column = "created_at", property = "createdAt")
