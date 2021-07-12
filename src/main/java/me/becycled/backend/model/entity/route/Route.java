@@ -155,7 +155,7 @@ public final class Route {
             .append("id", id)
             .append("userId", userId)
             .append("name", name)
-            .append("routeInfo", routeGeoData)
+            .append("routeGeoData", routeGeoData)
             .append("routePreview", routePreview)
             .append("sportTypes", sportTypes)
             .append("disposable", disposable)
