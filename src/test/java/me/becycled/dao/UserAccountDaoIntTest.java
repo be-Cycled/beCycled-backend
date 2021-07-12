@@ -87,12 +87,12 @@ public class UserAccountDaoIntTest extends BaseIntegrationTest {
 
         final UserAccount update = daoFactory.getUserAccountDao().getByUserId(testUserAccount.getUserId());
         update.setPassword("NEW_PASSWORD");
-        update.setLastAuthTime(Instant.now());
+        update.setLastAuthTime(Instant.parse("2021-07-12T00:00:00Z"));
         daoFactory.getUserAccountDao().update(update);
 
         final UserAccount afterUpdate = daoFactory.getUserAccountDao().getByUserId(testUserAccount.getUserId());
         assertEquals(afterUpdate.getUserId(), dbUserAccount.getUserId());
         assertEquals(afterUpdate.getPassword(), "NEW_PASSWORD");
-        assertEquals(afterUpdate.getLastAuthTime(), dbUserAccount.getLastAuthTime());
+        assertEquals(afterUpdate.getLastAuthTime(), Instant.parse("2021-07-12T00:00:00Z"));
     }
 }
