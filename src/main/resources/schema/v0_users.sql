@@ -11,6 +11,8 @@ CREATE TABLE users
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE RULE users_deny_delete AS ON DELETE TO users DO INSTEAD NOTHING;
+
 -------------------------------------------------------------------------
 
 CREATE TABLE user_accounts
@@ -18,4 +20,6 @@ CREATE TABLE user_accounts
     user_id        INTEGER NOT NULL UNIQUE REFERENCES users (id) ON DELETE CASCADE,
     password       TEXT    NOT NULL,
     last_auth_time TIMESTAMPTZ
-)
+);
+
+CREATE RULE user_accounts_deny_delete AS ON DELETE TO user_accounts DO INSTEAD NOTHING;

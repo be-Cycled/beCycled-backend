@@ -17,19 +17,30 @@ public class WorkoutDao extends BaseMyBatisDao {
     }
 
     public Workout create(final Workout entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+        try (SqlSession session = sqlSessionFactory.openSession(false)) {
             final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
-
             mapper.create(entity);
+
+            if (!entity.getUserIds().isEmpty()) {
+                mapper.insertWorkoutMembers(entity.getId(), entity.getUserIds());
+            }
+
+            session.commit();
             return mapper.getById(entity.getId());
         }
     }
 
     public Workout update(final Workout entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+        try (SqlSession session = sqlSessionFactory.openSession(false)) {
             final WorkoutMapper mapper = session.getMapper(WorkoutMapper.class);
-
             mapper.update(entity);
+
+            mapper.deleteWorkoutMembers(entity.getId());
+            if (!entity.getUserIds().isEmpty()) {
+                mapper.insertWorkoutMembers(entity.getId(), entity.getUserIds());
+            }
+
+            session.commit();
             return mapper.getById(entity.getId());
         }
     }

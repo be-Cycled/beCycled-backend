@@ -3,4 +3,14 @@
 <!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
   'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 
-<mapper namespace="me.becycled.backend.model.dao.mybatis.community.CommunityMapper"/>
+<mapper namespace="me.becycled.backend.model.dao.mybatis.community.CommunityMapper">
+
+  <insert id="insertCommunityMembers">
+    INSERT INTO community_members (community_id, user_id)
+    VALUES
+    <foreach collection="userIds" item="item" separator=",">
+      (#{communityId}, #{item})
+    </foreach>
+  </insert>
+
+</mapper>

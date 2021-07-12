@@ -93,6 +93,11 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
         assertEquals("1000", bdCommunity.getUrl());
         assertEquals("1", bdCommunity.getDescription());
         assertEquals(community.getCreatedAt(), bdCommunity.getCreatedAt());
+
+        testCommunity.setUserIds(List.of(1));
+
+        final Community bdCommunityAfterRemoveMemberId = daoFactory.getCommunityDao().update(testCommunity);
+        assertEquals(List.of(1), bdCommunityAfterRemoveMemberId.getUserIds());
     }
 
     @Test
@@ -162,6 +167,9 @@ public class CommunityDaoIntTest extends BaseIntegrationTest {
         final User user = new User();
         user.setLogin("login1");
         user.setEmail("email1@gmail.com");
+        daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
+        user.setLogin("login2");
+        user.setEmail("email2@gmail.com");
         daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
 
         Community testCommunity = TestUtils.getTestCommunity();

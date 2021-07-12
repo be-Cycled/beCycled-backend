@@ -17,19 +17,30 @@ public class CommunityDao extends BaseMyBatisDao {
     }
 
     public Community create(final Community entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+        try (SqlSession session = sqlSessionFactory.openSession(false)) {
             final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
-
             mapper.create(entity);
+
+            if (!entity.getUserIds().isEmpty()) {
+                mapper.insertCommunityMembers(entity.getId(), entity.getUserIds());
+            }
+
+            session.commit();
             return mapper.getById(entity.getId());
         }
     }
 
     public Community update(final Community entity) {
-        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+        try (SqlSession session = sqlSessionFactory.openSession(false)) {
             final CommunityMapper mapper = session.getMapper(CommunityMapper.class);
-
             mapper.update(entity);
+
+            mapper.deleteCommunityMembers(entity.getId());
+            if (!entity.getUserIds().isEmpty()) {
+                mapper.insertCommunityMembers(entity.getId(), entity.getUserIds());
+            }
+
+            session.commit();
             return mapper.getById(entity.getId());
         }
     }
