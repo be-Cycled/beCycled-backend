@@ -18,7 +18,8 @@ public interface UserAccountMapper {
 
     @Update(
         "UPDATE user_accounts SET " +
-            "password=#{password} " +
+            "password=#{password}, " +
+            "last_auth_time=#{lastAuthTime} " +
             "WHERE user_id=#{userId}")
     int update(UserAccount userAccount);
 
