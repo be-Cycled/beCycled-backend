@@ -36,11 +36,11 @@ public class ImageController {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadImage(@RequestParam("imageFile") final MultipartFile file) throws IOException {
+    public ResponseEntity<String> uploadImage(@RequestParam("imageFile") final MultipartFile file) throws IOException {
 
-        daoFactory.getImageDao().create(new Image(ImageUtils.compressBytes((file.getBytes()))));
+        final Image image = daoFactory.getImageDao().create(new Image(ImageUtils.compressBytes((file.getBytes()))));
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(image.getId());
     }
 
     @RequestMapping(value = "/get/{image-uuid}", method = RequestMethod.GET, produces = IMAGE_PNG_VALUE)
