@@ -29,6 +29,8 @@
         <mapper resource="mybatis/mappers/WorkoutMapper.xml"/>
         <mapper resource="mybatis/mappers/PostMapper.xml"/>
         <mapper resource="mybatis/mappers/CompetitionMapper.xml"/>
+        <mapper resource="mybatis/mappers/CompetitionMapper.xml"/>
+        <mapper resource="mybatis/mappers/ImageMapper.xml"/>
     </mappers>
 
 </configuration>
