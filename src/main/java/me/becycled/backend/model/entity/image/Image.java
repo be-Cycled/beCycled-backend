@@ -15,28 +15,19 @@ import java.util.Objects;
 @ApiModel(description = "Картинка")
 public class Image {
 
-    @ApiModelProperty(notes = "Уникальный идентификатор UUID", required = true, position = 0)
-    private String id;
+    @ApiModelProperty(notes = "Уникальное наименование картинки", required = true, position = 0)
+    private String fileName;
     @ApiModelProperty(notes = "Байты картинки", required = true, position = 1)
     private byte[] data;
 
-    private Image() {
-        // private default
-    }
-
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public Image(final byte[] data) {
-        this.data = data;
-    }
-
     //region GETTERS & SETTERS
 
-    public String getId() {
-        return id;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setId(final String id) {
-        this.id = id;
+    public void setFileName(final String fileName) {
+        this.fileName = fileName;
     }
 
     @SuppressWarnings("PMD.MethodReturnsInternalArray")
@@ -61,12 +52,12 @@ public class Image {
             return false;
         }
         final Image image = (Image) o;
-        return Objects.equals(id, image.id) && Arrays.equals(data, image.data);
+        return Objects.equals(fileName, image.fileName) && Arrays.equals(data, image.data);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id);
+        int result = Objects.hash(fileName);
         result = 31 * result + Arrays.hashCode(data);
         return result;
     }
@@ -74,8 +65,17 @@ public class Image {
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-            .append("id", id)
+            .append("fileName", fileName)
             .append("data", data)
             .toString();
+    }
+
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
+    public static Image build(final String fileName, final byte[] data) {
+        final Image image = new Image();
+        image.setFileName(fileName);
+        image.setData(data);
+
+        return image;
     }
 }

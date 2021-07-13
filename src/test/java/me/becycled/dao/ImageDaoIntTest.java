@@ -31,18 +31,18 @@ public class ImageDaoIntTest extends BaseIntegrationTest {
     void create() {
         Image testImage = TestUtils.getTestImage();
         Image image = daoFactory.getImageDao().create(testImage);
-        assertNotNull(image.getId());
+        assertNotNull(image.getFileName());
         assertNotNull(image.getData());
 
-        assertNotEquals(TestUtils.getTestImage().getId(), image.getId()); // db use autogenerate uuid
-        assertNotEquals(TestUtils.getTestImage().getId(), testImage.getId()); // db use autogenerate uuid
+        assertEquals(TestUtils.getTestImage().getFileName(), image.getFileName());
+        assertEquals(TestUtils.getTestImage().getFileName(), testImage.getFileName());
         assertEquals(testImage.getData(), image.getData());
     }
 
     @Test
     void getById() {
         final Image image = daoFactory.getImageDao().create(TestUtils.getTestImage());
-        final Image createPost = daoFactory.getImageDao().getById(image.getId());
+        final Image createPost = daoFactory.getImageDao().getById(image.getFileName());
 
         assertEquals(createPost, image);
     }
@@ -52,6 +52,7 @@ public class ImageDaoIntTest extends BaseIntegrationTest {
         Image testImage = TestUtils.getTestImage();
 
         Image firstPost = daoFactory.getImageDao().create(testImage);
+        testImage.setFileName("test1.png");
         testImage.setData(new byte[]{ 0x23, 0x43});
         Image secondPost = daoFactory.getImageDao().create(testImage);
 

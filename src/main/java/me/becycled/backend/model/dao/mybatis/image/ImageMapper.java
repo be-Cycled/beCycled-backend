@@ -2,7 +2,6 @@ package me.becycled.backend.model.dao.mybatis.image;
 
 import me.becycled.backend.model.entity.image.Image;
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
@@ -16,17 +15,17 @@ import java.util.List;
 public interface ImageMapper {
 
     @Insert(
-        "INSERT INTO images (data) " +
+        "INSERT INTO images (file_name, data) " +
             "VALUES (" +
+            "#{fileName}," +
             "#{data})")
-    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int create(Image image);
 
     @Results(id = "imageResult", value = {
-        @Result(id = true, column = "id", property = "id"),
+        @Result(id = true, column = "file_name", property = "fileName"),
         @Result(column = "data", property = "data")
     })
-    @Select("SELECT * FROM images WHERE id=#{id}::uuid")
+    @Select("SELECT * FROM images WHERE file_name=#{fileName}")
     Image getById(String id);
 
     @Select("SELECT * FROM images")

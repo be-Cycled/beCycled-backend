@@ -1,5 +1,5 @@
 CREATE TABLE images
 (
-    id   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    data BYTEA
+    file_name TEXT PRIMARY KEY,
+    data      BYTEA
 );

@@ -49,6 +49,10 @@ public enum ErrorMessages {;
         return String.format("%s is already exist", firstLetterToUpperCase(camelCaseToNormalText(clazz.getSimpleName())));
     }
 
+    public static String cannotFindImageExtension() {
+        return "Not found image extension";
+    }
+
     private static <T> String camelCaseToNormalText(final String text) {
         final List<String> strings = List.of(text.split("(?=[A-Z])")).stream()
             .map(String::toLowerCase)

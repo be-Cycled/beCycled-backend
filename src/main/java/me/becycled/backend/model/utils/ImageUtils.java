@@ -1,5 +1,7 @@
 package me.becycled.backend.model.utils;
 
+import org.springframework.http.MediaType;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.Deflater;
@@ -52,5 +54,21 @@ public enum ImageUtils {;
         }
 
         return result;
+    }
+
+    public static String buildImageName(final String extension) {
+        return DomainUtils.generateUUIDv4() + '.' + extension.toLowerCase();
+    }
+
+    public static MediaType findMediaTypeByImageExtension(final String extension) {
+        switch (extension.toLowerCase()){
+            case "jpg":
+            case "jpeg":
+                return MediaType.IMAGE_JPEG;
+            case "png":
+                return MediaType.IMAGE_PNG;
+            default:
+                throw new IllegalStateException("Unexpected image extension: " + extension);
+        }
     }
 }

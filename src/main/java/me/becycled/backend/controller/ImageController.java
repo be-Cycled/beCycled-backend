@@ -2,11 +2,14 @@ package me.becycled.backend.controller;
 
 import io.swagger.annotations.Api;
 import me.becycled.backend.exception.NotFoundException;
+import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.image.Image;
 import me.becycled.backend.model.error.ErrorMessages;
 import me.becycled.backend.model.utils.ImageUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 /**
@@ -38,19 +40,30 @@ public class ImageController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadImage(@RequestParam("imageFile") final MultipartFile file) throws IOException {
 
-        final Image image = daoFactory.getImageDao().create(new Image(ImageUtils.compressBytes((file.getBytes()))));
+        final String imageExtension = FilenameUtils.getExtension(file.getOriginalFilename());
+        if (imageExtension == null) {
+            throw new WrongRequestException(ErrorMessages.cannotFindImageExtension());
+        }
 
-        return ResponseEntity.ok(image.getId());
+        String imageName;
+        do {
+            imageName = ImageUtils.buildImageName(imageExtension);
+        } while (daoFactory.getImageDao().getById(imageName) != null);
+
+        final Image image = daoFactory.getImageDao().create(Image.build(imageName, ImageUtils.compressBytes((file.getBytes()))));
+
+        return ResponseEntity.ok(image.getFileName());
     }
 
-    @RequestMapping(value = "/get/{image-uuid}", method = RequestMethod.GET, produces = IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getImage(@PathVariable("image-uuid") final String imageUUID) {
+    @RequestMapping(value = "/{image-name}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getImage(@PathVariable("image-name") final String imageName) {
 
-        final Image image = daoFactory.getImageDao().getById(imageUUID);
+        final Image image = daoFactory.getImageDao().getById(imageName);
         if (image == null) {
             throw new NotFoundException(ErrorMessages.notFound(Image.class));
         }
+        final MediaType mediaType = ImageUtils.findMediaTypeByImageExtension(FilenameUtils.getExtension(image.getFileName()));
 
-        return ResponseEntity.ok(ImageUtils.decompressBytes(image.getData()));
+        return ResponseEntity.ok().contentType(mediaType).body(ImageUtils.decompressBytes(image.getData()));
     }
 }

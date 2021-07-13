@@ -209,8 +209,9 @@ public enum TestUtils {;
     }
 
     public static Image getTestImage() {
-        Image image = new Image(new byte[]{0x00, 0x55});
-        image.setId("407e3b85-b508-497b-b8ec-60b9e1929bbc");
+        Image image = new Image();
+        image.setFileName("test.jpg");
+        image.setData(new byte[]{0x00, 0x55});
         return image;
     }
 
