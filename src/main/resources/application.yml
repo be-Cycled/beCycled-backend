@@ -5,8 +5,8 @@ spring:
     banner-mode: off
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/becycled
-    username: becycled
-    password: becycled
+    username: postgres
+    password: postgres
     driverClassName: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
 

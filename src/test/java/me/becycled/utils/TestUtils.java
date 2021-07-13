@@ -3,6 +3,7 @@ package me.becycled.utils;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.community.CommunityType;
 import me.becycled.backend.model.entity.competition.Competition;
+import me.becycled.backend.model.entity.image.Image;
 import me.becycled.backend.model.entity.post.Post;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.route.RoutePhoto;
@@ -205,6 +206,12 @@ public enum TestUtils {;
         post.setContent("content");
         post.setPoster("poster");
         return post;
+    }
+
+    public static Image getTestImage() {
+        Image image = new Image(new byte[]{0x00, 0x55});
+        image.setId("407e3b85-b508-497b-b8ec-60b9e1929bbc");
+        return image;
     }
 
     public static Competition getTestCompetition() {
