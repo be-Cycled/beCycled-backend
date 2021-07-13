@@ -26,7 +26,7 @@ public interface ImageMapper {
         @Result(column = "data", property = "data")
     })
     @Select("SELECT * FROM images WHERE file_name=#{fileName}")
-    Image getById(String id);
+    Image getByFileName(String fileName);
 
     @Select("SELECT * FROM images")
     @ResultMap("imageResult")

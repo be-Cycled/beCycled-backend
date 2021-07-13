@@ -48,9 +48,9 @@ public class ImageController {
         String imageName;
         do {
             imageName = ImageUtils.buildImageName(imageExtension);
-        } while (daoFactory.getImageDao().getById(imageName) != null);
+        } while (daoFactory.getImageDao().getByFileName(imageName) != null);
 
-        final Image image = daoFactory.getImageDao().create(Image.build(imageName, ImageUtils.compressBytes((file.getBytes()))));
+        final Image image = daoFactory.getImageDao().create(Image.build(imageName, file.getBytes()));
 
         return ResponseEntity.ok(image.getFileName());
     }
@@ -58,12 +58,12 @@ public class ImageController {
     @RequestMapping(value = "/{image-name}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getImage(@PathVariable("image-name") final String imageName) {
 
-        final Image image = daoFactory.getImageDao().getById(imageName);
+        final Image image = daoFactory.getImageDao().getByFileName(imageName);
         if (image == null) {
             throw new NotFoundException(ErrorMessages.notFound(Image.class));
         }
         final MediaType mediaType = ImageUtils.findMediaTypeByImageExtension(FilenameUtils.getExtension(image.getFileName()));
 
-        return ResponseEntity.ok().contentType(mediaType).body(ImageUtils.decompressBytes(image.getData()));
+        return ResponseEntity.ok().contentType(mediaType).body(image.getData());
     }
 }

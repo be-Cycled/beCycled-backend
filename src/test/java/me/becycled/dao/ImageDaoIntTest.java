@@ -42,7 +42,7 @@ public class ImageDaoIntTest extends BaseIntegrationTest {
     @Test
     void getById() {
         final Image image = daoFactory.getImageDao().create(TestUtils.getTestImage());
-        final Image createPost = daoFactory.getImageDao().getById(image.getFileName());
+        final Image createPost = daoFactory.getImageDao().getByFileName(image.getFileName());
 
         assertEquals(createPost, image);
     }

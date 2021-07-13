@@ -25,11 +25,11 @@ public class ImageDao extends BaseMyBatisDao {
         }
     }
 
-    public Image getById(final String id) {
+    public Image getByFileName(final String fileName) {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             final ImageMapper mapper = session.getMapper(ImageMapper.class);
 
-            return mapper.getById(id);
+            return mapper.getByFileName(fileName);
         }
     }
 
