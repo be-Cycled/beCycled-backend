@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public class EventDao extends BaseMyBatisDao {
+public final class EventDao extends BaseMyBatisDao {
 
     public EventDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);

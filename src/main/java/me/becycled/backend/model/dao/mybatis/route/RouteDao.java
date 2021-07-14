@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public class RouteDao extends BaseMyBatisDao {
+public final class RouteDao extends BaseMyBatisDao {
 
     public RouteDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);

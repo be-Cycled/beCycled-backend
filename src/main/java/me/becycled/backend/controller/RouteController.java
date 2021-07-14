@@ -66,6 +66,7 @@ public class RouteController {
     public ResponseEntity<?> update(
         @ApiParam("Идентификатор маршрута") @PathVariable("id") final int id,
         @ApiParam("данные маршрута") @RequestBody final Route entity) {
+
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }

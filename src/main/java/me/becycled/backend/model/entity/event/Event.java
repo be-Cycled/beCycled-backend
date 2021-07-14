@@ -28,11 +28,11 @@ public final class Event {
     private Boolean isPrivate;
     @ApiModelProperty(notes = "Время начала события", required = true, position = 5)
     private Instant startDate;
-    @ApiModelProperty(notes = "Идентификатор маршрута, по которому будут проходить события", required = true, position = 6)
+    @ApiModelProperty(notes = "Идентификатор маршрута, по которому будет проходить события", required = true, position = 6)
     private Integer routeId;
     @ApiModelProperty(notes = "Вид спорта", required = true, position = 7)
     private SportType sportType;
-    @ApiModelProperty(notes = "Список идентификаторов пользователей, учавствующих в событии", required = true, position = 8)
+    @ApiModelProperty(notes = "Список идентификаторов пользователей, участвующих в событии", required = true, position = 8)
     private List<Integer> userIds;
     @ApiModelProperty(notes = "Место сбора", required = true, position = 9)
     private String venueGeoData;

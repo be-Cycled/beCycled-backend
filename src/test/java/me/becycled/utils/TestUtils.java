@@ -2,6 +2,7 @@ package me.becycled.utils;
 
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.community.CommunityType;
+import me.becycled.backend.model.entity.event.Event;
 import me.becycled.backend.model.entity.event.EventType;
 import me.becycled.backend.model.entity.image.Image;
 import me.becycled.backend.model.entity.post.Post;
@@ -12,7 +13,6 @@ import me.becycled.backend.model.entity.telemetry.Telemetry;
 import me.becycled.backend.model.entity.telemetry.Tracker;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
-import me.becycled.backend.model.entity.event.Event;
 
 import java.time.Instant;
 import java.util.Collections;

@@ -3,12 +3,12 @@ package me.becycled.dao;
 import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
 import me.becycled.backend.model.entity.community.Community;
+import me.becycled.backend.model.entity.event.Event;
 import me.becycled.backend.model.entity.event.EventType;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.route.SportType;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
-import me.becycled.backend.model.entity.event.Event;
 import me.becycled.utils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -250,9 +250,9 @@ public class EventDaoIntTest extends BaseIntegrationTest {
 
         assertNotNull(dbEvent.getId());
         assertEquals(event.getOwnerUserId(), dbEvent.getOwnerUserId());
-        assertEquals(testEvent.getCommunityId(), dbEvent.getCommunityId());
-        assertEquals(testEvent.getPrivate(), dbEvent.getPrivate());
+        assertEquals(event.getCommunityId(), dbEvent.getCommunityId());
         assertEquals(event.getRouteId(), dbEvent.getRouteId());
+        assertEquals(testEvent.getPrivate(), dbEvent.getPrivate());
         assertEquals(testEvent.getSportType(), dbEvent.getSportType());
         assertEquals(testEvent.getUserIds(), dbEvent.getUserIds());
         assertEquals(testEvent.getVenueGeoData(), dbEvent.getVenueGeoData());

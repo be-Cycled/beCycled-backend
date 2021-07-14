@@ -79,6 +79,7 @@ public class UserController {
     public ResponseEntity<?> update(
         @ApiParam("Идентификатор пользователя") @PathVariable("id") final int id,
         @ApiParam("Данные пользователя") @RequestBody final User entity) {
+
         if (id != entity.getId()) {
             return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
         }

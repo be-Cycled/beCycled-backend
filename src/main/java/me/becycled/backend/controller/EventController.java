@@ -45,7 +45,6 @@ public class EventController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-
     @ApiOperation("Получить событие по ее идентификатору")
     public ResponseEntity<Event> getById(
         @ApiParam("Идентификатор события") @PathVariable("id") final int id) {
@@ -58,8 +57,8 @@ public class EventController {
     }
 
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("Получить список событий по логину пользователя, который в них учавствует")
-    public ResponseEntity<List<Event>> getEventWhichUserMemberByUserLogin(
+    @ApiOperation("Получить список событий по логину пользователя, который является участником")
+    public ResponseEntity<List<Event>> getByMemberUserLogin(
         @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
 
         final User user = daoFactory.getUserDao().getByLogin(login);
@@ -71,7 +70,7 @@ public class EventController {
     }
 
     @RequestMapping(value = "/community/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("Получить список событий по никнейму сообщества, в котором они зарегестрированы")
+    @ApiOperation("Получить список событий по никнейму сообщества, в котором они созданы")
     public ResponseEntity<List<Event>> getByCommunityNickname(
         @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
 
@@ -83,13 +82,13 @@ public class EventController {
     }
 
     @RequestMapping(value = "/affiche", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("Получить список предстоящих и идущих в данный момент событий")
+    @ApiOperation("Получить список текущих и предстоящих событий")
     public ResponseEntity<List<Event>> getAffiche() {
         return ResponseEntity.ok(daoFactory.getEventDao().getAffiche());
     }
 
     @RequestMapping(value = "/feed", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("Получить список список прошедших событий ")
+    @ApiOperation("Получить список прошедших событий ")
     public ResponseEntity<List<Event>> getFeed() {
         return ResponseEntity.ok(daoFactory.getEventDao().getFeed());
     }
@@ -104,6 +103,7 @@ public class EventController {
     @ApiOperation("Создать событие")
     public ResponseEntity<Event> create(
         @ApiParam("Данные события") @RequestBody final Event entity) {
+
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
@@ -146,13 +146,14 @@ public class EventController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> delete(@PathVariable("id") final int id) {
+    @ApiOperation("Удалить событие по ее идентификатору")
+    public ResponseEntity<Integer> delete(
+        @PathVariable("id") final int id) {
 
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
         }
-
 
         final Event event = daoFactory.getEventDao().getById(id);
         if (event == null) {
@@ -170,6 +171,7 @@ public class EventController {
     @ApiOperation("Добавить на событие текущего пользователя по идентификатору события")
     public ResponseEntity<Event> join(
         @ApiParam("Идентификатор события") @PathVariable("id") final int id) {
+
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
@@ -187,13 +189,15 @@ public class EventController {
         final List<Integer> userIds = new ArrayList<>(event.getUserIds());
         userIds.add(curUser.getId());
         event.setUserIds(userIds);
+
         return ResponseEntity.ok(daoFactory.getEventDao().update(event));
     }
 
     @RequestMapping(value = "/leave/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("Удалить с события текущего пользователя по идентификатору события")
+    @ApiOperation("Удалить из события текущего пользователя по идентификатору события")
     public ResponseEntity<Event> leave(
         @ApiParam("Идентификатор события") @PathVariable("id") final int id) {
+
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
@@ -211,6 +215,7 @@ public class EventController {
         final List<Integer> userIds = new ArrayList<>(event.getUserIds());
         userIds.remove(curUser.getId());
         event.setUserIds(userIds);
+
         return ResponseEntity.ok(daoFactory.getEventDao().update(event));
     }
 }

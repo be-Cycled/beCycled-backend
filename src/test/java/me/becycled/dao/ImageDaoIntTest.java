@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -53,7 +52,7 @@ public class ImageDaoIntTest extends BaseIntegrationTest {
 
         Image firstPost = daoFactory.getImageDao().create(testImage);
         testImage.setFileName("test1.png");
-        testImage.setData(new byte[]{ 0x23, 0x43});
+        testImage.setData(new byte[]{0x23, 0x43});
         Image secondPost = daoFactory.getImageDao().create(testImage);
 
         final List<Image> all = daoFactory.getImageDao().getAll();

@@ -77,7 +77,6 @@ public class CommunityController {
         if (community == null) {
             throw new NotFoundException(ErrorMessages.notFound(Community.class));
         }
-
         return ResponseEntity.ok(daoFactory.getUserDao().getByIds(community.getUserIds()));
     }
 
@@ -85,6 +84,7 @@ public class CommunityController {
     @ApiOperation("Получить список сообществ по логину пользователя, который является участником")
     public ResponseEntity<List<Community>> getCommunityWhichUserMemberByUserLogin(
         @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
+
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
             throw new NotFoundException(ErrorMessages.notFound(User.class));
@@ -174,6 +174,7 @@ public class CommunityController {
     @ApiOperation("Вступить в сообщество по его идентификатору")
     public ResponseEntity<Community> join(
         @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
+
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());
@@ -198,6 +199,7 @@ public class CommunityController {
     @ApiOperation("Покинуть сообщество по его идентификатору")
     public ResponseEntity<Community> leave(
         @ApiParam("Идентификатор сообщества") @PathVariable("id") final int id) {
+
         final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
             throw new AuthException(ErrorMessages.authError());

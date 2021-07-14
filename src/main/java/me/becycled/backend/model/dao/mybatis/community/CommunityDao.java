@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public class CommunityDao extends BaseMyBatisDao {
+public final class CommunityDao extends BaseMyBatisDao {
 
     public CommunityDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);

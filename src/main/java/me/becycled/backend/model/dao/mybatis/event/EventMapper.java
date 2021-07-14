@@ -21,7 +21,7 @@ public interface EventMapper {
 
     @InsertProvider(type = EventSqlBuilder.class, method = "buildCreateSql")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    int create(Event user);
+    int create(Event event);
 
     @InsertProvider(type = EventSqlBuilder.class, method = "buildUpdateSql")
     int update(Event event);
@@ -107,8 +107,6 @@ public interface EventMapper {
             return new SQL() {{
                 UPDATE(TABLE_NAME);
 
-                SET("community_id = #{communityId}");
-                SET("event_type = #{eventType}::EVENT_TYPE");
                 SET("private = #{isPrivate}");
                 SET("start_date = #{startDate}");
                 SET("sport_type = #{sportType}::SPORT_TYPE");

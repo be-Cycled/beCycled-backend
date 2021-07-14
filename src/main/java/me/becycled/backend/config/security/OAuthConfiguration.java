@@ -27,7 +27,7 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
     private static final String[] AUTHORIZED_GRANT_TYPES = {"password", "authorization_code"};
     private static final String SCOPE = "all";
 
-    private static final int ACCESS_TOKEN_VALIDITY_SECONDS = 172_800; // 48 часов
+    private static final int ACCESS_TOKEN_VALIDITY_SECONDS = 86_400;
 
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;

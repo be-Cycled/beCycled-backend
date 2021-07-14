@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author binakot
  */
-public class TelemetryDao extends BaseMyBatisDao {
+public final class TelemetryDao extends BaseMyBatisDao {
 
     public TelemetryDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);
