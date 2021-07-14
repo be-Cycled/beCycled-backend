@@ -55,11 +55,15 @@ public interface EventMapper {
     @ResultMap("eventResult")
     List<Event> getByMemberUserId(Integer memberUserId);
 
-    @Select("SELECT * FROM events WHERE now() < start_date + duration * interval '1 second'")
+    @Select("SELECT * FROM events " +
+        "WHERE now() < start_date + duration * interval '1 second' " +
+        "ORDER BY start_date ASC")
     @ResultMap("eventResult")
     List<Event> getAffiche();
 
-    @Select("SELECT * FROM events WHERE now() >= start_date + duration * interval '1 second'")
+    @Select("SELECT * FROM events " +
+        "WHERE now() >= start_date + duration * interval '1 second' " +
+        "ORDER BY start_date ASC")
     @ResultMap("eventResult")
     List<Event> getFeed();
 
