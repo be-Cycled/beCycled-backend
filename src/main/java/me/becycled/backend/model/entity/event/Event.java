@@ -1,4 +1,4 @@
-package me.becycled.backend.model.entity.competition;
+package me.becycled.backend.model.entity.event;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,32 +13,34 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-@ApiModel(description = "Соревнование")
-public final class Competition {
+@ApiModel(description = "Событие")
+public final class Event {
 
     @ApiModelProperty(notes = "Уникальный идентификатор", required = true, position = 0)
     private Integer id;
-    @ApiModelProperty(notes = "Идентификатор пользователя, который создал соревнование", required = true, position = 1)
+    @ApiModelProperty(notes = "Идентификатор пользователя, который создал событие", required = true, position = 1)
     private Integer ownerUserId;
-    @ApiModelProperty(notes = "Идентификатор сообщества, в рамках которого проводится соревнование", required = true, position = 2)
+    @ApiModelProperty(notes = "Идентификатор сообщества, в рамках которого проводится событие", required = true, position = 2)
     private Integer communityId;
-    @ApiModelProperty(notes = "Флаг приватности", required = true, position = 3)
+    @ApiModelProperty(notes = "Тип события", required = true, position = 3)
+    private EventType eventType;
+    @ApiModelProperty(notes = "Флаг приватности", required = true, position = 4)
     private Boolean isPrivate;
-    @ApiModelProperty(notes = "Время начала соревнования", required = true, position = 4)
+    @ApiModelProperty(notes = "Время начала события", required = true, position = 5)
     private Instant startDate;
-    @ApiModelProperty(notes = "Идентификатор маршрута, по которому будут проходить соревнования", required = true, position = 5)
+    @ApiModelProperty(notes = "Идентификатор маршрута, по которому будут проходить события", required = true, position = 6)
     private Integer routeId;
-    @ApiModelProperty(notes = "Вид спорта", required = true, position = 6)
+    @ApiModelProperty(notes = "Вид спорта", required = true, position = 7)
     private SportType sportType;
-    @ApiModelProperty(notes = "Список идентификаторов пользователей, учавствующих в соревновании", required = true, position = 7)
+    @ApiModelProperty(notes = "Список идентификаторов пользователей, учавствующих в событии", required = true, position = 8)
     private List<Integer> userIds;
-    @ApiModelProperty(notes = "Место сбора", required = true, position = 8)
+    @ApiModelProperty(notes = "Место сбора", required = true, position = 9)
     private String venueGeoData;
-    @ApiModelProperty(notes = "Длительность соревнований, секунды", required = true, position = 9)
+    @ApiModelProperty(notes = "Длительность события, секунды", required = true, position = 10)
     private Integer duration;
-    @ApiModelProperty(notes = "Описание соревнования", required = true, position = 10)
+    @ApiModelProperty(notes = "Описание события", required = true, position = 11)
     private String description;
-    @ApiModelProperty(notes = "Время создания", required = true, position = 11)
+    @ApiModelProperty(notes = "Время создания", required = true, position = 12)
     private Instant createdAt;
 
     //region GETTERS & SETTERS
@@ -67,12 +69,20 @@ public final class Competition {
         this.communityId = communityId;
     }
 
-    public Boolean getIsPrivate() {
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(final EventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public Boolean getPrivate() {
         return isPrivate;
     }
 
-    public void setIsPrivate(final Boolean isPrivate) {
-        this.isPrivate = isPrivate;
+    public void setPrivate(final Boolean aPrivate) {
+        isPrivate = aPrivate;
     }
 
     public Instant getStartDate() {
@@ -107,12 +117,8 @@ public final class Competition {
         this.userIds = userIds;
     }
 
-    public Boolean getPrivate() {
-        return isPrivate;
-    }
-
-    public void setPrivate(final Boolean aPrivate) {
-        isPrivate = aPrivate;
+    public Integer getDuration() {
+        return duration;
     }
 
     public String getVenueGeoData() {
@@ -121,10 +127,6 @@ public final class Competition {
 
     public void setVenueGeoData(final String venueGeoData) {
         this.venueGeoData = venueGeoData;
-    }
-
-    public Integer getDuration() {
-        return duration;
     }
 
     public void setDuration(final Integer duration) {
@@ -158,10 +160,11 @@ public final class Competition {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Competition that = (Competition) o;
+        final Event that = (Event) o;
         return Objects.equals(id, that.id)
             && Objects.equals(ownerUserId, that.ownerUserId)
             && Objects.equals(communityId, that.communityId)
+            && Objects.equals(eventType, that.eventType)
             && Objects.equals(isPrivate, that.isPrivate)
             && Objects.equals(startDate, that.startDate)
             && Objects.equals(routeId, that.routeId)
@@ -175,8 +178,8 @@ public final class Competition {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ownerUserId, communityId, isPrivate,
-            startDate, routeId, sportType, userIds, venueGeoData, duration, description, createdAt);
+        return Objects.hash(id, ownerUserId, eventType, communityId, isPrivate,
+            startDate, routeId, sportType, userIds, description, createdAt);
     }
 
     @Override
@@ -185,6 +188,7 @@ public final class Competition {
             .append("id", id)
             .append("ownerUserId", ownerUserId)
             .append("communityId", communityId)
+            .append("eventType", eventType)
             .append("isPrivate", isPrivate)
             .append("startDate", startDate)
             .append("routeId", routeId)

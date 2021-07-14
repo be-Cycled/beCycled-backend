@@ -1,7 +1,7 @@
 package me.becycled.backend.model.dao.mybatis;
 
 import me.becycled.backend.model.dao.mybatis.community.CommunityDao;
-import me.becycled.backend.model.dao.mybatis.competition.CompetitionDao;
+import me.becycled.backend.model.dao.mybatis.event.EventDao;
 import me.becycled.backend.model.dao.mybatis.image.ImageDao;
 import me.becycled.backend.model.dao.mybatis.post.PostDao;
 import me.becycled.backend.model.dao.mybatis.route.RouteDao;
@@ -10,7 +10,6 @@ import me.becycled.backend.model.dao.mybatis.telemetry.TelemetryDao;
 import me.becycled.backend.model.dao.mybatis.tracker.TrackerDao;
 import me.becycled.backend.model.dao.mybatis.user.UserDao;
 import me.becycled.backend.model.dao.mybatis.useraccount.UserAccountDao;
-import me.becycled.backend.model.dao.mybatis.workout.WorkoutDao;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 /**
@@ -26,9 +25,8 @@ public class DaoFactory {
     private final CommunityDao communityDao;
     private final TelemetryDao telemetryDao;
     private final TrackerDao trackerDao;
-    private final WorkoutDao workoutDao;
+    private final EventDao eventDao;
     private final PostDao postDao;
-    private final CompetitionDao competitionDao;
     private final ImageDao imageDao;
 
     public DaoFactory(final SqlSessionFactory sqlSessionFactory) {
@@ -39,9 +37,8 @@ public class DaoFactory {
         communityDao = new CommunityDao(sqlSessionFactory);
         telemetryDao = new TelemetryDao(sqlSessionFactory);
         trackerDao = new TrackerDao(sqlSessionFactory);
-        workoutDao = new WorkoutDao(sqlSessionFactory);
+        eventDao = new EventDao(sqlSessionFactory);
         postDao = new PostDao(sqlSessionFactory);
-        competitionDao = new CompetitionDao(sqlSessionFactory);
         imageDao = new ImageDao(sqlSessionFactory);
     }
 
@@ -73,16 +70,12 @@ public class DaoFactory {
         return trackerDao;
     }
 
-    public WorkoutDao getWorkoutDao() {
-        return workoutDao;
+    public EventDao getEventDao() {
+        return eventDao;
     }
 
     public PostDao getPostDao() {
         return postDao;
-    }
-
-    public CompetitionDao getCompetitionDao() {
-        return competitionDao;
     }
 
     public ImageDao getImageDao() {

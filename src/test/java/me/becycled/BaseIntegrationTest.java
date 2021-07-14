@@ -113,6 +113,7 @@ public abstract class BaseIntegrationTest {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 
