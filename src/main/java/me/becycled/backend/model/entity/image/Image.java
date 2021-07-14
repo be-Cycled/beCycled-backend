@@ -12,12 +12,12 @@ import java.util.Objects;
 /**
  * @author I1yi4
  */
-@ApiModel(description = "Картинка")
-public class Image {
+@ApiModel(description = "Файл изображения")
+public final class Image {
 
-    @ApiModelProperty(notes = "Уникальное наименование картинки", required = true, position = 0)
+    @ApiModelProperty(notes = "Имя файла", required = true, position = 0)
     private String fileName;
-    @ApiModelProperty(notes = "Байты картинки", required = true, position = 1)
+    @ApiModelProperty(notes = "Данные файла", required = true, position = 1)
     private byte[] data;
 
     //region GETTERS & SETTERS
@@ -52,7 +52,8 @@ public class Image {
             return false;
         }
         final Image image = (Image) o;
-        return Objects.equals(fileName, image.fileName) && Arrays.equals(data, image.data);
+        return Objects.equals(fileName, image.fileName)
+            && Arrays.equals(data, image.data);
     }
 
     @Override
@@ -75,7 +76,6 @@ public class Image {
         final Image image = new Image();
         image.setFileName(fileName);
         image.setData(data);
-
         return image;
     }
 }

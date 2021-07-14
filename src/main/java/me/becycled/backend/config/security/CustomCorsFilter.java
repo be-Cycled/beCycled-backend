@@ -29,7 +29,7 @@ public class CustomCorsFilter extends OncePerRequestFilter {
     private static final String ALLOW_METHODS = "GET, POST, PUT, DELETE, OPTIONS";
     private static final String ALLOW_HEADERS = "*";
     private static final String ALLOW_CREDENTIALS = "true";
-    private static final String MAX_AGE = "3600";
+    private static final String MAX_AGE = "86400";
 
     @Override
     protected void doFilterInternal(final HttpServletRequest request,

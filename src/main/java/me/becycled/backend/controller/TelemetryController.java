@@ -51,6 +51,7 @@ public class TelemetryController {
         @ApiParam("Идентификатор трекера") @RequestParam("trackerId") final int trackerId,
         @ApiParam("Время начала в ISO8601") @RequestParam("from") final Instant from,
         @ApiParam("Время окончания в ISO8601") @RequestParam("to") final Instant to) {
+
         return ResponseEntity.ok(daoFactory.getTelemetryDao().getRangeByTrackerId(trackerId, from, to));
     }
 }

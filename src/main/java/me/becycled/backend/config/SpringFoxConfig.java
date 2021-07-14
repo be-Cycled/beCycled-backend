@@ -48,7 +48,7 @@ public class SpringFoxConfig {
             .license("Copyright © 2021 beCycled")
             .licenseUrl("https://github.com/be-Cycled/beCycled/blob/main/LICENSE")
             .termsOfServiceUrl("")
-            .contact(new Contact("Aleksandr Koltovich", "https://github.com/avkoltovich", "avkoltovich@gmail.com"))
+            .contact(new Contact("Support", "https://becycled.me", "support@becycled.me"))
             .build();
     }
 

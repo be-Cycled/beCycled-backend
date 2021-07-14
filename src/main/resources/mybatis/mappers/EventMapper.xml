@@ -3,13 +3,13 @@
 <!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN'
   'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
 
-<mapper namespace="me.becycled.backend.model.dao.mybatis.workout.WorkoutMapper">
+<mapper namespace="me.becycled.backend.model.dao.mybatis.event.EventMapper">
 
-  <insert id="insertWorkoutMembers">
-    INSERT INTO workout_members (workout_id, user_id)
+  <insert id="insertEventMembers">
+    INSERT INTO event_members (event_id, user_id)
     VALUES
     <foreach collection="userIds" item="item" separator=",">
-      (#{workoutId}, #{item})
+      (#{eventId}, #{item})
     </foreach>
   </insert>
 

@@ -89,6 +89,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         public void publishAuthenticationFailure(final AuthenticationException exception, final Authentication authentication) {
             // NOP
         }
-
     }
 }

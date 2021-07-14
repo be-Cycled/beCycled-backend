@@ -2,7 +2,8 @@ package me.becycled.utils;
 
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.community.CommunityType;
-import me.becycled.backend.model.entity.competition.Competition;
+import me.becycled.backend.model.entity.event.Event;
+import me.becycled.backend.model.entity.event.EventType;
 import me.becycled.backend.model.entity.image.Image;
 import me.becycled.backend.model.entity.post.Post;
 import me.becycled.backend.model.entity.route.Route;
@@ -12,7 +13,6 @@ import me.becycled.backend.model.entity.telemetry.Telemetry;
 import me.becycled.backend.model.entity.telemetry.Tracker;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
-import me.becycled.backend.model.entity.workout.Workout;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -185,18 +185,19 @@ public enum TestUtils {;
         return tracker;
     }
 
-    public static Workout getTestWorkout() {
-        final Workout workout = new Workout();
-        workout.setOwnerUserId(1);
-        workout.setPrivate(false);
-        workout.setRouteId(1);
-        workout.setSportType(SportType.BICYCLE);
-        workout.setUserIds(Collections.emptyList());
-        workout.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
-        workout.setDescription("description");
-        workout.setVenueGeoData("venueGeoData");
-        workout.setDuration(100500);
-        return workout;
+    public static Event getTestEvent() {
+        final Event event = new Event();
+        event.setOwnerUserId(1);
+        event.setPrivate(false);
+        event.setEventType(EventType.WORKOUT);
+        event.setRouteId(1);
+        event.setSportType(SportType.BICYCLE);
+        event.setUserIds(Collections.emptyList());
+        event.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
+        event.setDescription("description");
+        event.setVenueGeoData("venueGeoData");
+        event.setDuration(100500);
+        return event;
     }
 
     public static Post getTestPost() {
@@ -213,20 +214,6 @@ public enum TestUtils {;
         image.setFileName("test.jpg");
         image.setData(new byte[]{0x00, 0x55});
         return image;
-    }
-
-    public static Competition getTestCompetition() {
-        final Competition competition = new Competition();
-        competition.setOwnerUserId(1);
-        competition.setIsPrivate(false);
-        competition.setRouteId(1);
-        competition.setSportType(SportType.BICYCLE);
-        competition.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
-        competition.setUserIds(Collections.emptyList());
-        competition.setDescription("description");
-        competition.setVenueGeoData("venueGeoData");
-        competition.setDuration(100500);
-        return competition;
     }
 
     public static UserAccount getTestUserAccount() {

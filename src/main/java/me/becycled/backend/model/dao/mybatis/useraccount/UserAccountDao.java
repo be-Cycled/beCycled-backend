@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 /**
  * @author I1yi4
  */
-public class UserAccountDao extends BaseMyBatisDao {
+public final class UserAccountDao extends BaseMyBatisDao {
 
     public UserAccountDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);

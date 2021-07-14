@@ -1,5 +1,8 @@
 package me.becycled.backend.exception;
 
+/**
+ * @author I1yi4
+ */
 abstract class ApiException extends RuntimeException {
 
     private final String message;

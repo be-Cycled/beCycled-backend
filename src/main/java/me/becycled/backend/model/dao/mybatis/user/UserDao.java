@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public class UserDao extends BaseMyBatisDao {
+public final class UserDao extends BaseMyBatisDao {
 
     public UserDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author binakot
  */
-public class TrackerDao extends BaseMyBatisDao {
+public final class TrackerDao extends BaseMyBatisDao {
 
     public TrackerDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);

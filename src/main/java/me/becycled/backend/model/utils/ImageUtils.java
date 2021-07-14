@@ -13,7 +13,7 @@ public enum ImageUtils {;
     }
 
     public static MediaType findMediaTypeByImageExtension(final String extension) {
-        switch (extension.toLowerCase()){
+        switch (extension.toLowerCase()) {
             case "jpg":
             case "jpeg":
                 return MediaType.IMAGE_JPEG;
