@@ -9,6 +9,7 @@ import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
 import me.becycled.backend.model.error.ErrorMessages;
+import me.becycled.backend.model.utils.DomainUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,6 +57,7 @@ public class RegisterController {
         final User user = new User();
         user.setLogin(entity.getLogin());
         user.setEmail(entity.getEmail());
+        user.setAvatar(DomainUtils.DEFAULT_USER_AVATAR_URL);
 
         final UserAccount userAccount = new UserAccount();
         userAccount.setPassword(passwordEncoder.encode(entity.getPassword()));
