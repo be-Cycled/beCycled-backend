@@ -2,8 +2,9 @@ package me.becycled.utils;
 
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.community.CommunityType;
-import me.becycled.backend.model.entity.event.Event;
-import me.becycled.backend.model.entity.event.bicycle.BicycleWorkout;
+import me.becycled.backend.model.entity.event.bicycle.BicycleCompetition;
+import me.becycled.backend.model.entity.event.bicycle.BicycleCompetitionType;
+import me.becycled.backend.model.entity.event.bicycle.BicycleType;
 import me.becycled.backend.model.entity.image.Image;
 import me.becycled.backend.model.entity.post.Post;
 import me.becycled.backend.model.entity.route.Route;
@@ -186,8 +187,8 @@ public enum TestUtils {
         return tracker;
     }
 
-    public static Event getTestEvent() {
-        final Event event = new BicycleWorkout();
+    public static BicycleCompetition getTestEvent() {
+        final BicycleCompetition event = new BicycleCompetition();
         event.setId(1);
         event.setOwnerUserId(1);
         event.setCommunityId(null);
@@ -202,6 +203,9 @@ public enum TestUtils {
 
         event.setMemberUserIds(Collections.emptyList());
         event.setCreatedAt(Instant.now());
+
+        event.setBicycleType(BicycleType.ONE);
+        event.setBicycleCompetitionType(BicycleCompetitionType.ONE);
 
         return event;
     }

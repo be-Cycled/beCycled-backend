@@ -4,7 +4,9 @@ import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.event.Event;
-import me.becycled.backend.model.entity.event.bicycle.BicycleWorkout;
+import me.becycled.backend.model.entity.event.bicycle.BicycleCompetition;
+import me.becycled.backend.model.entity.event.bicycle.BicycleCompetitionType;
+import me.becycled.backend.model.entity.event.bicycle.BicycleType;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
@@ -44,8 +46,8 @@ public class EventDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void create() {
-        final Event testEvent = TestUtils.getTestEvent();
-        Event event = daoFactory.getEventDao().create(testEvent);
+        final BicycleCompetition testEvent = TestUtils.getTestEvent();
+        BicycleCompetition event = (BicycleCompetition) daoFactory.getEventDao().create(testEvent);
         assertNotNull(event.getId());
         assertNotNull(event.getCreatedAt());
 
@@ -64,6 +66,9 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         assertEquals(testEvent.getVenueGeoData(), event.getVenueGeoData());
         assertEquals(testEvent.getMemberUserIds(), event.getMemberUserIds());
         assertEquals(testEvent.getCreatedAt(), event.getCreatedAt());
+
+        assertEquals(testEvent.getBicycleType(), event.getBicycleType());
+        assertEquals(testEvent.getBicycleCompetitionType(), event.getBicycleCompetitionType());
     }
 
     @Test
@@ -223,13 +228,15 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         user.setPhone("89001600020");
         UserAccount userAccount = daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
         user = daoFactory.getUserDao().getById(userAccount.getUserId());
+
         Community community = TestUtils.getTestCommunity();
         community.setNickname("testNickname");
         community = daoFactory.getCommunityDao().create(community);
-        final Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
-        final Event originEvent = daoFactory.getEventDao().create(TestUtils.getTestEvent());
 
-        final Event testEvent = new BicycleWorkout();
+        final Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
+        final BicycleCompetition originEvent = (BicycleCompetition) daoFactory.getEventDao().create(TestUtils.getTestEvent());
+
+        final BicycleCompetition testEvent = new BicycleCompetition();
         testEvent.setId(originEvent.getId());
         testEvent.setOwnerUserId(user.getId());
         testEvent.setCommunityId(community.getId());
@@ -241,8 +248,10 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         testEvent.setVenueGeoData("BQ 128");
         testEvent.setMemberUserIds(List.of(1, 2));
         testEvent.setCreatedAt(Instant.now());
+        testEvent.setBicycleType(BicycleType.TWO);
+        testEvent.setBicycleCompetitionType(BicycleCompetitionType.TWO);
 
-        final Event dbEvent = daoFactory.getEventDao().update(testEvent);
+        final BicycleCompetition dbEvent = (BicycleCompetition) daoFactory.getEventDao().update(testEvent);
         testEvent.setCreatedAt(dbEvent.getCreatedAt());
 
         assertNotNull(dbEvent.getId());
@@ -257,5 +266,7 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         assertEquals(testEvent.getVenueGeoData(), dbEvent.getVenueGeoData());
         assertEquals(testEvent.getMemberUserIds(), dbEvent.getMemberUserIds());
         assertEquals(originEvent.getCreatedAt(), dbEvent.getCreatedAt());
+        assertEquals(testEvent.getBicycleType(), dbEvent.getBicycleType());
+        assertEquals(testEvent.getBicycleCompetitionType(), dbEvent.getBicycleCompetitionType());
     }
 }
