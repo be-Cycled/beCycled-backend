@@ -111,9 +111,9 @@ public class EventController {
 
         entity.setOwnerUserId(curUser.getId());
 
-        final List<Integer> userIds = new ArrayList<>(entity.getUserIds());
+        final List<Integer> userIds = new ArrayList<>(entity.getMemberUserIds());
         userIds.add(curUser.getId());
-        entity.setUserIds(userIds.stream().distinct().collect(Collectors.toList()));
+        entity.setMemberUserIds(userIds.stream().distinct().collect(Collectors.toList()));
 
         return ResponseEntity.ok(daoFactory.getEventDao().create(entity));
     }
@@ -182,13 +182,13 @@ public class EventController {
             throw new NotFoundException(ErrorMessages.notFound(Event.class));
         }
 
-        if (event.getUserIds().contains(curUser.getId())) {
+        if (event.getMemberUserIds().contains(curUser.getId())) {
             throw new WrongRequestException(ErrorMessages.userAlreadyJoin());
         }
 
-        final List<Integer> userIds = new ArrayList<>(event.getUserIds());
+        final List<Integer> userIds = new ArrayList<>(event.getMemberUserIds());
         userIds.add(curUser.getId());
-        event.setUserIds(userIds);
+        event.setMemberUserIds(userIds);
 
         return ResponseEntity.ok(daoFactory.getEventDao().update(event));
     }
@@ -208,13 +208,13 @@ public class EventController {
             throw new NotFoundException(ErrorMessages.notFound(Event.class));
         }
 
-        if (!event.getUserIds().contains(curUser.getId())) {
+        if (!event.getMemberUserIds().contains(curUser.getId())) {
             throw new WrongRequestException(ErrorMessages.userNotJoin());
         }
 
-        final List<Integer> userIds = new ArrayList<>(event.getUserIds());
+        final List<Integer> userIds = new ArrayList<>(event.getMemberUserIds());
         userIds.remove(curUser.getId());
-        event.setUserIds(userIds);
+        event.setMemberUserIds(userIds);
 
         return ResponseEntity.ok(daoFactory.getEventDao().update(event));
     }

@@ -92,15 +92,15 @@ public class EventControllerTest extends BaseIntegrationTest {
         route = daoFactory.getRouteDao().create(route);
 
         Event eventFirst = TestUtils.getTestEvent();
-        eventFirst.setUserIds(List.of(user.getId()));
+        eventFirst.setMemberUserIds(List.of(user.getId()));
         eventFirst = daoFactory.getEventDao().create(eventFirst);
 
         Event eventSecond = TestUtils.getTestEvent();
-        eventSecond.setUserIds(Collections.emptyList());
+        eventSecond.setMemberUserIds(Collections.emptyList());
         eventSecond = daoFactory.getEventDao().create(eventSecond);
 
         Event eventThird = TestUtils.getTestEvent();
-        eventThird.setUserIds(List.of(user.getId()));
+        eventThird.setMemberUserIds(List.of(user.getId()));
         eventThird = daoFactory.getEventDao().create(eventThird);
 
         final ResponseEntity<List<Event>> response = restTemplate.exchange(
@@ -149,16 +149,16 @@ public class EventControllerTest extends BaseIntegrationTest {
         Community community = daoFactory.getCommunityDao().create(TestUtils.getTestCommunity());
 
         Event eventFirst = TestUtils.getTestEvent();
-        eventFirst.setUserIds(List.of(user.getId()));
+        eventFirst.setMemberUserIds(List.of(user.getId()));
         eventFirst.setCommunityId(community.getId());
         eventFirst = daoFactory.getEventDao().create(eventFirst);
 
         Event eventSecond = TestUtils.getTestEvent();
-        eventSecond.setUserIds(Collections.emptyList());
+        eventSecond.setMemberUserIds(Collections.emptyList());
         eventSecond = daoFactory.getEventDao().create(eventSecond);
 
         Event eventThird = TestUtils.getTestEvent();
-        eventThird.setUserIds(List.of(user.getId()));
+        eventThird.setMemberUserIds(List.of(user.getId()));
         eventThird.setCommunityId(community.getId());
         eventThird = daoFactory.getEventDao().create(eventThird);
 
@@ -197,19 +197,19 @@ public class EventControllerTest extends BaseIntegrationTest {
         final Instant now = Instant.now();
 
         Event eventFirst = TestUtils.getTestEvent();
-        eventFirst.setUserIds(List.of(1, 2, 3));
+        eventFirst.setMemberUserIds(List.of(1, 2, 3));
         eventFirst.setStartDate(now.plus(1, ChronoUnit.HOURS));
         eventFirst.setDuration(1800);
         eventFirst = daoFactory.getEventDao().create(eventFirst);
 
         Event eventSecond = TestUtils.getTestEvent();
-        eventSecond.setUserIds(List.of(3));
+        eventSecond.setMemberUserIds(List.of(3));
         eventSecond.setStartDate(now.minus(1, ChronoUnit.HOURS));
         eventSecond.setDuration(1800);
         eventSecond = daoFactory.getEventDao().create(eventSecond);
 
         Event eventThird = TestUtils.getTestEvent();
-        eventThird.setUserIds(Collections.emptyList());
+        eventThird.setMemberUserIds(Collections.emptyList());
         eventThird.setStartDate(now.plus(240, ChronoUnit.HOURS));
         eventThird.setDuration(1800);
         eventThird = daoFactory.getEventDao().create(eventThird);
@@ -239,19 +239,19 @@ public class EventControllerTest extends BaseIntegrationTest {
         final Instant now = Instant.now();
 
         Event eventFirst = TestUtils.getTestEvent();
-        eventFirst.setUserIds(List.of(1, 2, 3));
+        eventFirst.setMemberUserIds(List.of(1, 2, 3));
         eventFirst.setStartDate(now.plus(1, ChronoUnit.HOURS));
         eventFirst.setDuration(1800);
         eventFirst = daoFactory.getEventDao().create(eventFirst);
 
         Event eventSecond = TestUtils.getTestEvent();
-        eventSecond.setUserIds(List.of(3));
+        eventSecond.setMemberUserIds(List.of(3));
         eventSecond.setStartDate(now.minus(1, ChronoUnit.HOURS));
         eventSecond.setDuration(1800);
         eventSecond = daoFactory.getEventDao().create(eventSecond);
 
         Event eventThird = TestUtils.getTestEvent();
-        eventThird.setUserIds(Collections.emptyList());
+        eventThird.setMemberUserIds(Collections.emptyList());
         eventThird.setStartDate(now.plus(240, ChronoUnit.HOURS));
         eventThird.setDuration(1800);
         eventThird = daoFactory.getEventDao().create(eventThird);
@@ -325,7 +325,7 @@ public class EventControllerTest extends BaseIntegrationTest {
         event.setOwnerUserId(user.getId());
         event.setId(result.getId());
         event.setCreatedAt(result.getCreatedAt());
-        event.setUserIds(Collections.singletonList(user.getId()));
+        event.setMemberUserIds(Collections.singletonList(user.getId()));
 
         then(result).isEqualTo(event);
     }
@@ -338,7 +338,7 @@ public class EventControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         Event event = TestUtils.getTestEvent();
-        event.setUserIds(Collections.singletonList(user.getId()));
+        event.setMemberUserIds(Collections.singletonList(user.getId()));
         event.setOwnerUserId(100500);
 
         final RequestEntity<Event> request = RequestEntity
@@ -356,7 +356,7 @@ public class EventControllerTest extends BaseIntegrationTest {
         event.setOwnerUserId(user.getId());
         event.setId(result.getId());
         event.setCreatedAt(result.getCreatedAt());
-        event.setUserIds(Collections.singletonList(user.getId()));
+        event.setMemberUserIds(Collections.singletonList(user.getId()));
 
         then(result).isEqualTo(event);
     }
@@ -597,7 +597,7 @@ public class EventControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         Event event = TestUtils.getTestEvent();
-        event.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
+        event.setMemberUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
         event = daoFactory.getEventDao().create(event);
 
         final ResponseEntity<Event> response = restTemplate.exchange(
@@ -605,7 +605,7 @@ public class EventControllerTest extends BaseIntegrationTest {
             HttpMethod.POST, HttpEntity.EMPTY, Event.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        event.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId(), user.getId()));
+        event.setMemberUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId(), user.getId()));
         then(response.getBody()).isEqualTo(event);
     }
 
@@ -617,7 +617,7 @@ public class EventControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         Event event = TestUtils.getTestEvent();
-        event.setUserIds(Collections.emptyList());
+        event.setMemberUserIds(Collections.emptyList());
         event = daoFactory.getEventDao().create(event);
 
         final ResponseEntity<Event> response = restTemplate.exchange(
@@ -625,7 +625,7 @@ public class EventControllerTest extends BaseIntegrationTest {
             HttpMethod.POST, HttpEntity.EMPTY, Event.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        event.setUserIds(Collections.singletonList(user.getId()));
+        event.setMemberUserIds(Collections.singletonList(user.getId()));
 
         then(response.getBody()).isEqualTo(event);
     }
@@ -668,7 +668,7 @@ public class EventControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         Event event = TestUtils.getTestEvent();
-        event.setUserIds(Collections.singletonList(user.getId()));
+        event.setMemberUserIds(Collections.singletonList(user.getId()));
         event = daoFactory.getEventDao().create(event);
 
         final ResponseEntity<String> response = restTemplate.exchange(
@@ -699,7 +699,7 @@ public class EventControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         Event event = TestUtils.getTestEvent();
-        event.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId(), user.getId()));
+        event.setMemberUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId(), user.getId()));
         event = daoFactory.getEventDao().create(event);
 
         final ResponseEntity<Event> response = restTemplate.exchange(
@@ -707,7 +707,7 @@ public class EventControllerTest extends BaseIntegrationTest {
             HttpMethod.POST, HttpEntity.EMPTY, Event.class);
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        event.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
+        event.setMemberUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
         then(response.getBody()).isEqualTo(event);
     }
 
@@ -757,7 +757,7 @@ public class EventControllerTest extends BaseIntegrationTest {
         when(accessService.getCurrentAuthUser()).thenReturn(user);
 
         Event event = TestUtils.getTestEvent();
-        event.setUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
+        event.setMemberUserIds(List.of(firstUser.getId(), secondUser.getId(), thirdUser.getId()));
 
         event = daoFactory.getEventDao().create(event);
 

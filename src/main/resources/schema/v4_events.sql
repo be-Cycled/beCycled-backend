@@ -1,5 +1,7 @@
 CREATE TYPE EVENT_TYPE AS ENUM (
-    'WORKOUT', 'COMPETITION'
+    'RUN_WORKOUT', 'RUN_COMPETITION',
+    'BICYCLE_WORKOUT', 'BICYCLE_COMPETITION',
+    'ROLLERBLADE_WORKOUT', 'ROLLERBLADE_COMPETITION'
     );
 
 CREATE TABLE events
@@ -8,13 +10,12 @@ CREATE TABLE events
     owner_user_id  INTEGER     NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
     community_id   INTEGER REFERENCES communities (id) ON DELETE RESTRICT,
     event_type     EVENT_TYPE  NOT NULL,
-    private        BOOLEAN     NOT NULL,
     start_date     TIMESTAMPTZ NOT NULL,
+    duration       INTEGER     NOT NULL,
+    description    TEXT        NOT NULL,
+    private        BOOLEAN     NOT NULL,
     route_id       INTEGER     NOT NULL REFERENCES routes (id) ON DELETE RESTRICT,
-    sport_type     SPORT_TYPE  NOT NULL,
     venue_geo_data TEXT,
-    duration       INTEGER,
-    description    TEXT,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
     attributes     JSONB       NOT NULL DEFAULT '{}'::JSONB
 );
