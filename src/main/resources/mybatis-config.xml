@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <!DOCTYPE configuration
-        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
 
-    <settings>
-        <setting name="cacheEnabled" value="false"/>
-        <setting name="lazyLoadingEnabled" value="false"/>
-        <setting name="aggressiveLazyLoading" value="false"/>
-        <setting name="autoMappingBehavior" value="NONE"/>
-        <setting name="autoMappingUnknownColumnBehavior" value="FAILING"/>
-        <setting name="lazyLoadTriggerMethods" value=""/>
-        <setting name="logPrefix" value=""/>
-        <setting name="logImpl" value="SLF4J"/>
-        <setting name="proxyFactory" value="JAVASSIST"/>
-    </settings>
+  <settings>
+    <setting name="cacheEnabled" value="false"/>
+    <setting name="lazyLoadingEnabled" value="false"/>
+    <setting name="aggressiveLazyLoading" value="false"/>
+    <setting name="autoMappingBehavior" value="NONE"/>
+    <setting name="autoMappingUnknownColumnBehavior" value="FAILING"/>
+    <setting name="lazyLoadTriggerMethods" value=""/>
+    <setting name="logPrefix" value=""/>
+    <setting name="logImpl" value="SLF4J"/>
+    <setting name="proxyFactory" value="JAVASSIST"/>
+  </settings>
 
-    <mappers>
-        <mapper resource="mybatis/mappers/RouteMapper.xml"/>
-        <mapper resource="mybatis/mappers/RoutePhotoMapper.xml"/>
-        <mapper resource="mybatis/mappers/UserAccountMapper.xml"/>
-        <mapper resource="mybatis/mappers/UserMapper.xml"/>
-        <mapper resource="mybatis/mappers/CommunityMapper.xml"/>
-        <mapper resource="mybatis/mappers/TelemetryMapper.xml"/>
-        <mapper resource="mybatis/mappers/TrackerMapper.xml"/>
-        <mapper resource="mybatis/mappers/EventMapper.xml"/>
-        <mapper resource="mybatis/mappers/PostMapper.xml"/>
-        <mapper resource="mybatis/mappers/ImageMapper.xml"/>
-    </mappers>
+  <typeAliases>
+    <typeAlias alias="event" type="me.becycled.backend.model.entity.event.Event"/>
+  </typeAliases>
+
+  <mappers>
+    <mapper resource="mybatis/mappers/CommunityMapper.xml"/>
+    <mapper resource="mybatis/mappers/EventMapper.xml"/>
+    <mapper resource="mybatis/mappers/ImageMapper.xml"/>
+    <mapper resource="mybatis/mappers/PostMapper.xml"/>
+    <mapper resource="mybatis/mappers/RouteMapper.xml"/>
+    <mapper resource="mybatis/mappers/RoutePhotoMapper.xml"/>
+    <mapper resource="mybatis/mappers/TelemetryMapper.xml"/>
+    <mapper resource="mybatis/mappers/TrackerMapper.xml"/>
+    <mapper resource="mybatis/mappers/UserAccountMapper.xml"/>
+    <mapper resource="mybatis/mappers/UserMapper.xml"/>
+  </mappers>
 
 </configuration>

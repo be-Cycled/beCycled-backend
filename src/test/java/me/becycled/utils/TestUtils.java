@@ -3,7 +3,7 @@ package me.becycled.utils;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.community.CommunityType;
 import me.becycled.backend.model.entity.event.Event;
-import me.becycled.backend.model.entity.event.EventType;
+import me.becycled.backend.model.entity.event.bicycle.BicycleWorkout;
 import me.becycled.backend.model.entity.image.Image;
 import me.becycled.backend.model.entity.post.Post;
 import me.becycled.backend.model.entity.route.Route;
@@ -21,7 +21,8 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public enum TestUtils {;
+public enum TestUtils {
+    ;
 
     public static User getTestUser() {
         final User user = new User();
@@ -186,17 +187,22 @@ public enum TestUtils {;
     }
 
     public static Event getTestEvent() {
-        final Event event = new Event();
+        final Event event = new BicycleWorkout();
+        event.setId(1);
         event.setOwnerUserId(1);
-        event.setPrivate(false);
-        event.setEventType(EventType.WORKOUT);
-        event.setRouteId(1);
-        event.setSportType(SportType.BICYCLE);
-        event.setUserIds(Collections.emptyList());
+        event.setCommunityId(null);
+
         event.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
-        event.setDescription("description");
-        event.setVenueGeoData("venueGeoData");
         event.setDuration(100500);
+        event.setDescription("description");
+        event.setPrivate(false);
+
+        event.setRouteId(1);
+        event.setVenueGeoData("venueGeoData");
+
+        event.setMemberUserIds(Collections.emptyList());
+        event.setCreatedAt(Instant.now());
+
         return event;
     }
 

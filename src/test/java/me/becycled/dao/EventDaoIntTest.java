@@ -4,9 +4,8 @@ import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.event.Event;
-import me.becycled.backend.model.entity.event.EventType;
+import me.becycled.backend.model.entity.event.bicycle.BicycleWorkout;
 import me.becycled.backend.model.entity.route.Route;
-import me.becycled.backend.model.entity.route.SportType;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
 import me.becycled.utils.TestUtils;
@@ -56,14 +55,14 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         assertEquals(testEvent.getId(), event.getId());
         assertEquals(testEvent.getOwnerUserId(), event.getOwnerUserId());
         assertEquals(testEvent.getCommunityId(), event.getCommunityId());
-        assertEquals(testEvent.getPrivate(), event.getPrivate());
+        assertEquals(testEvent.getEventType(), event.getEventType());
         assertEquals(testEvent.getStartDate(), event.getStartDate());
-        assertEquals(testEvent.getRouteId(), event.getRouteId());
-        assertEquals(testEvent.getSportType(), event.getSportType());
-        assertEquals(testEvent.getUserIds(), event.getUserIds());
-        assertEquals(testEvent.getVenueGeoData(), event.getVenueGeoData());
         assertEquals(testEvent.getDuration(), event.getDuration());
         assertEquals(testEvent.getDescription(), event.getDescription());
+        assertEquals(testEvent.getPrivate(), event.getPrivate());
+        assertEquals(testEvent.getRouteId(), event.getRouteId());
+        assertEquals(testEvent.getVenueGeoData(), event.getVenueGeoData());
+        assertEquals(testEvent.getMemberUserIds(), event.getMemberUserIds());
         assertEquals(testEvent.getCreatedAt(), event.getCreatedAt());
     }
 
@@ -117,15 +116,15 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         daoFactory.getUserAccountDao().create(user, TestUtils.getTestUserAccount());
 
         Event eventFirst = TestUtils.getTestEvent();
-        eventFirst.setUserIds(List.of(1, 2, 3));
+        eventFirst.setMemberUserIds(List.of(1, 2, 3));
         eventFirst = daoFactory.getEventDao().create(eventFirst);
 
         Event eventSecond = TestUtils.getTestEvent();
-        eventSecond.setUserIds(List.of(3));
+        eventSecond.setMemberUserIds(List.of(3));
         eventSecond = daoFactory.getEventDao().create(eventSecond);
 
         Event eventThird = TestUtils.getTestEvent();
-        eventThird.setUserIds(Collections.emptyList());
+        eventThird.setMemberUserIds(Collections.emptyList());
         eventThird = daoFactory.getEventDao().create(eventThird);
 
         final List<Event> result = daoFactory.getEventDao().getByMemberUserId(3);
@@ -147,19 +146,19 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         final Instant now = Instant.now();
 
         Event eventFirst = TestUtils.getTestEvent();
-        eventFirst.setUserIds(List.of(1, 2, 3));
+        eventFirst.setMemberUserIds(List.of(1, 2, 3));
         eventFirst.setStartDate(now.plus(1, ChronoUnit.HOURS));
         eventFirst.setDuration(1800);
         eventFirst = daoFactory.getEventDao().create(eventFirst);
 
         Event eventSecond = TestUtils.getTestEvent();
-        eventSecond.setUserIds(List.of(3));
+        eventSecond.setMemberUserIds(List.of(3));
         eventSecond.setStartDate(now.minus(1, ChronoUnit.HOURS));
         eventSecond.setDuration(1800);
         eventSecond = daoFactory.getEventDao().create(eventSecond);
 
         Event eventThird = TestUtils.getTestEvent();
-        eventThird.setUserIds(Collections.emptyList());
+        eventThird.setMemberUserIds(Collections.emptyList());
         eventThird.setStartDate(now.plus(240, ChronoUnit.HOURS));
         eventThird.setDuration(1800);
         eventThird = daoFactory.getEventDao().create(eventThird);
@@ -183,19 +182,19 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         final Instant now = Instant.now();
 
         Event eventFirst = TestUtils.getTestEvent();
-        eventFirst.setUserIds(List.of(1, 2, 3));
+        eventFirst.setMemberUserIds(List.of(1, 2, 3));
         eventFirst.setStartDate(now.plus(1, ChronoUnit.HOURS));
         eventFirst.setDuration(1800);
         eventFirst = daoFactory.getEventDao().create(eventFirst);
 
         Event eventSecond = TestUtils.getTestEvent();
-        eventSecond.setUserIds(List.of(3));
+        eventSecond.setMemberUserIds(List.of(3));
         eventSecond.setStartDate(now.minus(1, ChronoUnit.HOURS));
         eventSecond.setDuration(1800);
         eventSecond = daoFactory.getEventDao().create(eventSecond);
 
         Event eventThird = TestUtils.getTestEvent();
-        eventThird.setUserIds(Collections.emptyList());
+        eventThird.setMemberUserIds(Collections.emptyList());
         eventThird.setStartDate(now.plus(240, ChronoUnit.HOURS));
         eventThird.setDuration(1800);
         eventThird = daoFactory.getEventDao().create(eventThird);
@@ -228,36 +227,35 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         community.setNickname("testNickname");
         community = daoFactory.getCommunityDao().create(community);
         final Route route = daoFactory.getRouteDao().create(TestUtils.getTestRoute());
-        final Event event = daoFactory.getEventDao().create(TestUtils.getTestEvent());
+        final Event originEvent = daoFactory.getEventDao().create(TestUtils.getTestEvent());
 
-        final Event testEvent = new Event();
-        testEvent.setId(event.getId());
+        final Event testEvent = new BicycleWorkout();
+        testEvent.setId(originEvent.getId());
         testEvent.setOwnerUserId(user.getId());
         testEvent.setCommunityId(community.getId());
-        testEvent.setEventType(EventType.COMPETITION);
-        testEvent.setPrivate(true);
         testEvent.setStartDate(Instant.now());
-        testEvent.setRouteId(route.getId());
-        testEvent.setSportType(SportType.BICYCLE);
-        testEvent.setUserIds(List.of(1, 2));
-        testEvent.setVenueGeoData("BQ 128");
         testEvent.setDuration(123);
         testEvent.setDescription("test");
+        testEvent.setPrivate(true);
+        testEvent.setRouteId(route.getId());
+        testEvent.setVenueGeoData("BQ 128");
+        testEvent.setMemberUserIds(List.of(1, 2));
         testEvent.setCreatedAt(Instant.now());
 
         final Event dbEvent = daoFactory.getEventDao().update(testEvent);
         testEvent.setCreatedAt(dbEvent.getCreatedAt());
 
         assertNotNull(dbEvent.getId());
-        assertEquals(event.getOwnerUserId(), dbEvent.getOwnerUserId());
-        assertEquals(event.getCommunityId(), dbEvent.getCommunityId());
-        assertEquals(event.getRouteId(), dbEvent.getRouteId());
-        assertEquals(testEvent.getPrivate(), dbEvent.getPrivate());
-        assertEquals(testEvent.getSportType(), dbEvent.getSportType());
-        assertEquals(testEvent.getUserIds(), dbEvent.getUserIds());
-        assertEquals(testEvent.getVenueGeoData(), dbEvent.getVenueGeoData());
+        assertEquals(originEvent.getOwnerUserId(), dbEvent.getOwnerUserId());
+        assertEquals(originEvent.getCommunityId(), dbEvent.getCommunityId());
+        assertEquals(originEvent.getEventType(), dbEvent.getEventType());
+        assertEquals(testEvent.getStartDate(), dbEvent.getStartDate());
         assertEquals(testEvent.getDuration(), dbEvent.getDuration());
         assertEquals(testEvent.getDescription(), dbEvent.getDescription());
-        assertEquals(event.getCreatedAt(), dbEvent.getCreatedAt());
+        assertEquals(testEvent.getPrivate(), dbEvent.getPrivate());
+        assertEquals(testEvent.getRouteId(), dbEvent.getRouteId());
+        assertEquals(testEvent.getVenueGeoData(), dbEvent.getVenueGeoData());
+        assertEquals(testEvent.getMemberUserIds(), dbEvent.getMemberUserIds());
+        assertEquals(originEvent.getCreatedAt(), dbEvent.getCreatedAt());
     }
 }

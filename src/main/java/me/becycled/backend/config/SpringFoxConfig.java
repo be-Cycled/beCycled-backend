@@ -24,6 +24,7 @@ import java.util.List;
  */
 @Configuration
 @EnableSwagger2
+@SuppressWarnings("deprecation")
 public class SpringFoxConfig {
 
     private static final String OAUTH_2 = "OAuth2";

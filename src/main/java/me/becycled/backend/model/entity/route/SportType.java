@@ -1,11 +1,11 @@
 package me.becycled.backend.model.entity.route;
 
 /**
- * @author I1yi4
+ * @author binakot
  */
 public enum SportType {
-    BICYCLE,
-    ROLLERBLADE,
+
     RUN,
-    SKI
+    BICYCLE,
+    ROLLERBLADE
 }

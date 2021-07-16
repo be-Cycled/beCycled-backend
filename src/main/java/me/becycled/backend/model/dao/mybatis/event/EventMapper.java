@@ -3,12 +3,9 @@ package me.becycled.backend.model.dao.mybatis.event;
 import me.becycled.backend.model.entity.event.Event;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
-import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -29,22 +26,8 @@ public interface EventMapper {
     @Delete("DELETE FROM events WHERE id=#{id}")
     int delete(Integer id);
 
-    @Results(id = "eventResult", value = {
-        @Result(id = true, column = "id", property = "id"),
-        @Result(column = "owner_user_id", property = "ownerUserId"),
-        @Result(column = "community_id", property = "communityId"),
-        @Result(column = "event_type", property = "eventType"),
-        @Result(column = "private", property = "isPrivate"),
-        @Result(column = "start_date", property = "startDate"),
-        @Result(column = "route_id", property = "routeId"),
-        @Result(column = "sport_type", property = "sportType"),
-        @Result(column = "id", property = "userIds", javaType = List.class, many = @Many(select = "getEventMembers")),
-        @Result(column = "venue_geo_data", property = "venueGeoData"),
-        @Result(column = "duration", property = "duration"),
-        @Result(column = "description", property = "description"),
-        @Result(column = "created_at", property = "createdAt")
-    })
     @Select("SELECT * FROM events WHERE id=#{id}")
+    @ResultMap("eventResult")
     Event getById(Integer id);
 
     @Select("SELECT * FROM events WHERE community_id IN (SELECT id FROM communities WHERE nickname=#{nickname})")
@@ -54,6 +37,9 @@ public interface EventMapper {
     @Select("SELECT * FROM events WHERE id IN (SELECT event_id FROM event_members WHERE user_id=#{memberUserId})")
     @ResultMap("eventResult")
     List<Event> getByMemberUserId(Integer memberUserId);
+
+    @Select("SELECT user_id FROM event_members WHERE event_id=#{eventId}")
+    List<Integer> getEventMembers(Integer eventId);
 
     @Select("SELECT * FROM events " +
         "WHERE now() < start_date + duration * interval '1 second' " +
@@ -71,11 +57,9 @@ public interface EventMapper {
     @ResultMap("eventResult")
     List<Event> getAll();
 
-    @Select("SELECT user_id FROM event_members WHERE event_id=#{eventId}")
-    List<Integer> getEventMembers(Integer eventId);
-
     // see XML
-    int insertEventMembers(@Param("eventId") Integer eventId, @Param("userIds") List<Integer> userIds);
+    int insertEventMembers(@Param("eventId") Integer eventId,
+                           @Param("userIds") List<Integer> userIds);
 
     @Delete("DELETE FROM event_members WHERE event_id=#{eventId}")
     int deleteEventMembers(Integer eventId);
@@ -91,18 +75,16 @@ public interface EventMapper {
             return new SQL() {{
                 INSERT_INTO(TABLE_NAME);
 
-                INTO_COLUMNS("owner_user_id, community_id, event_type, private, start_date, route_id, sport_type, venue_geo_data, duration, description");
+                INTO_COLUMNS("owner_user_id, community_id, event_type, start_date, duration, description, private, route_id, venue_geo_data");
                 INTO_VALUES("#{ownerUserId}");
                 INTO_VALUES("#{communityId}");
                 INTO_VALUES("#{eventType}::EVENT_TYPE");
-                INTO_VALUES("#{isPrivate}");
                 INTO_VALUES("#{startDate}");
-                INTO_VALUES("#{routeId}");
-                INTO_VALUES("#{sportType}::SPORT_TYPE");
-                INTO_VALUES("#{venueGeoData}");
                 INTO_VALUES("#{duration}");
                 INTO_VALUES("#{description}");
-
+                INTO_VALUES("#{isPrivate}");
+                INTO_VALUES("#{routeId}");
+                INTO_VALUES("#{venueGeoData}");
             }}.toString();
         }
 
@@ -111,15 +93,14 @@ public interface EventMapper {
             return new SQL() {{
                 UPDATE(TABLE_NAME);
 
-                SET("private = #{isPrivate}");
                 SET("start_date = #{startDate}");
-                SET("sport_type = #{sportType}::SPORT_TYPE");
-                SET("venue_geo_data = #{venueGeoData}");
                 SET("duration = #{duration}");
                 SET("description = #{description}");
+                SET("private = #{isPrivate}");
+                SET("route_id = #{routeId}");
+                SET("venue_geo_data = #{venueGeoData}");
 
                 WHERE("id = #{id}");
-
             }}.toString();
         }
     }

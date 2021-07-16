@@ -21,8 +21,8 @@ public final class EventDao extends BaseMyBatisDao {
             final EventMapper mapper = session.getMapper(EventMapper.class);
             mapper.create(entity);
 
-            if (!entity.getUserIds().isEmpty()) {
-                mapper.insertEventMembers(entity.getId(), entity.getUserIds());
+            if (!entity.getMemberUserIds().isEmpty()) {
+                mapper.insertEventMembers(entity.getId(), entity.getMemberUserIds());
             }
 
             session.commit();
@@ -36,8 +36,8 @@ public final class EventDao extends BaseMyBatisDao {
             mapper.update(entity);
 
             mapper.deleteEventMembers(entity.getId());
-            if (!entity.getUserIds().isEmpty()) {
-                mapper.insertEventMembers(entity.getId(), entity.getUserIds());
+            if (!entity.getMemberUserIds().isEmpty()) {
+                mapper.insertEventMembers(entity.getId(), entity.getMemberUserIds());
             }
 
             session.commit();

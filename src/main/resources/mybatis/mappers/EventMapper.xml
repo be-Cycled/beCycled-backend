@@ -5,6 +5,32 @@
 
 <mapper namespace="me.becycled.backend.model.dao.mybatis.event.EventMapper">
 
+  <resultMap id="eventResult" type="event">
+    <constructor>
+      <arg column="attributes" javaType="java.lang.String"/>
+    </constructor>
+    <id column="id" property="id"/>
+    <result column="owner_user_id" property="ownerUserId"/>
+    <result column="community_id" property="communityId"/>
+    <result column="event_type" property="eventType"/>
+    <result column="start_date" property="startDate"/>
+    <result column="duration" property="duration"/>
+    <result column="description" property="description"/>
+    <result column="private" property="isPrivate"/>
+    <result column="route_id" property="routeId"/>
+    <result column="venue_geo_data" property="venueGeoData"/>
+    <result column="created_at" property="createdAt"/>
+    <collection property="memberUserIds" column="id" select="me.becycled.backend.model.dao.mybatis.event.EventMapper.getEventMembers"/>
+    <discriminator column="event_type" javaType="me.becycled.backend.model.entity.event.EventType">
+      <case value="RUN_WORKOUT" resultType="me.becycled.backend.model.entity.event.run.RunWorkout"/>
+      <case value="RUN_COMPETITION" resultType="me.becycled.backend.model.entity.event.run.RunCompetition"/>
+      <case value="BICYCLE_WORKOUT" resultType="me.becycled.backend.model.entity.event.bicycle.BicycleWorkout"/>
+      <case value="BICYCLE_COMPETITION" resultType="me.becycled.backend.model.entity.event.bicycle.BicycleCompetition"/>
+      <case value="ROLLERBLADE_WORKOUT" resultType="me.becycled.backend.model.entity.event.rollerblade.RollerbladeWorkout"/>
+      <case value="ROLLERBLADE_COMPETITION" resultType="me.becycled.backend.model.entity.event.rollerblade.RollerbladeCompetition"/>
+    </discriminator>
+  </resultMap>
+
   <insert id="insertEventMembers">
     INSERT INTO event_members (event_id, user_id)
     VALUES
