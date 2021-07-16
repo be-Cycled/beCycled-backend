@@ -248,8 +248,8 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         testEvent.setVenueGeoData("BQ 128");
         testEvent.setMemberUserIds(List.of(1, 2));
         testEvent.setCreatedAt(Instant.now());
-        testEvent.setBicycleType(BicycleType.TWO);
-        testEvent.setBicycleCompetitionType(BicycleCompetitionType.TWO);
+        testEvent.setBicycleType(BicycleType.MOUNTAIN);
+        testEvent.setBicycleCompetitionType(BicycleCompetitionType.INDIVIDUAL);
 
         final BicycleCompetition dbEvent = (BicycleCompetition) daoFactory.getEventDao().update(testEvent);
         testEvent.setCreatedAt(dbEvent.getCreatedAt());

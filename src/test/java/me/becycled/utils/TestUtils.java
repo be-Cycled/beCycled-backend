@@ -22,8 +22,7 @@ import java.util.List;
 /**
  * @author I1yi4
  */
-public enum TestUtils {
-    ;
+public enum TestUtils {;
 
     public static User getTestUser() {
         final User user = new User();
@@ -204,8 +203,8 @@ public enum TestUtils {
         event.setMemberUserIds(Collections.emptyList());
         event.setCreatedAt(Instant.now());
 
-        event.setBicycleType(BicycleType.ONE);
-        event.setBicycleCompetitionType(BicycleCompetitionType.ONE);
+        event.setBicycleType(BicycleType.MOUNTAIN);
+        event.setBicycleCompetitionType(BicycleCompetitionType.INDIVIDUAL);
 
         return event;
     }
