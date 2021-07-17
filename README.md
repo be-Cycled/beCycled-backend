@@ -2,6 +2,8 @@
 
 Сервер API для работы с сервисом.
 
+![beCycled Deploy Status](https://img.shields.io/github/workflow/status/be-Cycled/beCycled-devops/Deploy?label=deploy)
+
 ## Требования
 
 * Java 11 и выше
