@@ -61,7 +61,6 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         assertEquals(testEvent.getStartDate(), event.getStartDate());
         assertEquals(testEvent.getDuration(), event.getDuration());
         assertEquals(testEvent.getDescription(), event.getDescription());
-        assertEquals(testEvent.getPrivate(), event.getPrivate());
         assertEquals(testEvent.getRouteId(), event.getRouteId());
         assertEquals(testEvent.getVenueGeoData(), event.getVenueGeoData());
         assertEquals(testEvent.getMemberUserIds(), event.getMemberUserIds());
@@ -243,7 +242,6 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         testEvent.setStartDate(Instant.now());
         testEvent.setDuration(123);
         testEvent.setDescription("test");
-        testEvent.setPrivate(true);
         testEvent.setRouteId(route.getId());
         testEvent.setVenueGeoData("BQ 128");
         testEvent.setMemberUserIds(List.of(1, 2));
@@ -261,7 +259,6 @@ public class EventDaoIntTest extends BaseIntegrationTest {
         assertEquals(testEvent.getStartDate(), dbEvent.getStartDate());
         assertEquals(testEvent.getDuration(), dbEvent.getDuration());
         assertEquals(testEvent.getDescription(), dbEvent.getDescription());
-        assertEquals(testEvent.getPrivate(), dbEvent.getPrivate());
         assertEquals(testEvent.getRouteId(), dbEvent.getRouteId());
         assertEquals(testEvent.getVenueGeoData(), dbEvent.getVenueGeoData());
         assertEquals(testEvent.getMemberUserIds(), dbEvent.getMemberUserIds());
