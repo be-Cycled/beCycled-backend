@@ -13,7 +13,6 @@ CREATE TABLE events
     start_date     TIMESTAMPTZ NOT NULL,
     duration       INTEGER     NOT NULL,
     description    TEXT        NOT NULL,
-    private        BOOLEAN     NOT NULL,
     route_id       INTEGER     NOT NULL REFERENCES routes (id) ON DELETE RESTRICT,
     venue_geo_data TEXT,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
