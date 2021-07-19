@@ -64,7 +64,6 @@ public class UserDaoIntTest extends BaseIntegrationTest {
 
     @Test
     void getByIds() {
-
         User firstUser = TestUtils.getTestUser();
         UserAccount firstUserAccount = daoFactory.getUserAccountDao().create(firstUser, TestUtils.getTestUserAccount());
         firstUser = daoFactory.getUserDao().getById(firstUserAccount.getUserId());
