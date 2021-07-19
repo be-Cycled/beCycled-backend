@@ -11,6 +11,7 @@ import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.error.ErrorMessages;
+import me.becycled.backend.model.utils.DomainUtils;
 import me.becycled.backend.service.AccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -118,6 +119,10 @@ public class CommunityController {
         final List<Integer> userIds = new ArrayList<>(entity.getUserIds());
         userIds.add(curUser.getId());
         entity.setUserIds(userIds.stream().distinct().collect(Collectors.toList()));
+
+        if (entity.getAvatar() == null) {
+            entity.setAvatar(DomainUtils.DEFAULT_COMMUNITY_AVATAR_URL);
+        }
 
         return ResponseEntity.ok(daoFactory.getCommunityDao().create(entity));
     }
