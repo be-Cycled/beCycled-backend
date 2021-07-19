@@ -21,6 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * @author I1yi4
+ * @author binakot
  */
 @RestController
 @RequestMapping("/users")
@@ -54,6 +55,14 @@ public class UserController {
             return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(user);
+    }
+
+    @RequestMapping(value = "/multiple", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить пользователей по их идентификаторам")
+    public ResponseEntity<?> getByIds(
+        @ApiParam("Идентификаторы пользователей") @RequestBody final List<Integer> ids) {
+
+        return ResponseEntity.ok(daoFactory.getUserDao().getByIds(ids));
     }
 
     @RequestMapping(value = "/login/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
