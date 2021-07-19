@@ -9,14 +9,17 @@ public enum BicycleType {
      * Любой.
      */
     ANY,
+
     /**
      * Шоссейный.
      */
     ROAD,
+
     /**
      * Горный.
      */
     MOUNTAIN,
+
     /**
      * Гравийный.
      */

@@ -19,7 +19,7 @@ import java.util.Objects;
 public final class BicycleWorkout extends Workout {
 
     @JsonView(JsonUtils.Views.AttributeColumn.class)
-    @ApiModelProperty(notes = "Тип велосипеда", required = true, position = 12)
+    @ApiModelProperty(notes = "Тип велосипеда", required = true, position = 11)
     private BicycleType bicycleType;
 
     public BicycleWorkout() {

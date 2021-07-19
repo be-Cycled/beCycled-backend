@@ -19,11 +19,11 @@ import java.util.Objects;
 public final class BicycleCompetition extends Competition {
 
     @JsonView(JsonUtils.Views.AttributeColumn.class)
-    @ApiModelProperty(notes = "Тип велосипеда", required = true, position = 12)
+    @ApiModelProperty(notes = "Тип велосипеда", required = true, position = 11)
     private BicycleType bicycleType;
 
     @JsonView(JsonUtils.Views.AttributeColumn.class)
-    @ApiModelProperty(notes = "Тип велосипедного соревнования", required = true, position = 13)
+    @ApiModelProperty(notes = "Тип велосипедного соревнования", required = true, position = 12)
     private BicycleCompetitionType bicycleCompetitionType;
 
     public BicycleCompetition() {

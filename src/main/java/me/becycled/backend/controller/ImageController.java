@@ -41,7 +41,7 @@ public class ImageController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("Выгрузить файл изображения")
     public ResponseEntity<String> uploadImage(
-        @RequestParam("imageFile") final MultipartFile file) throws IOException {
+        @RequestParam("file") final MultipartFile file) throws IOException {
 
         final String imageExtension = FilenameUtils.getExtension(file.getOriginalFilename());
         if (imageExtension == null) {

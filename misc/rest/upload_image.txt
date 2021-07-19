@@ -3,7 +3,7 @@ Content-Type: multipart/form-data; boundary=boundary
 Authorization: Bearer qwe123
 
 --boundary
-Content-Disposition: form-data; name="imageFile"; filename="image.png"
+Content-Disposition: form-data; name="file"; filename="image.png"
 
 < ./image.png
 
