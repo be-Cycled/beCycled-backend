@@ -195,6 +195,7 @@ public enum TestUtils {;
         event.setStartDate(Instant.parse("2021-06-19T00:00:00Z"));
         event.setDuration(100500);
         event.setDescription("description");
+        event.setUrl("url");
 
         event.setRouteId(1);
         event.setVenueGeoData("venueGeoData");

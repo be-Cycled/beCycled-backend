@@ -53,16 +53,18 @@ public abstract class Event {
     protected Integer duration;
     @ApiModelProperty(notes = "Описание события", required = true, position = 6)
     protected String description;
+    @ApiModelProperty(notes = "Ссылка на внешний ресурс события", required = true, position = 7)
+    protected String url;
 
-    @ApiModelProperty(notes = "Идентификатор маршрута, по которому будет проходить события", required = true, position = 7)
+    @ApiModelProperty(notes = "Идентификатор маршрута, по которому будет проходить события", required = true, position = 8)
     protected Integer routeId;
-    @ApiModelProperty(notes = "Место сбора", required = true, position = 8)
+    @ApiModelProperty(notes = "Место сбора", required = true, position = 9)
     protected String venueGeoData;
 
-    @ApiModelProperty(notes = "Список идентификаторов пользователей, участвующих в событии", required = true, position = 9)
+    @ApiModelProperty(notes = "Список идентификаторов пользователей, участвующих в событии", required = true, position = 10)
     protected List<Integer> memberUserIds;
 
-    @ApiModelProperty(notes = "Время создания", required = true, position = 10)
+    @ApiModelProperty(notes = "Время создания", required = true, position = 11)
     protected Instant createdAt;
 
     //region GETTERS & SETTERS
@@ -123,6 +125,14 @@ public abstract class Event {
         this.description = description;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(final String url) {
+        this.url = url;
+    }
+
     public Integer getRouteId() {
         return routeId;
     }
@@ -174,6 +184,7 @@ public abstract class Event {
             && Objects.equals(startDate, that.startDate)
             && Objects.equals(duration, that.duration)
             && Objects.equals(description, that.description)
+            && Objects.equals(url, that.url)
             && Objects.equals(routeId, that.routeId)
             && Objects.equals(venueGeoData, that.venueGeoData)
             && Objects.equals(memberUserIds, that.memberUserIds)
@@ -183,7 +194,7 @@ public abstract class Event {
     @Override
     public int hashCode() {
         return Objects.hash(id, ownerUserId, communityId, eventType,
-            startDate, duration, description,
+            startDate, duration, description, url,
             routeId, venueGeoData, memberUserIds, createdAt);
     }
 
@@ -197,6 +208,7 @@ public abstract class Event {
             .append("startDate", startDate)
             .append("duration", duration)
             .append("description", description)
+            .append("url", url)
             .append("routeId", routeId)
             .append("venueGeoData", venueGeoData)
             .append("memberUserIds", memberUserIds)
