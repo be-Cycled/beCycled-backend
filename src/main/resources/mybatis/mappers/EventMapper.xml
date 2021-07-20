@@ -16,6 +16,7 @@
     <result column="start_date" property="startDate"/>
     <result column="duration" property="duration"/>
     <result column="description" property="description"/>
+    <result column="url" property="url"/>
     <result column="route_id" property="routeId"/>
     <result column="venue_geo_data" property="venueGeoData"/>
     <result column="created_at" property="createdAt"/>

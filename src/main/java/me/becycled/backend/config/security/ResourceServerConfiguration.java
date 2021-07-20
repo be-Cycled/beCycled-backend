@@ -29,6 +29,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
             .and()
             .antMatcher("/**")
             .authorizeRequests()
+            .antMatchers(HttpMethod.POST, "/users/multiple").permitAll()
             .antMatchers(HttpMethod.POST, "/register").permitAll()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .antMatchers(HttpMethod.GET, "/**").permitAll()
