@@ -77,13 +77,14 @@ public interface EventMapper {
             return new SQL() {{
                 INSERT_INTO(TABLE_NAME);
 
-                INTO_COLUMNS("owner_user_id, community_id, event_type, start_date, duration, description, route_id, venue_geo_data, attributes");
+                INTO_COLUMNS("owner_user_id, community_id, event_type, start_date, duration, description, url, route_id, venue_geo_data, attributes");
                 INTO_VALUES("#{ownerUserId}");
                 INTO_VALUES("#{communityId}");
                 INTO_VALUES("#{eventType}::EVENT_TYPE");
                 INTO_VALUES("#{startDate}");
                 INTO_VALUES("#{duration}");
                 INTO_VALUES("#{description}");
+                INTO_VALUES("#{url}");
                 INTO_VALUES("#{routeId}");
                 INTO_VALUES("#{venueGeoData}");
                 INTO_VALUES("'" + JsonUtils.getJsonMapper().writerWithView(JsonUtils.Views.AttributeColumn.class).writeValueAsString(event) + "'::JSONB");
@@ -99,6 +100,7 @@ public interface EventMapper {
                 SET("start_date = #{startDate}");
                 SET("duration = #{duration}");
                 SET("description = #{description}");
+                SET("url = #{url}");
                 SET("route_id = #{routeId}");
                 SET("venue_geo_data = #{venueGeoData}");
                 SET("attributes = '" + JsonUtils.getJsonMapper().writerWithView(JsonUtils.Views.AttributeColumn.class).writeValueAsString(event) + "'::JSONB");
