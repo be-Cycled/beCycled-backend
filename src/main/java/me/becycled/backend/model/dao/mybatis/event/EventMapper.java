@@ -51,7 +51,7 @@ public interface EventMapper {
 
     @Select("SELECT * FROM events " +
         "WHERE now() >= start_date + duration * interval '1 second' " +
-        "ORDER BY start_date ASC")
+        "ORDER BY start_date DESC")
     @ResultMap("eventResult")
     List<Event> getFeed();
 
