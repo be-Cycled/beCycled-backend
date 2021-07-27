@@ -8,6 +8,7 @@ import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.image.Image;
 import me.becycled.backend.model.error.ErrorMessages;
 import me.becycled.backend.model.utils.ImageUtils;
+import me.becycled.backend.service.ImageService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,10 +33,13 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 public class ImageController {
 
     private final DaoFactory daoFactory;
+    private final ImageService imageService;
 
     @Autowired
-    public ImageController(final DaoFactory daoFactory) {
+    public ImageController(final DaoFactory daoFactory,
+                           final ImageService imageService) {
         this.daoFactory = daoFactory;
+        this.imageService = imageService;
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = MULTIPART_FORM_DATA_VALUE)
@@ -48,12 +52,9 @@ public class ImageController {
             throw new WrongRequestException(ErrorMessages.cannotFindImageExtension());
         }
 
-        String filename;
-        do {
-            filename = ImageUtils.buildImageName(imageExtension);
-        } while (daoFactory.getImageDao().getByFileName(filename) != null);
-
-        final Image image = daoFactory.getImageDao().create(Image.build(filename, file.getBytes()));
+        final Image image = daoFactory.getImageDao().create(Image.build(
+            imageService.buildImageName(imageExtension), file.getBytes()
+        ));
 
         return ResponseEntity.ok(image.getFileName());
     }
@@ -61,15 +62,22 @@ public class ImageController {
     @RequestMapping(value = "/{filename}", method = RequestMethod.GET)
     @ApiOperation("Скачать файл изображения")
     public ResponseEntity<byte[]> downloadImage(
-        @PathVariable("filename") final String filename) {
+        @PathVariable("filename") final String filename,
+        @RequestParam(value = "width", required = false) final Integer width,
+        @RequestParam(value = "height", required = false) final Integer height) {
 
-        final Image image = daoFactory.getImageDao().getByFileName(filename);
-        if (image == null) {
+        final Image originImage = daoFactory.getImageDao().getByFileName(filename);
+        if (originImage == null) {
             throw new NotFoundException(ErrorMessages.notFound(Image.class));
         }
 
-        final MediaType mediaType = ImageUtils.findMediaTypeByImageExtension(FilenameUtils.getExtension(image.getFileName()));
+        final String extension = FilenameUtils.getExtension(originImage.getFileName());
+        final byte[] imageData = width != null && height != null
+            ? imageService.resizeImage(originImage, width, height, extension)
+            : originImage.getData();
 
-        return ResponseEntity.ok().contentType(mediaType).body(image.getData());
+        final MediaType mediaType = ImageUtils.findMediaTypeByImageExtension(extension);
+
+        return ResponseEntity.ok().contentType(mediaType).body(imageData);
     }
 }
