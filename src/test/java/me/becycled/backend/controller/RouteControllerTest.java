@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package me.becycled.controller;
+package me.becycled.backend.controller;
 
 import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;

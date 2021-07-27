@@ -1,4 +1,4 @@
-package me.becycled.dao;
+package me.becycled.backend.model.dao;
 
 import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
