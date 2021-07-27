@@ -23,3 +23,12 @@ CREATE TABLE user_accounts
 );
 
 CREATE RULE user_accounts_deny_delete AS ON DELETE TO user_accounts DO INSTEAD NOTHING;
+
+-------------------------------------------------------------------------
+
+CREATE TABLE user_privacy_settings
+(
+    user_id            INTEGER     NOT NULL UNIQUE REFERENCES users (id) ON DELETE CASCADE,
+    privacy_settings   JSONB       NOT NULL DEFAULT '{}'::JSONB
+);
+

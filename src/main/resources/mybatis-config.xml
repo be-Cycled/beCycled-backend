@@ -33,6 +33,7 @@
     <mapper resource="mybatis/mappers/TrackerMapper.xml"/>
     <mapper resource="mybatis/mappers/UserAccountMapper.xml"/>
     <mapper resource="mybatis/mappers/UserMapper.xml"/>
+    <mapper resource="mybatis/mappers/UserPrivacySettingMapper.xml"/>
   </mappers>
 
 </configuration>

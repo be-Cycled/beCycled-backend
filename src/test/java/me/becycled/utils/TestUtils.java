@@ -14,10 +14,13 @@ import me.becycled.backend.model.entity.telemetry.Telemetry;
 import me.becycled.backend.model.entity.telemetry.Tracker;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
+import me.becycled.backend.model.entity.userprivacysetting.PrivacyRule;
+import me.becycled.backend.model.entity.userprivacysetting.UserPrivacySetting;
 
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author I1yi4
@@ -231,5 +234,16 @@ public enum TestUtils {;
         userAccount.setPassword("password");
         userAccount.setLastAuthTime(Instant.parse("2021-06-18T12:00:00Z"));
         return userAccount;
+    }
+
+    public static UserPrivacySetting getUserPrivacySetting() {
+        final UserPrivacySetting userPrivacySetting = new UserPrivacySetting();
+        userPrivacySetting.setUserId(1);
+        userPrivacySetting.setPrivacySettings(Map.of(
+            "avatar", PrivacyRule.OWNER_ONLY,
+            "phone", PrivacyRule.OWNER_ONLY,
+            "email", PrivacyRule.ALL)
+        );
+        return userPrivacySetting;
     }
 }

@@ -21,12 +21,20 @@ public enum ErrorMessages {;
         return "Auth error";
     }
 
+    public static <T> String onlyOwnerCanCreateEntity(final Class<T> clazz) {
+        return String.format("%s can be created by owner only", firstLetterToUpperCase(camelCaseToNormalText(clazz.getSimpleName())));
+    }
+
     public static <T> String onlyOwnerCanUpdateEntity(final Class<T> clazz) {
         return String.format("%s can be updated by owner only", firstLetterToUpperCase(camelCaseToNormalText(clazz.getSimpleName())));
     }
 
     public static <T> String onlyOwnerCanDeleteEntity(final Class<T> clazz) {
         return String.format("%s can be deleted by owner only", firstLetterToUpperCase(camelCaseToNormalText(clazz.getSimpleName())));
+    }
+
+    public static <T> String onlyOwnerCanReadEntity(final Class<T> clazz) {
+        return String.format("Only owner can read %s", firstLetterToUpperCase(camelCaseToNormalText(clazz.getSimpleName())));
     }
 
     public static String userAlreadyJoin() {
