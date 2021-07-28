@@ -10,6 +10,7 @@ import me.becycled.backend.model.dao.mybatis.telemetry.TelemetryDao;
 import me.becycled.backend.model.dao.mybatis.tracker.TrackerDao;
 import me.becycled.backend.model.dao.mybatis.user.UserDao;
 import me.becycled.backend.model.dao.mybatis.useraccount.UserAccountDao;
+import me.becycled.backend.model.dao.mybatis.userprivacysetting.UserPrivacySettingDao;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 /**
@@ -20,6 +21,7 @@ public class DaoFactory {
 
     private final UserDao userDao;
     private final UserAccountDao userAccountDao;
+    private final UserPrivacySettingDao userPrivacySettingDao;
     private final RouteDao routeDao;
     private final RoutePhotoDao routePhotoDao;
     private final CommunityDao communityDao;
@@ -32,6 +34,7 @@ public class DaoFactory {
     public DaoFactory(final SqlSessionFactory sqlSessionFactory) {
         userDao = new UserDao(sqlSessionFactory);
         userAccountDao = new UserAccountDao(sqlSessionFactory);
+        userPrivacySettingDao = new UserPrivacySettingDao(sqlSessionFactory);
         routeDao = new RouteDao(sqlSessionFactory);
         routePhotoDao = new RoutePhotoDao(sqlSessionFactory);
         communityDao = new CommunityDao(sqlSessionFactory);
@@ -48,6 +51,10 @@ public class DaoFactory {
 
     public UserAccountDao getUserAccountDao() {
         return userAccountDao;
+    }
+
+    public UserPrivacySettingDao getUserPrivacySettingDao() {
+        return userPrivacySettingDao;
     }
 
     public RouteDao getRouteDao() {
