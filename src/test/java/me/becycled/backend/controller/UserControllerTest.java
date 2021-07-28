@@ -2,6 +2,7 @@ package me.becycled.backend.controller;
 
 import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
+import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.event.Event;
 import me.becycled.backend.model.entity.route.Route;
 import me.becycled.backend.model.entity.user.User;
@@ -22,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -266,6 +268,98 @@ class UserControllerTest extends BaseIntegrationTest {
 
         then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         then(response.getBody()).isEqualTo("User is not found");
+    }
+
+    @Test
+    public void getUsersByCommunityNickname() {
+        User firstUser = createUser(prepareUser("test0", "test0@gmail.com", "88005553503"));
+        assertNotNull(firstUser.getId());
+
+        User secondUser = createUser(prepareUser("test", "test@gmail.com", "88005553530"));
+        assertNotNull(secondUser.getId());
+
+        User thirdUser = createUser(prepareUser("test1", "test1@gmail.com", "88005553531"));
+        assertNotNull(thirdUser.getId());
+
+        when(accessService.getCurrentAuthUser()).thenReturn(secondUser);
+
+        Community community = TestUtils.getTestCommunity();
+        community.setUserIds(List.of(firstUser.getId(), thirdUser.getId()));
+        community = daoFactory.getCommunityDao().create(community);
+
+        final ResponseEntity<List<User>> response = restTemplate.exchange(
+            "http://localhost:" + port + "/users/community/nickname/" + community.getNickname(),
+            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<User>>() {
+            });
+
+        firstUser.setEmail(null); // user privacy aspect
+        firstUser.setPhone(null); // user privacy aspect
+
+        thirdUser.setEmail(null); // user privacy aspect
+        thirdUser.setPhone(null); // user privacy aspect
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        then(response.getBody().size()).isEqualTo(2);
+        then(response.getBody().get(0)).isEqualTo(firstUser);
+        then(response.getBody().get(1)).isEqualTo(thirdUser);
+    }
+
+    @Test
+    public void getUsersByCommunityNicknameWhenOneIsCurUser() {
+        User firstUser = createUser(prepareUser("test0", "test0@gmail.com", "88005553503"));
+        assertNotNull(firstUser.getId());
+
+        User secondUser = createUser(prepareUser("test", "test@gmail.com", "88005553530"));
+        assertNotNull(secondUser.getId());
+
+        User thirdUser = createUser(prepareUser("test1", "test1@gmail.com", "88005553531"));
+        assertNotNull(thirdUser.getId());
+
+        when(accessService.getCurrentAuthUser()).thenReturn(thirdUser);
+
+        Community community = TestUtils.getTestCommunity();
+        community.setUserIds(List.of(firstUser.getId(), thirdUser.getId()));
+        community = daoFactory.getCommunityDao().create(community);
+
+        final ResponseEntity<List<User>> response = restTemplate.exchange(
+            "http://localhost:" + port + "/users/community/nickname/" + community.getNickname(),
+            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<User>>() {
+            });
+
+        firstUser.setEmail(null); // user privacy aspect
+        firstUser.setPhone(null); // user privacy aspect
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        then(response.getBody().size()).isEqualTo(2);
+        then(response.getBody().get(0)).isEqualTo(firstUser);
+        then(response.getBody().get(1)).isEqualTo(thirdUser);
+    }
+
+    @Test
+    public void getUsersByCommunityNicknameWhenNoOneInCommunity() {
+        createUser(TestUtils.getTestUser());
+
+        Community community = TestUtils.getTestCommunity();
+        community.setUserIds(Collections.emptyList());
+        community = daoFactory.getCommunityDao().create(community);
+
+        final ResponseEntity<List<User>> response = restTemplate.exchange(
+            "http://localhost:" + port + "/users/community/nickname/" + community.getNickname(),
+            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<User>>() {
+            });
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        then(response.getBody().size()).isEqualTo(0);
+    }
+
+    @Test
+    public void getUsersByCommunityNicknameWhenNotExist() {
+        final ResponseEntity<String> response = restTemplate.exchange(
+            "http://localhost:" + port + "/users/community/nickname/" + 100500,
+            HttpMethod.GET, HttpEntity.EMPTY, String.class);
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        then(response.getBody()).isEqualTo("Community is not found");
     }
 
     @Test

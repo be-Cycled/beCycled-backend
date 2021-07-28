@@ -69,18 +69,6 @@ public class CommunityController {
         return ResponseEntity.ok(community);
     }
 
-    @RequestMapping(value = "/nickname/{nickname}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("Получить список участников сообщества по его никнейму")
-    public ResponseEntity<List<User>> getUsersByCommunityNickname(
-        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
-
-        final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
-        if (community == null) {
-            throw new NotFoundException(ErrorMessages.notFound(Community.class));
-        }
-        return ResponseEntity.ok(daoFactory.getUserDao().getByIds(community.getUserIds()));
-    }
-
     @RequestMapping(value = "/user/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить список сообществ по логину пользователя, который является участником")
     public ResponseEntity<List<Community>> getCommunityWhichUserMemberByUserLogin(
