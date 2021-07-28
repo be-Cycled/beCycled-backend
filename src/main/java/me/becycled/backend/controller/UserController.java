@@ -7,6 +7,7 @@ import me.becycled.backend.exception.AuthException;
 import me.becycled.backend.exception.NotFoundException;
 import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
+import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.error.ErrorMessages;
 import me.becycled.backend.service.AccessService;
@@ -81,6 +82,18 @@ public class UserController {
             throw new NotFoundException(ErrorMessages.notFound(User.class));
         }
         return ResponseEntity.ok(user);
+    }
+
+    @RequestMapping(value = "/community/nickname/{nickname}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("Получить список участников сообщества по его никнейму")
+    public ResponseEntity<List<User>> getUsersByCommunityNickname(
+        @ApiParam("Никнейм сообщества") @PathVariable("nickname") final String nickname) {
+
+        final Community community = daoFactory.getCommunityDao().getByNickname(nickname);
+        if (community == null) {
+            throw new NotFoundException(ErrorMessages.notFound(Community.class));
+        }
+        return ResponseEntity.ok(daoFactory.getUserDao().getByIds(community.getUserIds()));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)

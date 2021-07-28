@@ -105,65 +105,6 @@ public class CommunityControllerTest extends BaseIntegrationTest {
 
     //endregion getByNickname
 
-    //region getUsersByCommunityNickname
-
-    @Test
-    public void getUsersByCommunityNickname() {
-        User firstUser = createUser(prepareUser("test0", "test0@gmail.com", "88005553503"));
-        assertNotNull(firstUser.getId());
-
-        User secondUser = createUser(prepareUser("test", "test@gmail.com", "88005553530"));
-        assertNotNull(secondUser.getId());
-
-        User thirdUser = createUser(prepareUser("test1", "test1@gmail.com", "88005553531"));
-        assertNotNull(thirdUser.getId());
-
-        when(accessService.getCurrentAuthUser()).thenReturn(secondUser);
-
-        Community community = TestUtils.getTestCommunity();
-        community.setUserIds(List.of(firstUser.getId(), thirdUser.getId()));
-        community = daoFactory.getCommunityDao().create(community);
-
-        final ResponseEntity<List<User>> response = restTemplate.exchange(
-            "http://localhost:" + port + "/communities/nickname/" + community.getNickname() + "/users",
-            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<User>>() {
-            });
-
-        then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        then(response.getBody().size()).isEqualTo(2);
-        then(response.getBody().get(0)).isEqualTo(firstUser);
-        then(response.getBody().get(1)).isEqualTo(thirdUser);
-    }
-
-    @Test
-    public void getUsersByCommunityNicknameWhenNoOneInCommunity() {
-        createUser(TestUtils.getTestUser());
-
-        Community community = TestUtils.getTestCommunity();
-        community.setUserIds(Collections.emptyList());
-        community = daoFactory.getCommunityDao().create(community);
-
-        final ResponseEntity<List<User>> response = restTemplate.exchange(
-            "http://localhost:" + port + "/communities/nickname/" + community.getNickname() + "/users",
-            HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<User>>() {
-            });
-
-        then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        then(response.getBody().size()).isEqualTo(0);
-    }
-
-    @Test
-    public void getUsersByCommunityNicknameWhenNotExist() {
-        final ResponseEntity<String> response = restTemplate.exchange(
-            "http://localhost:" + port + "/communities/nickname/" + "100500" + "/users",
-            HttpMethod.GET, HttpEntity.EMPTY, String.class);
-
-        then(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        then(response.getBody()).isEqualTo("Community is not found");
-    }
-
-    //endregion getUsersByCommunityNickname
-
     //region getCommunityWhichUserMemberByUserLogin
 
     @Test
