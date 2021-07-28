@@ -16,6 +16,7 @@ import java.util.Map;
 /**
  * @author I1yi4
  */
+@SuppressWarnings("PMD.LinguisticNaming")
 public interface UserPrivacySettingMapper {
 
     @InsertProvider(type = UserPrivacySettingMapper.UserPrivacySettingSqlBuilder.class, method = "buildCreateSql")

@@ -1,7 +1,5 @@
 package me.becycled.backend.model.dao.mybatis.userprivacysetting;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import me.becycled.backend.model.dao.mybatis.BaseMyBatisDao;
 import me.becycled.backend.model.entity.userprivacysetting.PrivacyRule;
 import me.becycled.backend.model.entity.userprivacysetting.UserPrivacySetting;
@@ -14,9 +12,12 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author I1yi4
+ */
 public class UserPrivacySettingDao extends BaseMyBatisDao {
 
-    public UserPrivacySettingDao(SqlSessionFactory sqlSessionFactory) {
+    public UserPrivacySettingDao(final SqlSessionFactory sqlSessionFactory) {
         super(sqlSessionFactory);
     }
 
@@ -55,17 +56,17 @@ public class UserPrivacySettingDao extends BaseMyBatisDao {
         private UserPrivacySetting result;
 
         @Override
-        @SuppressWarnings({"unchecked", "PMD.EmptyCatchBlock"})
+        @SuppressWarnings({"unchecked", "PMD.EmptyCatchBlock", "PMD.AvoidThrowingRawExceptionTypes"})
         public void handleResult(final ResultContext rc) {
             final Map<String, Object> convertedRow = (Map<String, Object>) rc.getResultObject();
             try {
                 result = new UserPrivacySetting();
                 result.setUserId((Integer) convertedRow.get("userId"));
-                final Map<String, String> privacySettings = (Map<String, String>)JsonUtils.getJsonMapper().readValue((String) convertedRow.get("privacySettings"), Map.class);
+                final Map<String, String> privacySettings = (Map<String, String>) JsonUtils.getJsonMapper().readValue((String) convertedRow.get("privacySettings"), Map.class);
 
                 result.setPrivacySettings(privacySettings.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> PrivacyRule.valueOf(e.getValue()))));
             } catch (Exception ex) {
-                // NOP
+                throw new RuntimeException(ex);
             }
         }
 

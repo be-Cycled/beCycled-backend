@@ -23,7 +23,7 @@ public class UserPrivacySetting {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(final Integer userId) {
         this.userId = userId;
     }
 
@@ -31,7 +31,7 @@ public class UserPrivacySetting {
         return privacySettings;
     }
 
-    public void setPrivacySettings(Map<String, PrivacyRule> privacySettings) {
+    public void setPrivacySettings(final Map<String, PrivacyRule> privacySettings) {
         this.privacySettings = privacySettings;
     }
 

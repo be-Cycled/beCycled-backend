@@ -3,12 +3,15 @@ package me.becycled.backend.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import me.becycled.backend.exception.AuthException;
+import me.becycled.backend.exception.NotFoundException;
+import me.becycled.backend.exception.WrongRequestException;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.error.ErrorMessages;
+import me.becycled.backend.service.AccessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,37 +32,40 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserController {
 
     private final DaoFactory daoFactory;
+    private final AccessService accessService;
 
     @Autowired
-    public UserController(final DaoFactory daoFactory) {
+    public UserController(final DaoFactory daoFactory,
+                           final AccessService accessService) {
         this.daoFactory = daoFactory;
+        this.accessService = accessService;
     }
 
     @RequestMapping(value = "/me", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить данные текущего пользователя")
-    public ResponseEntity<?> getMe() {
-        final Object login = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (login == null) {
-            return new ResponseEntity<>("User not auth", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<User> getMe() {
+        final User curUser = accessService.getCurrentAuthUser();
+        if (curUser == null) {
+            throw new AuthException(ErrorMessages.authError());
         }
-        return ResponseEntity.ok(daoFactory.getUserDao().getByLogin(login.toString()));
+        return ResponseEntity.ok(daoFactory.getUserDao().getByLogin(curUser.getLogin()));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить пользователя по его идентификатору")
-    public ResponseEntity<?> getById(
+    public ResponseEntity<User> getById(
         @ApiParam("Идентификатор пользователя") @PathVariable("id") final int id) {
 
         final User user = daoFactory.getUserDao().getById(id);
         if (user == null) {
-            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(User.class));
         }
         return ResponseEntity.ok(user);
     }
 
     @RequestMapping(value = "/multiple", method = RequestMethod.POST, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить пользователей по их идентификаторам")
-    public ResponseEntity<?> getByIds(
+    public ResponseEntity<List<User>> getByIds(
         @ApiParam("Идентификаторы пользователей") @RequestBody final List<Integer> ids) {
 
         return ResponseEntity.ok(daoFactory.getUserDao().getByIds(ids));
@@ -67,12 +73,12 @@ public class UserController {
 
     @RequestMapping(value = "/login/{login}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Получить пользователя по его логину")
-    public ResponseEntity<?> getByLogin(
+    public ResponseEntity<User> getByLogin(
         @ApiParam("Логин пользователя") @PathVariable("login") final String login) {
 
         final User user = daoFactory.getUserDao().getByLogin(login);
         if (user == null) {
-            return new ResponseEntity<>("User is not found", HttpStatus.NOT_FOUND);
+            throw new NotFoundException(ErrorMessages.notFound(User.class));
         }
         return ResponseEntity.ok(user);
     }
@@ -85,21 +91,21 @@ public class UserController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("Обновить пользователя по его идентификатору")
-    public ResponseEntity<?> update(
+    public ResponseEntity<User> update(
         @ApiParam("Идентификатор пользователя") @PathVariable("id") final int id,
         @ApiParam("Данные пользователя") @RequestBody final User entity) {
 
         if (id != entity.getId()) {
-            return new ResponseEntity<>("Different identifiers in request path and body", HttpStatus.BAD_REQUEST);
+            throw new WrongRequestException(ErrorMessages.differentIdentifierInPathAndBody());
         }
 
-        final User curUser = daoFactory.getUserDao().getByLogin(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        final User curUser = accessService.getCurrentAuthUser();
         if (curUser == null) {
-            return new ResponseEntity<>("Auth error", HttpStatus.UNAUTHORIZED);
+            throw new AuthException(ErrorMessages.authError());
         }
 
         if (!curUser.getId().equals(id)) {
-            return new ResponseEntity<>("User can be updated by itself only", HttpStatus.FORBIDDEN);
+            throw new WrongRequestException(ErrorMessages.onlyOwnerCanUpdateEntity(User.class));
         }
 
         return ResponseEntity.ok(daoFactory.getUserDao().update(entity));

@@ -2,8 +2,8 @@ package me.becycled.backend.controller;
 
 import me.becycled.BaseIntegrationTest;
 import me.becycled.ByCycledBackendApplicationTest;
-import me.becycled.backend.model.entity.community.Community;
 import me.becycled.backend.model.entity.user.User;
+import me.becycled.backend.model.entity.userprivacysetting.PrivacyRule;
 import me.becycled.backend.model.entity.userprivacysetting.UserPrivacySetting;
 import me.becycled.backend.service.AccessService;
 import me.becycled.utils.TestUtils;
@@ -21,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.URI;
+import java.util.Map;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.Mockito.when;
@@ -66,6 +67,34 @@ public class UserPrivacySettingControllerTest extends BaseIntegrationTest {
 
         final RequestEntity<UserPrivacySetting> request = RequestEntity
             .post(URI.create("http://localhost:" + port + "/user-privacy-settings"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(privacySetting);
+
+        final ResponseEntity<UserPrivacySetting> response = restTemplate.exchange(
+            request, UserPrivacySetting.class);
+
+        then(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        then(response.getBody()).isEqualTo(privacySetting);
+    }
+
+    @Test
+    public void update() {
+        User user = TestUtils.getTestUser();
+        user = createUser(user);
+
+        when(accessService.getCurrentAuthUser()).thenReturn(user);
+
+        UserPrivacySetting privacySetting = TestUtils.getUserPrivacySetting();
+        privacySetting = daoFactory.getUserPrivacySettingDao().create(privacySetting);
+
+        privacySetting.setPrivacySettings(Map.of(
+            "avatar", PrivacyRule.ALL,
+            "phone", PrivacyRule.ALL,
+            "email", PrivacyRule.ALL)
+        );
+
+        final RequestEntity<UserPrivacySetting> request = RequestEntity
+            .put(URI.create("http://localhost:" + port + "/user-privacy-settings/" + privacySetting.getUserId()))
             .contentType(MediaType.APPLICATION_JSON)
             .body(privacySetting);
 

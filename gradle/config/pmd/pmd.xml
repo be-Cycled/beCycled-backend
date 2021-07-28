@@ -49,6 +49,7 @@
         <exclude name="ShortVariable"/>
         <exclude name="TooManyStaticImports"/>
         <exclude name="UselessParentheses"/>
+        <exclude name="DefaultPackage"/>
     </rule>
     <rule ref="category/java/codestyle.xml/FieldNamingConventions">
         <properties>
