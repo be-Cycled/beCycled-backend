@@ -3,12 +3,14 @@ package me.becycled;
 import me.becycled.backend.model.dao.mybatis.DaoFactory;
 import me.becycled.backend.model.entity.user.User;
 import me.becycled.backend.model.entity.user.UserAccount;
+import me.becycled.backend.service.email.EmailService;
 import me.becycled.utils.TestUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
@@ -81,6 +83,9 @@ public abstract class BaseIntegrationTest {
             return ds;
         }
     }
+
+    @MockBean
+    private EmailService emailService;
 
     @Autowired
     protected DataSource dataSource;

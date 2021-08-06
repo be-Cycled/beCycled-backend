@@ -1,8 +1,3 @@
-/*
- * Copyright © 2018 ООО "Первая Мониторинговая Компания".
- * All rights reserved.
- */
-
 package me.becycled.backend.model.utils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;

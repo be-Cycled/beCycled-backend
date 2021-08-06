@@ -44,6 +44,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-security'
   implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  implementation 'org.springframework.boot:spring-boot-starter-mail'
 
   implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
   implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -60,6 +61,9 @@ dependencies {
   implementation 'org.apache.httpcomponents:httpclient:4.5.11'
 
   implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+  implementation 'org.passay:passay:1.6.1'
+  implementation 'org.freemarker:freemarker:2.3.31'
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.testcontainers:postgresql:1.15.3'
