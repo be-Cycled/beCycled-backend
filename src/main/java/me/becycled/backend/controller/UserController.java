@@ -37,7 +37,7 @@ public class UserController {
 
     @Autowired
     public UserController(final DaoFactory daoFactory,
-                           final AccessService accessService) {
+                          final AccessService accessService) {
         this.daoFactory = daoFactory;
         this.accessService = accessService;
     }

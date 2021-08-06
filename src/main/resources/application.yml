@@ -9,6 +9,20 @@ spring:
     password: becycled
     driverClassName: org.postgresql.Driver
     type: com.zaxxer.hikari.HikariDataSource
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: no-reply@becycled.me
+    password: password
+    properties:
+      mail.smtp.ssl.enable: true
+      mail.transport.protocol: smtp
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 60000
+      mail.smtp.writetimeout: 60000
 
 server:
   port: 8080
