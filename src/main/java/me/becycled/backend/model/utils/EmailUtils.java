@@ -32,7 +32,7 @@ public enum EmailUtils {;
             sw.flush();
             return sw.getBuffer().toString();
         } catch (Exception ex) {
-            throw new IllegalArgumentException("Cannot create telegram notification html body: " + ex.getMessage(), ex);
+            throw new IllegalArgumentException("Cannot build template html body: " + ex.getMessage(), ex);
         }
     }
 }
